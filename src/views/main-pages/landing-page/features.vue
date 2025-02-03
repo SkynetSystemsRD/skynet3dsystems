@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import check from '@images/svg/Check.svg'
-import keyboard from '@images/svg/keyboard.svg'
-import laptop from '@images/svg/laptop.svg'
-import paper from '@images/svg/paper-send.svg'
-import rocket from '@images/svg/rocket.svg'
-import user from '@images/svg/user.svg'
+import icon2 from '@images/svg/3d-printer2.svg'
+import icon3 from '@images/svg/3d-printer3.svg'
+import icon4 from '@images/svg/3d-printer4.svg'
+import icon5 from '@images/svg/3d-printer5.svg'
+import icon6 from '@images/svg/3d-printer6.svg'
+import icon1 from '@images/svg/3d-printer8.svg'
 
 const featuresData = [
-  { title: 'Impresión 3D Personalizada', desc: 'Creamos modelos 3D únicos adaptados a tus ideas y necesidades.', icon: check },
-  { title: 'Prototipado Rápido', desc: 'Desarrolla prototipos funcionales en menos tiempo con alta precisión.', icon: keyboard },
-  { title: 'Modelado 3D Profesional', desc: 'Diseños digitales detallados listos para impresión o simulación.', icon: laptop },
-  { title: 'Asesoría Técnica', desc: 'Consultoría experta en materiales, técnicas de impresión y optimización de modelos.', icon: paper },
-  { title: 'Producción en Serie', desc: 'Capacidad de producción de piezas en grandes volúmenes con calidad constante.', icon: rocket },
-  { title: 'Galería de Proyectos', desc: 'Explora nuestros trabajos anteriores para inspirarte y conocer nuestra experiencia.', icon: user }
+  { title: 'Impresión 3D Personalizada', desc: 'Creamos modelos 3D únicos adaptados a tus ideas y necesidades.', icon: icon1 },
+  { title: 'Prototipado Rápido', desc: 'Desarrolla prototipos funcionales en menos tiempo con alta precisión.', icon: icon2 },
+  { title: 'Modelado 3D Profesional', desc: 'Diseños digitales detallados listos para impresión o simulación.', icon: icon3 },
+  { title: 'Asesoría Técnica', desc: 'Consultoría experta en materiales, técnicas de impresión y optimización de modelos.', icon: icon4 },
+  { title: 'Producción en Serie', desc: 'Capacidad de producción de piezas en grandes volúmenes con calidad constante.', icon: icon5 },
+  { title: 'Galería de Proyectos', desc: 'Explora nuestros trabajos anteriores para inspirarte y conocer nuestra experiencia.', icon: icon6 }
 ]
 </script>
 
