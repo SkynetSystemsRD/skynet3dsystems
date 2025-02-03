@@ -41,15 +41,14 @@ const translateMouse = computed(() => {
         <VContainer>
           <div class="hero-text-box text-center px-6">
             <h1 class="hero-title mb-4">
-              One dashboard to manage all your business
+              Revolucionando las industrias con la impresión 3D
             </h1>
             <h6 class="mb-6 text-h6">
-              Production-ready & easy to use Admin Template
-              for Reliability and Customizability.
+              Soluciones avanzadas para impresión 3D personalizada y prototipado, impulsadas por Skynet 3D Systems.
             </h6>
             <div class="position-relative">
               <h6 class="position-absolute hero-btn-item d-md-flex d-none text-h6 text-medium-emphasis">
-                Join Community
+                Únetenos 
                 <VImg
                   :src="joinArrow"
                   class="flip-in-rtl"
@@ -63,7 +62,7 @@ const translateMouse = computed(() => {
                 :to="{ name: 'main-pages-landing-page', hash: `#pricing-plan` }"
                 :active="false"
               >
-                Get early Access
+              Explora nuestros servicios
               </VBtn>
             </div>
           </div>
