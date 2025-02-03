@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HelpCenterArticlesOverview } from '@db/pages/help-center/types'
+import type { HelpCenterArticlesOverview } from '@db/pages/help-center/types';
 
 interface Props {
   articles: HelpCenterArticlesOverview[]
@@ -39,7 +39,7 @@ const props = defineProps<Props>()
             size="small"
             variant="tonal"
             :to="{
-              name: 'front-pages-help-center-article-title',
+              name: 'main-pages-help-center-article-title',
               params: {
                 title: 'how-to-add-product-in-cart',
               },

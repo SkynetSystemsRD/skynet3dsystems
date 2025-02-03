@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import navImg from '@images/front-pages/misc/nav-item-col-img.png'
 import { useWindowScroll } from '@vueuse/core'
 import type { RouteLocationRaw } from 'vue-router/auto'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useDisplay } from 'vuetify'
-import navImg from '@images/front-pages/misc/nav-item-col-img.png'
 
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
@@ -44,10 +44,10 @@ const menuItems: MenuItem[] = [
     listTitle: 'Page',
     listIcon: 'tabler-layout-grid',
     navItems: [
-      { name: 'Pricing', to: { name: 'front-pages-pricing' } },
-      { name: 'Payment', to: { name: 'front-pages-payment' } },
-      { name: 'Checkout', to: { name: 'front-pages-checkout' } },
-      { name: 'Help Center', to: { name: 'front-pages-help-center' } },
+      { name: 'Pricing', to: { name: 'main-pages-pricing' } },
+      { name: 'Payment', to: { name: 'main-pages-payment' } },
+      { name: 'Checkout', to: { name: 'main-pages-checkout' } },
+      { name: 'Help Center', to: { name: 'main-pages-help-center' } },
     ],
   },
   {
@@ -106,9 +106,9 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
       <div>
         <div class="d-flex flex-column gap-y-4 pa-4">
           <RouterLink
-            v-for="(item, index) in ['Home', 'Features', 'Team', 'FAQ', 'Contact us']"
+            v-for="(item, index) in ['Inicio', 'Features', 'Team', 'FAQ', 'Contact us']"
             :key="index"
-            :to="{ name: 'front-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
+            :to="{ name: 'main-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
             class="nav-link font-weight-medium"
             :class="[props.activeId?.toLocaleLowerCase().replace('-', ' ') === item.toLocaleLowerCase() ? 'active-link' : '']"
           >
@@ -232,7 +232,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
             <RouterLink
               v-for="(item, index) in ['Home', 'Features', 'Team', 'FAQ', 'Contact us']"
               :key="index"
-              :to="{ name: 'front-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
+              :to="{ name: 'main-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
               class="nav-link font-weight-medium py-2 px-2 px-lg-4"
               :class="[props.activeId?.toLocaleLowerCase().replace('-', ' ') === item.toLocaleLowerCase() ? 'active-link' : '']"
             >

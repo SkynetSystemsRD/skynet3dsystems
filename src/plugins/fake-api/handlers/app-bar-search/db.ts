@@ -42,27 +42,27 @@ export const db: DB = {
       category: 'frontPages',
       children: [
         {
-          url: { name: 'front-pages-landing-page' },
+          url: { name: 'main-pages-landing-page' },
           icon: 'tabler-file-description',
           title: 'Landing Front',
         },
         {
-          url: { name: 'front-pages-pricing' },
+          url: { name: 'main-pages-pricing' },
           icon: 'tabler-file-description',
           title: 'Pricing Front',
         },
         {
-          url: { name: 'front-pages-payment' },
+          url: { name: 'main-pages-payment' },
           icon: 'tabler-file-description',
           title: 'Payment Front',
         },
         {
-          url: { name: 'front-pages-checkout' },
+          url: { name: 'main-pages-checkout' },
           icon: 'tabler-file-description',
           title: 'Checkout Front',
         },
         {
-          url: { name: 'front-pages-help-center' },
+          url: { name: 'main-pages-help-center' },
           icon: 'tabler-file-description',
           title: 'Help Center Front',
         },

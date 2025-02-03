@@ -190,7 +190,7 @@ const pricingPlans = [
                   block
                   :variant="plan.current ? 'elevated' : 'tonal'"
                   class="mt-8"
-                  :to="{ name: 'front-pages-payment' }"
+                  :to="{ name: 'main-pages-payment' }"
                 >
                   Get Started
                 </VBtn>

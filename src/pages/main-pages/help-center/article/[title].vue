@@ -45,7 +45,7 @@ setTimeout(async () => {
             <div>
               <VBreadcrumbs
                 class="px-0 pb-2 pt-0 help-center-breadcrumbs"
-                :items="[{ title: 'Help Center', to: { name: 'front-pages-help-center' }, class: 'text-primary' }, { title: 'how to add product in cart' }]"
+                :items="[{ title: 'Help Center', to: { name: 'main-pages-help-center' }, class: 'text-primary' }, { title: 'how to add product in cart' }]"
               />
               <h4 class="text-h4 mb-2">
                 {{ articleData?.title }}
