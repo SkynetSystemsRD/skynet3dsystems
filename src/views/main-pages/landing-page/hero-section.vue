@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useGenerateImageVariant } from '@/@core/composable/useGenerateImageVariant'
 import joinArrow from '@images/front-pages/icons/Join-community-arrow.png'
-import heroDashboardImgDark from '@images/front-pages/landing-page/hero-dashboard-dark.png'
-import heroDashboardImgLight from '@images/front-pages/landing-page/hero-dashboard-light.png'
+import heroDashboardImgDark from '@images/main-pages/landing-page/hero-dashboard-dark.png'
+import heroDashboardImgLight from '@images/main-pages/landing-page/hero-dashboard-light.png'
 import { useMouse } from '@vueuse/core'
 import { useTheme } from 'vuetify'
 
-import heroElementsImgDark from '@images/front-pages/landing-page/hero-elements-dark.png'
-import heroElementsImgLight from '@images/front-pages/landing-page/hero-elements-light.png'
+import heroElementsImgDark from '@images/main-pages/landing-page/hero-elements-dark.png'
+import heroElementsImgLight from '@images/main-pages/landing-page/hero-elements-light.png'
 
 const theme = useTheme()
 
