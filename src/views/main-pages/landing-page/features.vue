@@ -7,12 +7,12 @@ import rocket from '@images/svg/rocket.svg'
 import user from '@images/svg/user.svg'
 
 const featuresData = [
-  { title: 'Quality Code', desc: 'Code structure that all developers will easily understand and fall in love with.', icon: laptop },
-  { title: 'Continuous Updates', desc: 'Free updates for the next 12 months, including new demos and features.', icon: rocket },
-  { title: 'Starter Kit', desc: 'Start your project quickly without having to remove unnecessary features.', icon: paper },
-  { title: 'API Ready', desc: 'Just change the endpoint and see your own data loaded within seconds.', icon: check },
-  { title: 'Excellent Support', desc: 'An easy-to-follow doc with lots of references and code examples.', icon: user },
-  { title: 'Well Documented', desc: 'An easy-to-follow doc with lots of references and code examples.', icon: keyboard },
+  { title: 'Impresión 3D Personalizada', desc: 'Creamos modelos 3D únicos adaptados a tus ideas y necesidades.', icon: check },
+  { title: 'Prototipado Rápido', desc: 'Desarrolla prototipos funcionales en menos tiempo con alta precisión.', icon: keyboard },
+  { title: 'Modelado 3D Profesional', desc: 'Diseños digitales detallados listos para impresión o simulación.', icon: laptop },
+  { title: 'Asesoría Técnica', desc: 'Consultoría experta en materiales, técnicas de impresión y optimización de modelos.', icon: paper },
+  { title: 'Producción en Serie', desc: 'Capacidad de producción de piezas en grandes volúmenes con calidad constante.', icon: rocket },
+  { title: 'Galería de Proyectos', desc: 'Explora nuestros trabajos anteriores para inspirarte y conocer nuestra experiencia.', icon: user }
 ]
 </script>
 
@@ -26,18 +26,18 @@ const featuresData = [
           class="mb-4"
           size="small"
         >
-          Useful Features
+        Servicios de Skynet 3D Systems
         </VChip>
         <div class="d-flex text-h4 mb-1 align-center flex-wrap justify-center">
           <div class="position-relative me-2">
             <div class="section-title">
-              Everything you need
+              Impresiones 3D de Alta Calidad
             </div>
           </div>
-          to start your next project
+          para llevar tus ideas al siguiente nivel
         </div>
         <p class="text-body-1 mb-0">
-          Not just a set of tools, the package includes ready-to-deploy conceptual application.
+          En Skynet 3D Systems ofrecemos soluciones innovadoras en impresión 3D, personalizadas para tus necesidades.
         </p>
       </div>
       <VRow>

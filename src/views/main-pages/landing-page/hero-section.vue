@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useGenerateImageVariant } from '@/@core/composable/useGenerateImageVariant'
 import joinArrow from '@images/main-pages/icons/Join-community-arrow.png'
-import { default as heroDashboardImgDark, default as heroDashboardImgLight } from '@images/main-pages/landing-page/main-image.png'
+import heroDashboardImgDark from '@images/main-pages/landing-page/hero-dashboard-dark.png'
+import heroDashboardImgLight from '@images/main-pages/landing-page/hero-dashboard-light.png'
 import { useMouse } from '@vueuse/core'
 import { useTheme } from 'vuetify'
 
