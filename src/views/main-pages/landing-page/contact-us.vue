@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ConnectImg from '@images/front-pages/landing-page/contact-customer-service.png'
+import ConnectImg from '@images/main-pages/landing-page/contact-customer-service.png';
 
 const name = ref('')
 const email = ref('')
@@ -165,7 +165,7 @@ const message = ref('')
 
 .section-title::after {
   position: absolute;
-  background: url("../../../assets/images/front-pages/icons/section-title-icon.png") no-repeat left bottom;
+  background: url("../../../assets/images/main-pages/icons/section-title-icon.png") no-repeat left bottom;
   background-size: contain;
   block-size: 100%;
   content: "";
@@ -181,7 +181,7 @@ const message = ref('')
 
 .contact-card::before {
   position: absolute;
-  content: url("@images/front-pages/icons/contact-border.png");
+  content: url("@images/main-pages/icons/contact-border.png");
   inset-block-start: -2.5rem;
   inset-inline-start: -2.5rem;
 }

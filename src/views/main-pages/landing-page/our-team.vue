@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import teamPerson1 from '@images/front-pages/landing-page/team-member-1.png'
-import teamPerson2 from '@images/front-pages/landing-page/team-member-2.png'
-import teamPerson3 from '@images/front-pages/landing-page/team-member-3.png'
-import teamPerson4 from '@images/front-pages/landing-page/team-member-4.png'
+import teamPerson1 from '@images/main-pages/landing-page/team-member-1.png';
+import teamPerson2 from '@images/main-pages/landing-page/team-member-2.png';
+import teamPerson3 from '@images/main-pages/landing-page/team-member-3.png';
+import teamPerson4 from '@images/main-pages/landing-page/team-member-4.png';
 
 const teamData = ref([
   { name: 'Sophie Gilbert', position: 'Project Manager', image: teamPerson1, backgroundColor: 'rgba(144, 85, 253, 0.16)', borderColor: 'rgba(144, 85, 253,0.16)', isHover: false },
@@ -110,7 +110,7 @@ const teamData = ref([
 
 .section-title::after {
   position: absolute;
-  background: url("../../../assets/images/front-pages/icons/section-title-icon.png") no-repeat left bottom;
+  background: url("../../../assets/images/main-pages/icons/section-title-icon.png") no-repeat left bottom;
   background-size: contain;
   block-size: 100%;
   content: "";

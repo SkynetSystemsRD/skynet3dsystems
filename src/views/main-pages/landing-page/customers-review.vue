@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { register } from 'swiper/element/bundle'
 import { useGenerateImageVariant } from '@/@core/composable/useGenerateImageVariant'
-import logo1dark from '@images/front-pages/branding/logo-1-dark.png'
-import logo1light from '@images/front-pages/branding/logo-1-light.png'
-import logo1 from '@images/front-pages/branding/logo-1.png'
-import logo2dark from '@images/front-pages/branding/logo-2-dark.png'
-import logo2light from '@images/front-pages/branding/logo-2-light.png'
-import logo2 from '@images/front-pages/branding/logo-2.png'
-import logo3dark from '@images/front-pages/branding/logo-3-dark.png'
-import logo3light from '@images/front-pages/branding/logo-3-light.png'
-import logo3 from '@images/front-pages/branding/logo-3.png'
-import logo4dark from '@images/front-pages/branding/logo-4-dark.png'
-import logo4light from '@images/front-pages/branding/logo-4-light.png'
-import logo4 from '@images/front-pages/branding/logo-4.png'
-import logo5dark from '@images/front-pages/branding/logo-5-dark.png'
-import logo5light from '@images/front-pages/branding/logo-5-light.png'
+import logo1dark from '@images/main-pages/branding/logo-1-dark.png'
+import logo1light from '@images/main-pages/branding/logo-1-light.png'
+import logo1 from '@images/main-pages/branding/logo-1.png'
+import logo2dark from '@images/main-pages/branding/logo-2-dark.png'
+import logo2light from '@images/main-pages/branding/logo-2-light.png'
+import logo2 from '@images/main-pages/branding/logo-2.png'
+import logo3dark from '@images/main-pages/branding/logo-3-dark.png'
+import logo3light from '@images/main-pages/branding/logo-3-light.png'
+import logo3 from '@images/main-pages/branding/logo-3.png'
+import logo4dark from '@images/main-pages/branding/logo-4-dark.png'
+import logo4light from '@images/main-pages/branding/logo-4-light.png'
+import logo4 from '@images/main-pages/branding/logo-4.png'
+import logo5dark from '@images/main-pages/branding/logo-5-dark.png'
+import logo5light from '@images/main-pages/branding/logo-5-light.png'
+import { register } from 'swiper/element/bundle'
 
 import avatar1 from '@images/avatars/avatar-1.png'
 import avatar2 from '@images/avatars/avatar-2.png'
@@ -376,7 +376,7 @@ swiper-container::part(bullet) {
 
 .section-title::after {
   position: absolute;
-  background: url("../../../assets/images/front-pages/icons/section-title-icon.png") no-repeat left bottom/contain;
+  background: url("../../../assets/images/main-pages/icons/section-title-icon.png") no-repeat left bottom/contain;
   background-size: contain;
   block-size: 100%;
   content: "";

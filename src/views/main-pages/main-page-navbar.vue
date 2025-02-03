@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import navImg from '@images/front-pages/misc/nav-item-col-img.png'
+import navImg from '@images/main-pages/misc/nav-item-col-img.png'
 import { useWindowScroll } from '@vueuse/core'
 import type { RouteLocationRaw } from 'vue-router/auto'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
@@ -191,8 +191,8 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
   </VNavigationDrawer>
 
   <!-- 👉 Navbar for desktop devices  -->
-  <div class="front-page-navbar">
-    <div class="front-page-navbar">
+  <div class="main-page-navbar">
+    <div class="main-page-navbar">
       <VAppBar
         :color="$vuetify.theme.current.dark ? 'rgba(var(--v-theme-surface),0.38)' : 'rgba(var(--v-theme-surface), 0.38)'"
         :class="y > 10 ? 'app-bar-scrolled' : [$vuetify.theme.current.dark ? 'app-bar-dark' : 'app-bar-light', 'elevation-0']"
@@ -390,7 +390,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
 }
 
 @media (min-width: 1920px) {
-  .front-page-navbar {
+  .main-page-navbar {
     .v-toolbar {
       max-inline-size: calc(1440px - 32px);
     }
@@ -398,7 +398,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
 }
 
 @media (min-width: 1280px) and (max-width: 1919px) {
-  .front-page-navbar {
+  .main-page-navbar {
     .v-toolbar {
       max-inline-size: calc(1200px - 32px);
     }
@@ -406,7 +406,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
 }
 
 @media (min-width: 960px) and (max-width: 1279px) {
-  .front-page-navbar {
+  .main-page-navbar {
     .v-toolbar {
       max-inline-size: calc(900px - 32px);
     }
@@ -414,7 +414,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
 }
 
 @media (min-width: 600px) and (max-width: 959px) {
-  .front-page-navbar {
+  .main-page-navbar {
     .v-toolbar {
       max-inline-size: calc(100% - 64px);
     }
@@ -422,7 +422,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
 }
 
 @media (max-width: 600px) {
-  .front-page-navbar {
+  .main-page-navbar {
     .v-toolbar {
       max-inline-size: calc(100% - 32px);
     }
@@ -459,7 +459,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
   transition: all 0.1s ease-in-out;
 }
 
-.front-page-navbar::after {
+.main-page-navbar::after {
   position: fixed;
   z-index: 2;
   backdrop-filter: saturate(100%) blur(6px);
@@ -483,7 +483,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
   }
 }
 
-.front-page-navbar {
+.main-page-navbar {
   .v-toolbar__content {
     padding-inline: 30px !important;
   }

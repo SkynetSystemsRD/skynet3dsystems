@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import boyWithLogo from '@images/front-pages/landing-page/faq-boy-with-logos.png'
+import boyWithLogo from '@images/main-pages/landing-page/faq-boy-with-logos.png';
 
 const faqData = [
   {
@@ -112,7 +112,7 @@ const faqData = [
 
 .section-title::after {
   position: absolute;
-  background: url("../../../assets/images/front-pages/icons/section-title-icon.png") no-repeat left bottom;
+  background: url("../../../assets/images/main-pages/icons/section-title-icon.png") no-repeat left bottom;
   background-size: contain;
   block-size: 100%;
   content: "";

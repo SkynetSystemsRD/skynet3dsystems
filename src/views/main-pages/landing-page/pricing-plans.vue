@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import paperPlane from '@images/front-pages/icons/paper-airplane.png'
-import plane from '@images/front-pages/icons/plane.png'
-import pricingPlanArrow from '@images/front-pages/icons/pricing-plans-arrow.png'
-import shuttleRocket from '@images/front-pages/icons/shuttle-rocket.png'
+import paperPlane from '@images/main-pages/icons/paper-airplane.png'
+import plane from '@images/main-pages/icons/plane.png'
+import pricingPlanArrow from '@images/main-pages/icons/pricing-plans-arrow.png'
+import shuttleRocket from '@images/main-pages/icons/shuttle-rocket.png'
 
 const annualMonthlyPlanPriceToggler = ref(true)
 
@@ -247,7 +247,7 @@ const pricingPlans = [
 
 .section-title::after {
   position: absolute;
-  background: url("../../../assets/images/front-pages/icons/section-title-icon.png") no-repeat left bottom;
+  background: url("../../../assets/images/main-pages/icons/section-title-icon.png") no-repeat left bottom;
   background-size: contain;
   block-size: 100%;
   content: "";

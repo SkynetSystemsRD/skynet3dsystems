@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ctaDashborad from '@images/front-pages/landing-page/cta-dashboard.png'
+import ctaDashborad from '@images/main-pages/landing-page/cta-dashboard.png'
 </script>
 
 <template>
@@ -53,10 +53,10 @@ import ctaDashborad from '@images/front-pages/landing-page/cta-dashboard.png'
 }
 
 .banner-bg-light {
-  background-image: url("@images/front-pages/backgrounds/cta-bg.png");
+  background-image: url("@images/main-pages/backgrounds/cta-bg.png");
 }
 
 .banner-bg-dark {
-  background-image: url("@images/front-pages/backgrounds/cta-bg-dark.png");
+  background-image: url("@images/main-pages/backgrounds/cta-bg-dark.png");
 }
 </style>
