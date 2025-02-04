@@ -1,19 +1,12 @@
 <script setup lang="ts">
 import { useGenerateImageVariant } from '@/@core/composable/useGenerateImageVariant'
-import logo1dark from '@images/main-pages/branding/logo-1-dark.png'
-import logo1light from '@images/main-pages/branding/logo-1-light.png'
-import logo1 from '@images/main-pages/branding/logo-1.png'
-import logo2dark from '@images/main-pages/branding/logo-2-dark.png'
-import logo2light from '@images/main-pages/branding/logo-2-light.png'
-import logo2 from '@images/main-pages/branding/logo-2.png'
-import logo3dark from '@images/main-pages/branding/logo-3-dark.png'
-import logo3light from '@images/main-pages/branding/logo-3-light.png'
-import logo3 from '@images/main-pages/branding/logo-3.png'
-import logo4dark from '@images/main-pages/branding/logo-4-dark.png'
-import logo4light from '@images/main-pages/branding/logo-4-light.png'
-import logo4 from '@images/main-pages/branding/logo-4.png'
-import logo5dark from '@images/main-pages/branding/logo-5-dark.png'
-import logo5light from '@images/main-pages/branding/logo-5-light.png'
+
+import main_logo1 from '@images/main-pages/branding/main-logo1.png'
+import main_logo2 from '@images/main-pages/branding/main-logo2.png'
+import main_logo3 from '@images/main-pages/branding/main-logo3.png'
+import main_logo4 from '@images/main-pages/branding/main-logo4.png'
+import main_logo5 from '@images/main-pages/branding/main-logo5.png'
+
 import { register } from 'swiper/element/bundle'
 
 import avatar1 from '@images/avatars/avatar-1.png'
@@ -24,93 +17,93 @@ import avatar5 from '@images/avatars/avatar-5.png'
 
 register()
 
-const brandLogo1 = useGenerateImageVariant(logo1light, logo1dark)
-const brandLogo2 = useGenerateImageVariant(logo2light, logo2dark)
-const brandLogo3 = useGenerateImageVariant(logo3light, logo3dark)
-const brandLogo4 = useGenerateImageVariant(logo4light, logo4dark)
-const brandLogo5 = useGenerateImageVariant(logo5light, logo5dark)
+const brandLogo1 = useGenerateImageVariant(main_logo1, main_logo1)
+const brandLogo2 = useGenerateImageVariant(main_logo2, main_logo2)
+const brandLogo3 = useGenerateImageVariant(main_logo3, main_logo3)
+const brandLogo4 = useGenerateImageVariant(main_logo4, main_logo4)
+const brandLogo5 = useGenerateImageVariant(main_logo5, main_logo5)
 
 // Customer Review Data
 const reviewData = [
   {
     desc: 'El servicio de impresión 3D de Skynet 3D Systems superó mis expectativas. La precisión en los detalles es impresionante.',
-    img: logo1,
+    img: main_logo1,
     rating: 5,
-    name: 'Luis Rodríguez',
-    position: 'Ingeniero en Santo Domingo',
-    avatar: avatar1,
-  },
-  {
-    desc: 'La calidad de las piezas impresas es excelente y la atención al cliente fue muy profesional. ¡Recomendado!',
-    img: logo2,
-    rating: 5,
-    name: 'María Gómez',
-    position: 'Diseñadora Industrial en Santiago',
+    name: 'Luisa Rodríguez',
+    position: 'Ingeniera en Santo Domingo',
     avatar: avatar2,
   },
   {
-    desc: 'Skynet 3D Systems me ayudó a materializar un prototipo complejo con gran precisión. Sin duda volveré a trabajar con ellos.',
-    img: logo3,
-    rating: 4,
-    name: 'José Martínez',
-    position: 'Emprendedor en La Romana',
-    avatar: avatar3,
+    desc: 'La calidad de las piezas impresas es excelente y la atención al cliente fue muy profesional. ¡Recomendado!',
+    img: main_logo2,
+    rating: 5,
+    name: 'Mario Gómez',
+    position: 'Diseñador Industrial en Santiago',
+    avatar: avatar1,
   },
   {
-    desc: 'El proceso de cotización fue rápido y sencillo. La entrega de mis modelos 3D fue puntual y de alta calidad.',
-    img: logo4,
-    rating: 5,
-    name: 'Ana Pérez',
-    position: 'Arquitecta en Punta Cana',
+    desc: 'Skynet 3D Systems me ayudó a materializar un prototipo complejo con gran precisión. Sin duda volveré a trabajar con ellos.',
+    img: main_logo3,
+    rating: 4,
+    name: 'Josefina Martínez',
+    position: 'Emprendedora en La Romana',
     avatar: avatar4,
   },
   {
-    desc: 'Excelente servicio al cliente. Siempre atentos a los detalles y abiertos a resolver cualquier duda sobre el proceso de impresión.',
-    img: logo3,
+    desc: 'El proceso de cotización fue rápido y sencillo. La entrega de mis modelos 3D fue puntual y de alta calidad.',
+    img: main_logo4,
     rating: 5,
-    name: 'Carlos Fernández',
-    position: 'Empresario en Puerto Plata',
-    avatar: avatar5,
+    name: 'Andrés Pérez',
+    position: 'Arquitecto en Punta Cana',
+    avatar: avatar3,
   },
   {
-    desc: 'Gracias a Skynet 3D Systems, pude obtener piezas personalizadas con un acabado profesional. ¡Muy satisfecho!',
-    img: logo1,
+    desc: 'Excelente servicio al cliente. Siempre atentos a los detalles y abiertos a resolver cualquier duda sobre el proceso de impresión.',
+    img: main_logo5,
     rating: 5,
-    name: 'Daniela Torres',
+    name: 'Carla Fernández',
+    position: 'Empresaria en Puerto Plata',
+    avatar: avatar4,
+  },
+  {
+    desc: 'Gracias a Skynet 3D Systems, pude obtener piezas personalizadas con un acabado profesional. ¡Muy satisfecha!',
+    img: main_logo1,
+    rating: 5,
+    name: 'Daniel Torres',
     position: 'Estudiante de Ingeniería en Santo Domingo',
     avatar: avatar1,
   },
   {
     desc: 'La variedad de materiales y tecnologías que ofrecen me permitió elegir la mejor opción para mi proyecto.',
-    img: logo2,
+    img: main_logo2,
     rating: 5,
-    name: 'Juan Castillo',
-    position: 'Técnico Mecánico en San Cristóbal',
+    name: 'Juana Castillo',
+    position: 'Técnica Mecánica en San Cristóbal',
     avatar: avatar2,
   },
   {
     desc: 'Un servicio completo, desde el diseño hasta la impresión. La calidad final del producto fue impecable.',
-    img: logo3,
+    img: main_logo3,
     rating: 4,
-    name: 'Gabriela Méndez',
+    name: 'Gabriel Méndez',
     position: 'Freelancer en Barahona',
     avatar: avatar3,
   },
   {
     desc: 'Skynet 3D Systems ofrece un servicio rápido y confiable. La precisión en las dimensiones fue perfecta.',
-    img: logo4,
+    img: main_logo4,
     rating: 4,
     name: 'Roberto Jiménez',
     position: 'Desarrollador de Productos en Higüey',
-    avatar: avatar4,
+    avatar: avatar5,
   },
   {
-    desc: 'Muy satisfecho con el soporte técnico y la calidad de las impresiones. Definitivamente seguiré trabajando con ellos.',
-    img: logo2,
+    desc: 'Muy satisfecha con el soporte técnico y la calidad de las impresiones. Definitivamente seguiré trabajando con ellos.',
+    img: main_logo2,
     rating: 5,
-    name: 'Paola Sánchez',
-    position: 'Diseñadora Gráfica en Bonao',
-    avatar: avatar5,
+    name: 'Pablo Sánchez',
+    position: 'Diseñador Gráfico en Bonao',
+    avatar: avatar3,
   },
 ];
 
