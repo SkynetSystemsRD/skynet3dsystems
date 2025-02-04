@@ -3,7 +3,8 @@ import { useGenerateImageVariant } from '@/@core/composable/useGenerateImageVari
 import joinArrow from '@images/main-pages/icons/Join-community-arrow.png'
 import heroDashboardImgDark from '@images/main-pages/landing-page/hero-dashboard-dark.png'
 import heroDashboardImgLight from '@images/main-pages/landing-page/hero-dashboard-light.png'
-import main3dImage from '@images/main-pages/landing-page/main-3d-image3.png'
+import main3dImage1 from '@images/main-pages/landing-page/main-3d-image3.png'
+import main3dImage2 from '@images/main-pages/landing-page/main-3d-image4.png'
 import { useMouse } from '@vueuse/core'
 import { useTheme } from 'vuetify'
 
@@ -14,7 +15,8 @@ const theme = useTheme()
 
 const heroElementsImg = useGenerateImageVariant(heroElementsImgLight, heroElementsImgDark)
 const heroDashboardImg = useGenerateImageVariant(heroDashboardImgLight, heroDashboardImgDark)
-const main3dImg = useGenerateImageVariant(main3dImage, main3dImage)
+const main3dImg1 = useGenerateImageVariant(main3dImage1, main3dImage1)
+const main3dImg2 = useGenerateImageVariant(main3dImage2, main3dImage2)
 
 const { x, y } = useMouse({ touch: false })
 
@@ -86,12 +88,12 @@ const translateMouse = computed(() => {
               data-allow-mismatch
             >
               <img
-                :src="heroDashboardImg"
+                :src="main3dImg2"
                 alt="Hero Dashboard"
                 class="animation-img"
               >
               <img
-                :src="heroElementsImg"
+                :src="main3dImg1"
                 alt="hero elements"
                 class="hero-elements-img animation-img position-absolute"
                 style="transform: translateZ(1rem);"
