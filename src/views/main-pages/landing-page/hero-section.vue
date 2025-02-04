@@ -3,6 +3,7 @@ import { useGenerateImageVariant } from '@/@core/composable/useGenerateImageVari
 import joinArrow from '@images/main-pages/icons/Join-community-arrow.png'
 import heroDashboardImgDark from '@images/main-pages/landing-page/hero-dashboard-dark.png'
 import heroDashboardImgLight from '@images/main-pages/landing-page/hero-dashboard-light.png'
+import main3dImage from '@images/main-pages/landing-page/main-3d-image3.png'
 import { useMouse } from '@vueuse/core'
 import { useTheme } from 'vuetify'
 
@@ -13,6 +14,7 @@ const theme = useTheme()
 
 const heroElementsImg = useGenerateImageVariant(heroElementsImgLight, heroElementsImgDark)
 const heroDashboardImg = useGenerateImageVariant(heroDashboardImgLight, heroDashboardImgDark)
+const main3dImg = useGenerateImageVariant(main3dImage, main3dImage)
 
 const { x, y } = useMouse({ touch: false })
 
@@ -84,7 +86,7 @@ const translateMouse = computed(() => {
               data-allow-mismatch
             >
               <img
-                :src="heroDashboardImg"
+                :src="main3dImg"
                 alt="Hero Dashboard"
                 class="animation-img"
               >
@@ -222,14 +224,14 @@ section {
 
 .landing-hero-dark-bg {
   background-color: #25293c;
-  background-image: url("@images/front-pages/backgrounds/hero-bg.png");
+  background-image: url("@images/main-pages/backgrounds/hero-bg.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .landing-hero-light-bg {
-  background: url("@images/front-pages/backgrounds/hero-bg.png") center no-repeat, linear-gradient(138.18deg, #eae8fd 0%, #fce5e6 94.44%);
+  background: url("@images/main-pages/backgrounds/hero-bg.png") center no-repeat, linear-gradient(138.18deg, #eae8fd 0%, #fce5e6 94.44%);
   background-size: cover;
 }
 
