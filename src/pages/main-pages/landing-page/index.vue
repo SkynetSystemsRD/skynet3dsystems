@@ -3,11 +3,11 @@ import Banner from '@/views/main-pages/landing-page/banner.vue'
 import ContactUs from '@/views/main-pages/landing-page/contact-us.vue'
 import CustomersReview from '@/views/main-pages/landing-page/customers-review.vue'
 import FaqSection from '@/views/main-pages/landing-page/faq-section.vue'
-import Features from '@/views/main-pages/landing-page/features.vue'
-import HeroSection from '@/views/main-pages/landing-page/hero-section.vue'
+import Home from '@/views/main-pages/landing-page/home.vue'
 import OurTeam from '@/views/main-pages/landing-page/our-team.vue'
 import PricingPlans from '@/views/main-pages/landing-page/pricing-plans.vue'
 import ProductStats from '@/views/main-pages/landing-page/product-stats.vue'
+import Services from '@/views/main-pages/landing-page/services.vue'
 import Footer from '@/views/main-pages/main-page-footer.vue'
 import Navbar from '@/views/main-pages/main-page-navbar.vue'
 import { useConfigStore } from '@core/stores/config'
@@ -25,13 +25,13 @@ definePage({
 const activeSectionId = ref()
 
 const refHome = ref()
-const refFeatures = ref()
+const refServices = ref()
 const refTeam = ref()
 const refContact = ref()
 const refFaq = ref()
 
 useIntersectionObserver(
-  [refHome, refFeatures, refTeam, refContact, refFaq],
+  [refHome, refServices, refTeam, refContact, refFaq],
   ([{ isIntersecting, target }]) => {
     if (isIntersecting)
       activeSectionId.value = target.id
@@ -47,11 +47,11 @@ useIntersectionObserver(
     <Navbar :active-id="activeSectionId" />
 
     <!-- 👉 Hero Section  -->
-    <HeroSection ref="refHome" />
+    <Home ref="refHome" />
 
     <!-- 👉 Useful features  -->
     <div :style="{ 'background-color': 'rgb(var(--v-theme-surface))' }">
-      <Features ref="refFeatures" />
+      <Services ref="refServices" />
     </div>
 
     <!-- 👉 Customer Review -->

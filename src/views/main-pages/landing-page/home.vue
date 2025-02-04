@@ -34,7 +34,7 @@ const translateMouse = computed(() => {
 
 <template>
   <div
-    id="home"
+    id="inicio"
     :style="{ background: 'rgb(var(--v-theme-surface))' }"
   >
     <div id="landingHero">

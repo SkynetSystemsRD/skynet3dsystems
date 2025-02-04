@@ -6,7 +6,7 @@ import icon5 from '@images/svg/3d-printer5.svg'
 import icon6 from '@images/svg/3d-printer6.svg'
 import icon1 from '@images/svg/3d-printer8.svg'
 
-const featuresData = [
+const servicesData = [
   { title: 'Impresión 3D Personalizada', desc: 'Creamos modelos 3D únicos adaptados a tus ideas y necesidades.', icon: icon1 },
   { title: 'Prototipado Rápido', desc: 'Desarrolla prototipos funcionales en menos tiempo con alta precisión.', icon: icon2 },
   { title: 'Modelado 3D Profesional', desc: 'Diseños digitales detallados listos para impresión o simulación.', icon: icon3 },
@@ -17,8 +17,8 @@ const featuresData = [
 </script>
 
 <template>
-  <VContainer id="features">
-    <div class="feature-cards">
+  <VContainer id="services">
+    <div class="services-cards">
       <div class="headers d-flex justify-center flex-column align-center mb-12">
         <VChip
           label
@@ -42,7 +42,7 @@ const featuresData = [
       </div>
       <VRow>
         <VCol
-          v-for="(data, index) in featuresData"
+          v-for="(data, index) in servicesData"
           :key="index"
           cols="12"
           md="4"
@@ -73,13 +73,13 @@ const featuresData = [
 </template>
 
 <style lang="scss" scoped>
-.feature-cards {
+.services-cards {
   margin-block: 3.75rem;
 }
 
 .section-title::after {
   position: absolute;
-  background: url("../../../assets/images/front-pages/icons/section-title-icon.png") no-repeat left bottom;
+  background: url("../../../assets/images/main-pages/icons/section-title-icon.png") no-repeat left bottom;
   background-size: contain;
   block-size: 100%;
   content: "";
@@ -94,7 +94,7 @@ const featuresData = [
   line-height: 36px;
 }
 
-.feature {
+.services {
   .v-avatar {
     &.v-avatar--variant-outlined {
       border: 2px solid rgba(var(--v-theme-primary), 0.32);
