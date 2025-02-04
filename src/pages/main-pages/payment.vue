@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Footer from '@/views/front-pages/front-page-footer.vue'
-import Navbar from '@/views/front-pages/front-page-navbar.vue'
+import Footer from '@/views/main-pages/main-page-footer.vue'
+import Navbar from '@/views/main-pages/main-page-navbar.vue'
 
 import paypalDark from '@images/icons/payments/img/paypal-dark.png'
 import paypalLight from '@images/icons/payments/img/paypal-light.png'

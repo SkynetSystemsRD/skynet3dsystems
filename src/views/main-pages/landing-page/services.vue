@@ -17,7 +17,7 @@ const servicesData = [
 </script>
 
 <template>
-  <VContainer id="services">
+  <VContainer id="servicios">
     <div class="services-cards">
       <div class="headers d-flex justify-center flex-column align-center mb-12">
         <VChip

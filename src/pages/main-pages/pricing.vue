@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Footer from '@/views/front-pages/front-page-footer.vue'
-import Navbar from '@/views/front-pages/front-page-navbar.vue'
+import Footer from '@/views/main-pages/main-page-footer.vue'
+import Navbar from '@/views/main-pages/main-page-navbar.vue'
 import { useConfigStore } from '@core/stores/config'
 import laptopGirl from '@images/illustrations/laptop-girl.png'
 

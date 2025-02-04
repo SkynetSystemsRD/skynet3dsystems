@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Footer from '@/views/front-pages/front-page-footer.vue'
-import Navbar from '@/views/front-pages/front-page-navbar.vue'
+import Footer from '@/views/main-pages/main-page-footer.vue'
+import Navbar from '@/views/main-pages/main-page-navbar.vue'
 import AddressContent from '@/views/wizard-examples/checkout/Address.vue'
 import CartContent from '@/views/wizard-examples/checkout/Cart.vue'
 import ConfirmationContent from '@/views/wizard-examples/checkout/Confirmation.vue'

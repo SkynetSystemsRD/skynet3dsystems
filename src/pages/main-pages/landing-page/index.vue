@@ -49,7 +49,7 @@ useIntersectionObserver(
     <!-- 👉 Hero Section  -->
     <Home ref="refHome" />
 
-    <!-- 👉 Useful features  -->
+    <!-- 👉 Useful Services  -->
     <div :style="{ 'background-color': 'rgb(var(--v-theme-surface))' }">
       <Services ref="refServices" />
     </div>

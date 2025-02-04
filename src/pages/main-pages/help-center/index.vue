@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { HelpCenterAllCategoryArticles, HelpCenterArticlesOverview } from '@db/pages/help-center/types'
 
-import Footer from '@/views/front-pages/front-page-footer.vue'
-import Navbar from '@/views/front-pages/front-page-navbar.vue'
+import Footer from '@/views/main-pages/main-page-footer.vue'
+import Navbar from '@/views/main-pages/main-page-navbar.vue'
 
 import HelpCenterLandingArticlesOverview from '@/views/pages/help-center/HelpCenterLandingArticlesOverview.vue'
 import HelpCenterLandingFooter from '@/views/pages/help-center/HelpCenterLandingFooter.vue'
