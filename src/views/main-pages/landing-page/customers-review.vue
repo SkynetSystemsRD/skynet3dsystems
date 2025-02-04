@@ -33,86 +33,86 @@ const brandLogo5 = useGenerateImageVariant(logo5light, logo5dark)
 // Customer Review Data
 const reviewData = [
   {
-    desc: 'I\'ve never used a theme as versatile and flexible as Vuexy. It\'s my go to for building dashboard sites on almost any project.',
+    desc: 'El servicio de impresión 3D de Skynet 3D Systems superó mis expectativas. La precisión en los detalles es impresionante.',
     img: logo1,
     rating: 5,
-    name: 'Eugenia Moore',
-    position: 'Founder of Hubspot',
+    name: 'Luis Rodríguez',
+    position: 'Ingeniero en Santo Domingo',
     avatar: avatar1,
   },
   {
-    desc: 'This template is really clean & well documented. The docs are really easy to understand and it\'s always easy to find a screenshot from their website.',
+    desc: 'La calidad de las piezas impresas es excelente y la atención al cliente fue muy profesional. ¡Recomendado!',
     img: logo2,
     rating: 5,
-    name: 'Curtis Fletcher',
-    position: 'Design Lead at Dribbble',
+    name: 'María Gómez',
+    position: 'Diseñadora Industrial en Santiago',
     avatar: avatar2,
   },
   {
-    desc: 'This template is superior in so many ways. The code, the design, the regular updates, the support.. It\'s the whole package. Excellent Work.',
+    desc: 'Skynet 3D Systems me ayudó a materializar un prototipo complejo con gran precisión. Sin duda volveré a trabajar con ellos.',
     img: logo3,
     rating: 4,
-    name: 'Eugenia Moore',
-    position: 'CTO of Airbnb',
+    name: 'José Martínez',
+    position: 'Emprendedor en La Romana',
     avatar: avatar3,
   },
   {
-    desc: 'All the requirements for developers have been taken into consideration, so I\'m able to build any beautiful interface I want.',
+    desc: 'El proceso de cotización fue rápido y sencillo. La entrega de mis modelos 3D fue puntual y de alta calidad.',
     img: logo4,
     rating: 5,
-    name: 'Sara Smith',
-    position: 'Founder of Continental',
+    name: 'Ana Pérez',
+    position: 'Arquitecta en Punta Cana',
     avatar: avatar4,
   },
   {
-    desc: 'Vuexy is awesome, and I particularly enjoy knowing that if I get stuck on something, there is always a helpful community to assist me.',
+    desc: 'Excelente servicio al cliente. Siempre atentos a los detalles y abiertos a resolver cualquier duda sobre el proceso de impresión.',
     img: logo3,
     rating: 5,
-    name: 'Tommy haffman',
-    position: 'Founder of Levis',
+    name: 'Carlos Fernández',
+    position: 'Empresario en Puerto Plata',
     avatar: avatar5,
   },
   {
-    desc: 'I\'ve never used a theme as versatile and flexible as Vuexy. It\'s my go to for building dashboard sites on almost any project.',
+    desc: 'Gracias a Skynet 3D Systems, pude obtener piezas personalizadas con un acabado profesional. ¡Muy satisfecho!',
     img: logo1,
     rating: 5,
-    name: 'Eugenia Moore',
-    position: 'Founder of Hubspot',
+    name: 'Daniela Torres',
+    position: 'Estudiante de Ingeniería en Santo Domingo',
     avatar: avatar1,
   },
   {
-    desc: 'Vuexy is awesome, and I particularly enjoy knowing that if I get stuck on something, there is always a helpful community to assist me.',
+    desc: 'La variedad de materiales y tecnologías que ofrecen me permitió elegir la mejor opción para mi proyecto.',
     img: logo2,
     rating: 5,
-    name: 'Tommy haffman',
-    position: 'Founder of Levis',
+    name: 'Juan Castillo',
+    position: 'Técnico Mecánico en San Cristóbal',
     avatar: avatar2,
   },
   {
-    desc: 'This template is superior in so many ways. The code, the design, the regular updates, the support.. It\'s the whole package. Excellent Work.',
+    desc: 'Un servicio completo, desde el diseño hasta la impresión. La calidad final del producto fue impecable.',
     img: logo3,
     rating: 4,
-    name: 'Eugenia Moore',
-    position: 'CTO of Airbnb',
+    name: 'Gabriela Méndez',
+    position: 'Freelancer en Barahona',
     avatar: avatar3,
   },
   {
-    desc: 'All the requirements for developers have been taken into consideration, so I\'m able to build any beautiful interface I want.',
+    desc: 'Skynet 3D Systems ofrece un servicio rápido y confiable. La precisión en las dimensiones fue perfecta.',
     img: logo4,
     rating: 4,
-    name: 'Sara Smith',
-    position: 'Founder of Continental',
+    name: 'Roberto Jiménez',
+    position: 'Desarrollador de Productos en Higüey',
     avatar: avatar4,
   },
   {
-    desc: 'This template is really clean & well documented. The docs are really easy to understand and it\'s always easy to find a screenshot from their website.',
+    desc: 'Muy satisfecho con el soporte técnico y la calidad de las impresiones. Definitivamente seguiré trabajando con ellos.',
     img: logo2,
     rating: 5,
-    name: 'Curtis Fletcher',
-    position: 'Design Lead at Dribbble',
+    name: 'Paola Sánchez',
+    position: 'Diseñadora Gráfica en Bonao',
     avatar: avatar5,
   },
-]
+];
 
 const customerReviewSwiper = ref(null)
 
@@ -149,15 +149,15 @@ const slide = (dir: string) => {
                 class="mb-4"
                 size="small"
               >
-                Real Customers Reviews
+                Reseñas de clientes reales
               </VChip>
               <div class="position-relative mb-1 me-2">
                 <div class="section-title">
-                  What people say
+                  Que dicen los clientes
                 </div>
               </div>
               <p class="text-body-1 mb-12">
-                See what our customers have to say about their experience.
+                Vea lo que nuestros clientes tienen que decir sobre su experiencia.
               </p>
               <div class="position-relative">
                 <IconBtn
