@@ -86,7 +86,7 @@ const translateMouse = computed(() => {
               data-allow-mismatch
             >
               <img
-                :src="main3dImg"
+                :src="heroDashboardImg"
                 alt="Hero Dashboard"
                 class="animation-img"
               >
