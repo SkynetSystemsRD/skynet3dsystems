@@ -63,7 +63,7 @@ const translateMouse = computed(() => {
 
               <VBtn
                 :size="$vuetify.display.smAndUp ? 'large' : 'default' "
-                :to="{ name: 'main-pages-landing-page', hash: `#pricing-plan` }"
+                :to="{ name: 'main-pages-landing-page', hash: `#technologies` }"
                 :active="false"
               >
               Explora nuestros servicios
