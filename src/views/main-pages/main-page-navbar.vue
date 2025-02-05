@@ -339,7 +339,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
             prepend-icon="tabler-login"
             variant="elevated"
             color="primary"
-            href="http://localhost:5173/login"
+            href="http://localhost:5173/pages/authentication/login-v1"
             target="_blank"
             rel="noopener noreferrer"
           >
