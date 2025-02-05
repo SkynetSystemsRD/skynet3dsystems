@@ -67,6 +67,7 @@ const translateMouse = computed(() => {
                 :active="false"
               >
               Explora nuestros servicios
+              <!-- AL DAR CLICK A ESTE BOTON HACER UN SCROLLDOWN AUTOMATICO EN LA PARTE DE LOS SERVICIOS COMO SON IM0PRESION, ESCANEO Y CORTE LASER -->
               </VBtn>
             </div>
           </div>
