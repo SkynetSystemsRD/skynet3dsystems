@@ -1,32 +1,34 @@
 <script setup lang="ts">
-import boyWithLogo from '@images/main-pages/landing-page/faq-boy-with-logos.png';
+// import boyWithLogo from '@images/main-pages/landing-page/faq-boy-with-logos.png';
+import video from '@images/main-pages/landing-page/main-page-video1.mp4';
 
 const faqData = [
   {
-    question: 'Do you charge for each upgrade?',
-    answer: 'Lemon drops chocolate cake gummies carrot cake chupa chups muffin topping. Sesame snaps icing marzipan gummi bears macaroon dragée danish caramels powder. Bear claw dragée pastry topping soufflé. Wafer gummi bears marshmallow pastry pie.',
+    question: '¿Ofrecen servicios de escaneo 3D?',
+    answer: 'Sí, en Skynet 3D Systems ofrecemos servicios de escaneo 3D de alta precisión para piezas de diferentes tamaños, ideal para ingeniería inversa, prototipado y más.',
   },
   {
-    question: 'Do I need to purchase a license for each website?',
-    answer: 'Dessert ice cream donut oat cake jelly-o pie sugar plum cheesecake. Bear claw dragée oat cake dragée ice cream halvah tootsie roll. Danish cake oat cake pie macaroon tart donut gummies. Jelly beans candy canes carrot cake. Fruitcake chocolate chupa chups.',
+    question: '¿Pueden realizar impresiones 3D en diferentes materiales?',
+    answer: 'Ofrecemos impresiones en una variedad de materiales, incluyendo PLA, ABS, PETG y resina, adaptándonos a las necesidades específicas de cada proyecto.',
   },
   {
-    question: 'What is regular license?',
-    answer: 'Regular license can be used for end products that do not charge users for access or service(access is free and there will be no monthly subscription fee). Single regular license can be used for single end product and end product can be used by you or your client. If you want to sell end product to multiple clients then you will need to purchase separate license for each client. The same rule applies if you want to use the same end product on multiple domains(unique setup). For more info on regular license you can check official description.',
+    question: '¿Cómo solicito una cotización personalizada?',
+    answer: 'Puedes solicitar una cotización personalizada completando nuestro formulario en línea. Solo necesitas subir tu archivo 3D o describir tu proyecto y te responderemos rápidamente.',
   },
   {
-    question: 'What is extended license?',
-    answer: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis et aliquid quaerat possimus maxime! Mollitia reprehenderit neque repellat deleniti delectus architecto dolorum maxime, blanditiis earum ea, incidunt quam possimus cumque.',
+    question: '¿Ofrecen servicios de diseño 3D desde cero?',
+    answer: 'Sí, contamos con un equipo especializado en diseño 3D que puede crear modelos personalizados según tus especificaciones y requerimientos.',
   },
   {
-    question: 'Which license is applicable for SASS application?',
-    answer: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi molestias exercitationem ab cum nemo facere voluptates veritatis quia, eveniet veniam at et repudiandae mollitia ipsam quasi labore enim architecto non!',
+    question: '¿Cuál es el tiempo de entrega para una impresión 3D?',
+    answer: 'El tiempo de entrega depende del tamaño y la complejidad de la pieza. Generalmente, los proyectos pequeños se entregan en 2-3 días hábiles, mientras que los más grandes pueden tardar más.',
   },
 ]
+
 </script>
 
 <template>
-  <div id="faq">
+  <div id="preguntas">
     <VContainer>
       <!-- 👉 Header  -->
       <div class="faq-section">
@@ -37,18 +39,18 @@ const faqData = [
             size="small"
             class="mb-4"
           >
-            FAQ
+            Preguntas Frecuentes
           </VChip>
           <h4 class="d-flex align-center text-h4 mb-1 flex-wrap justify-center">
-            Frequently Asked
+            Preguntas Frecuentes
             <div class="position-relative ms-2">
               <div class="section-title">
-                questions
+                Skynet 3D Systems
               </div>
             </div>
           </h4>
           <p class="text-body-1 mb-0">
-            Browse through these FAQs to find answers to commonly asked questions.
+            Explora estas preguntas frecuentes para encontrar respuestas a dudas comunes sobre nuestros servicios 3D.
           </p>
         </div>
         <VRow>
@@ -57,11 +59,21 @@ const faqData = [
             md="5"
           >
             <div class="pt-10 d-flex align-center justify-center h-100">
-              <VImg
+              <!-- <VImg
                 :src="boyWithLogo"
                 height="330"
                 width="330"
-              />
+              /> -->
+
+              <video 
+                :src="video" 
+                height="330" 
+                width="330" 
+                autoplay 
+                muted 
+                loop 
+                playsinline
+              ></video>
             </div>
           </VCol>
           <VCol
@@ -89,6 +101,16 @@ const faqData = [
 </template>
 
 <style lang="scss" scoped>
+video {
+  overflow: hidden;
+  border: 4px solid #2a9d8f;
+  block-size: 300px; /* Amplificado el tamaño */
+  border-end-end-radius: 40px;
+  border-start-start-radius: 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 20%);
+  inline-size: 600px; /* Amplificado el tamaño */
+}
+
 .faq-section {
   margin-block: 5.25rem;
 }
