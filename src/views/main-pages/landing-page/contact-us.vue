@@ -17,18 +17,18 @@ const message = ref('')
           class="mb-4"
           size="small"
         >
-          Contact Us
+          Contáctanos
         </VChip>
         <h4 class="d-flex align-center text-h4 mb-1 flex-wrap justify-center">
           <div class="position-relative me-2">
             <div class="section-title">
-              let's work
+              Impulsando
             </div>
           </div>
-          together
+          tus ideas
         </h4>
         <p class="text-body-1 mb-0">
-          Any question or remark? just write us a message
+          ¿Necesitas servicios de impresión 3D, desarrollo de sistemas o cotizaciones personalizadas? Estamos aquí para ayudarte.
         </p>
       </div>
 
@@ -53,8 +53,9 @@ const message = ref('')
                   <div class="d-flex justify-space-between flex-wrap gap-y-4">
                     <div
                       v-for="(item, index) in [
-                        { title: 'Email', icon: 'tabler-mail', color: 'primary', value: 'example@gmail.com' },
-                        { title: 'Phone', icon: 'tabler-phone-call', color: 'success', value: '+1234 568 963' },
+                        { title: 'Correo Electrónico', icon: 'tabler-mail', color: 'primary', value: 'skynetsystemsrd@gmail.com' },
+                        { title: 'Teléfono', icon: 'tabler-phone-call', color: 'success', value: '+1 849 342 4322' },
+                        { title: 'Oficina', icon: 'tabler-map-pin', color: 'info', value: 'Calle Federico Velasquez #50, Mejoramiento Social, Santo Domingo' }
                       ]"
                       :key="index"
                       class="d-flex gap-x-3 align-center"
@@ -75,7 +76,7 @@ const message = ref('')
 
                       <div>
                         <div class="text-body-1">
-                          {{ item .title }}
+                          {{ item.title }}
                         </div>
                         <h6 class="text-h6">
                           {{ item.value }}
@@ -95,13 +96,13 @@ const message = ref('')
             <VCard>
               <VCardItem class="pb-0">
                 <h4 class="text-h4 mb-1">
-                  Send a message
+                  Enviar un mensaje
                 </h4>
               </VCardItem>
 
               <VCardText>
                 <p class="mb-6">
-                  If you would like to discuss anything related to payment, account, licensing, partnerships, or have pre-sales questions, you’re at the right place.
+                  Cuéntanos tu idea o proyecto. Skynet 3D Systems está listo para ofrecerte soluciones personalizadas en tecnología e impresión 3D.
                 </p>
                 <VForm @submit.prevent="() => {}">
                   <VRow>
@@ -111,8 +112,8 @@ const message = ref('')
                     >
                       <AppTextField
                         v-model="name"
-                        placeholder="John Doe"
-                        label="Full Name"
+                        placeholder="Juan Pérez"
+                        label="Nombre Completo"
                       />
                     </VCol>
 
@@ -122,23 +123,23 @@ const message = ref('')
                     >
                       <AppTextField
                         v-model="email"
-                        placeholder="johndoe@gmail.com"
-                        label="Email address"
+                        placeholder="juanperez@email.com"
+                        label="Correo Electrónico"
                       />
                     </VCol>
 
                     <VCol cols="12">
                       <AppTextarea
                         v-model="message"
-                        placeholder="Write a message"
+                        placeholder="Escribe tu mensaje aquí..."
                         rows="3"
-                        label="Message"
+                        label="Mensaje"
                       />
                     </VCol>
 
                     <VCol>
                       <VBtn type="submit">
-                        Send Inquiry
+                        Enviar Mensaje
                       </VBtn>
                     </VCol>
                   </VRow>

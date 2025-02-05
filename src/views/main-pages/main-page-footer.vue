@@ -61,15 +61,15 @@ const demoList = [
                 class="mb-6"
                 :class="$vuetify.theme.current.dark ? 'text-body-1' : 'text-white-variant'"
               >
-                Most Powerful & Comprehensive 🤩 Vuejs Admin Template with Elegant Material Design & Unique Layouts.
+                Impresión 3D Innovadora & Soluciones de Sistemas 🚀 para un Futuro más Inteligente.
               </div>
               <VForm class="subscribe-form d-flex align-center">
                 <AppTextField
-                  label="Subscribe to newsletter"
+                  label="Suscríbete por correo electronico"
                   placeholder="john@email.com"
                 />
                 <VBtn class="align-self-end rounded-s-0">
-                  Subscribe
+                  Suscríbete
                 </VBtn>
               </VForm>
             </div>
@@ -81,7 +81,7 @@ const demoList = [
             sm="4"
             xs="6"
           >
-            <div class="footer-links">
+            <!-- <div class="footer-links">
               <h6 class="footer-title text-h6 mb-6">
                 Demos
               </h6>
@@ -101,7 +101,7 @@ const demoList = [
                   </a>
                 </li>
               </ul>
-            </div>
+            </div> -->
           </VCol>
 
           <!-- 👉 Pages  -->
@@ -110,7 +110,7 @@ const demoList = [
             sm="4"
             xs="6"
           >
-            <div class="footer-links">
+            <!-- <div class="footer-links">
               <h6 class="footer-title text-h6 mb-6">
                 Pages
               </h6>
@@ -139,7 +139,7 @@ const demoList = [
                   </template>
                 </li>
               </ul>
-            </div>
+            </div> -->
           </VCol>
 
           <!-- 👉 Download App -->
@@ -150,7 +150,7 @@ const demoList = [
           >
             <div>
               <h6 class="footer-title text-h6 mb-6">
-                Download our app
+                Descarga nuestra app
               </h6>
 
               <div>
@@ -201,21 +201,21 @@ const demoList = [
 
             {{ new Date().getFullYear() }}
             <a
-              href="https://pixinvent.com/"
+              href="https://skynet3dsystems.com/"
               target="_blank"
               rel="noopener noreferrer"
               class="font-weight-bold ms-1 text-white"
-            >Pixinvent</a>,
-            Made With ❤️ for a better web.
+            >Skynet 3D Systems</a>,
+            Hecho con ❤️ para un futuro más innovador en impresión 3D.
           </div>
 
           <div class="d-flex gap-x-6">
             <template
               v-for="(item, index) in [
-                { title: 'github', icon: 'tabler-brand-github-filled', href: 'https://github.com/pixinvent' },
-                { title: 'facebook', icon: 'tabler-brand-facebook-filled', href: 'https://www.facebook.com/pixinvents/' },
-                { title: 'twitter', icon: 'tabler-brand-twitter-filled', href: 'https://twitter.com/pixinvents' },
-                { title: 'google', icon: 'tabler-brand-youtube-filled', href: 'https://www.youtube.com/channel/UClOcB3o1goJ293ri_Hxpklg' },
+                { title: 'github', icon: 'tabler-brand-github-filled', href: 'https://github.com/skynet3dsystems' },
+                { title: 'facebook', icon: 'tabler-brand-facebook-filled', href: 'https://www.facebook.com/skynet3dsystems/' },
+                { title: 'twitter', icon: 'tabler-brand-twitter-filled', href: 'https://twitter.com/skynet3dsystems' },
+                { title: 'google', icon: 'tabler-brand-youtube-filled', href: 'https://www.youtube.com/channel/youtube_user_token_code_here' },
               ]"
               :key="index"
             >
@@ -299,3 +299,4 @@ const demoList = [
   }
 }
 </style>
+
