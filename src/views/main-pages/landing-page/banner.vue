@@ -11,17 +11,17 @@ import ctaDashborad from '@images/main-pages/landing-page/cta-dashboard.png'
       <div class="d-flex justify-center justify-md-space-between flex-wrap gap-6 gap-x-10 position-relative pt-12">
         <div class="align-self-center">
           <div class="banner-title text-primary mb-1">
-            Ready to Get Started?
+            ¿Listo para tu próximo proyecto?
           </div>
           <h5 class="text-h5 text-medium-emphasis mb-8">
-            Start your project with a 14-day free trial
+            Impresión 3D, Escaneo 3D y Grabado/Corte Láser personalizados para ti
           </h5>
           <VBtn
             color="primary"
             :to="{ name: 'main-pages-payment' }"
             :size="$vuetify.display.smAndUp ? 'large' : 'default' "
           >
-            Get Started
+            Solicitar Cotización
           </VBtn>
         </div>
 

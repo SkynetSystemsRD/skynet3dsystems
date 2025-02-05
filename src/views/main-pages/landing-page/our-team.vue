@@ -5,15 +5,15 @@ import teamPerson3 from '@images/main-pages/landing-page/team-member-3.png';
 import teamPerson4 from '@images/main-pages/landing-page/team-member-4.png';
 
 const teamData = ref([
-  { name: 'Sophie Gilbert', position: 'Project Manager', image: teamPerson1, backgroundColor: 'rgba(144, 85, 253, 0.16)', borderColor: 'rgba(144, 85, 253,0.16)', isHover: false },
-  { name: 'Paul Miles', position: 'UI Designer', image: teamPerson2, backgroundColor: 'rgba(22, 177, 255, 0.16)', borderColor: 'rgba(22, 177, 255,0.16)', isHover: false },
-  { name: 'Nannie Ford', position: 'Development Lead', image: teamPerson3, backgroundColor: 'rgba(255, 76, 81, 0.16)', borderColor: 'rgba(255, 76, 81,0.16)', isHover: false },
-  { name: 'Chris Watkins', position: 'Marketing Manager', image: teamPerson4, backgroundColor: 'rgba(86, 202, 0, 0.16)', borderColor: 'rgba(86, 202, 0,0.16)', isHover: false },
+  { name: 'Laura Rodríguez', position: 'Especialista en Impresión 3D', image: teamPerson1, backgroundColor: 'rgba(144, 85, 253, 0.16)', borderColor: 'rgba(144, 85, 253,0.16)', isHover: false },
+  { name: 'Carlos Gómez', position: 'Técnico en Escaneo 3D', image: teamPerson2, backgroundColor: 'rgba(22, 177, 255, 0.16)', borderColor: 'rgba(22, 177, 255,0.16)', isHover: false },
+  { name: 'Ana Martínez', position: 'Diseñadora de Modelos 3D', image: teamPerson3, backgroundColor: 'rgba(255, 76, 81, 0.16)', borderColor: 'rgba(255, 76, 81,0.16)', isHover: false },
+  { name: 'José Castillo', position: 'Operador de Corte Láser', image: teamPerson4, backgroundColor: 'rgba(86, 202, 0, 0.16)', borderColor: 'rgba(86, 202, 0,0.16)', isHover: false },
 ])
 </script>
 
 <template>
-  <VContainer id="team">
+  <VContainer id="equipo">
     <div class="our-team pa-">
       <div class="headers d-flex justify-center flex-column align-center">
         <VChip
@@ -22,20 +22,20 @@ const teamData = ref([
           class="mb-4"
           size="small"
         >
-          Our Great Team
+          Nuestro Equipo
         </VChip>
 
         <h4 class="d-flex align-center text-h4 mb-1 flex-wrap justify-center">
           <div class="position-relative me-2">
             <div class="section-title">
-              Supported
+              Apoyado
             </div>
           </div>
-          by Real People
+          por profesionales reales
         </h4>
 
         <p class="text-center text-body-1 mb-0">
-          Who is behind these great-looking interfaces?
+          ¿Quién desarrolla estos asombrosos proyectos 3D?
         </p>
       </div>
 
