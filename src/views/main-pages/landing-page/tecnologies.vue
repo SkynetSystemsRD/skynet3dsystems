@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import paperPlane from '@images/main-pages/icons/paper-airplane.png'
-import plane from '@images/main-pages/icons/plane.png'
-import pricingPlanArrow from '@images/main-pages/icons/pricing-plans-arrow.png'
-import shuttleRocket from '@images/main-pages/icons/shuttle-rocket.png'
+import main_icon1 from '@images/main-pages/icons/main-icon1.png';
+import main_icon2 from '@images/main-pages/icons/main-icon2.png';
+import main_icon3 from '@images/main-pages/icons/main-icon3.png';
 
 const annualMonthlyPlanPriceToggler = ref(true)
 
@@ -10,58 +9,58 @@ const annualMonthlyPlanPriceToggler = ref(true)
 const technologies = [
 {
   title: 'Impresión 3D',
-  image: paperPlane, // Puedes cambiar esta imagen por la que prefieras para la impresión 3D
+  image: main_icon1,
   monthlyPrice: 19,
   yearlyPrice: 168,
   features: [
-    'Impresión de piezas personalizadas',
-    'Variedad de materiales (PLA, ABS, PETG, etc)',
-    'Resolución alta para detalles finos',
-    'Soporte de diferentes tamaños de piezas',
-    'Diseño personalizado por encargo',
-    'Entrega rápida',
+    'Impresiones personalizadas',
+    'Materiales variados',
+    'Alta resolución',
+    'Soporte para piezas',
+    'Diseño personalizado',
+    'Entrega rápida'
   ],
   supportType: 'Básico',
   supportMedium: 'Solo Email',
-  respondTime: 'Tiempo promedio: 24h',
-  current: false,
+  respondTime: 'Promedio: 24h',
+  current: false
 },
 {
   title: 'Escaneo 3D',
-  image: plane, // Cambia la imagen por una relacionada con el escaneo 3D
+  image: main_icon2,
   monthlyPrice: 29,
   yearlyPrice: 264,
   features: [
-    'Escaneo 3D de alta precisión',
-    'Escaneo de objetos de diferentes tamaños',
-    'Modelado en 3D a partir del escaneo',
-    'Formato de archivo compatible con impresión 3D',
-    'Mejoras en la calidad de los modelos escaneados',
-    'Reparación de mallas 3D',
+    'Escaneo preciso',
+    'Escaneo de varios tamaños',
+    'Modelado en 3D',
+    'Formato 3D estándar',
+    'Alta calidad',
+    'Reparación de mallas'
   ],
   supportType: 'Estándar',
   supportMedium: 'Email y Chat',
-  respondTime: 'Tiempo promedio: 6h',
-  current: true,
+  respondTime: 'Promedio: 6h',
+  current: true
 },
 {
   title: 'Grabado/Corte Láser',
-  image: shuttleRocket, // Cambia la imagen por una relacionada con el grabado/corte láser
+  image: main_icon3,
   monthlyPrice: 49,
   yearlyPrice: 444,
   features: [
-    'Grabado y corte láser de alta precisión',
-    'Grabado en materiales como madera, acrílico, metal y más',
+    'Grabado y corte',
+    'Materiales como metal',
     'Personalización de diseños',
-    'Corte de piezas en diferentes grosores',
-    'Diseños personalizados para grabado',
-    'Soporte para proyectos industriales y personales',
+    'Corte en grosor',
+    'Diseños grabados',
+    'Soporte personalizado'
   ],
   supportType: 'Exclusivo',
   supportMedium: 'Email, Chat y Google Meet',
   respondTime: 'Soporte en vivo',
-  current: false,
-},
+  current: false
+}
 ]
 </script>
 
@@ -77,28 +76,28 @@ const technologies = [
             class="mb-4"
             size="small"
           >
-            Pricing Plans
+            Variedad de Servicios
           </VChip>
           <h4 class="d-flex align-center text-h4 mb-1 flex-wrap justify-center">
             <div class="position-relative me-2">
               <div class="section-title">
-                Tailored design plans
+                Impresión 3D, Escaneo 3D
               </div>
             </div>
-            designed for you
+            y Soluciones de Grabado/Corte Láser
           </h4>
           <div class="text-center text-body-1">
             <p class="mb-0">
-              All plans include 40+ advanced tools and features to boost your product.
+              Descubre nuestra variedad de servicios para dar vida a tus ideas.
             </p>
             <p class="mb-0">
-              Choose the best plan to fit your needs.
+              Elige el servicio que mejor se adapte a las necesidades de tu proyecto.
             </p>
           </div>
         </div>
         <!-- 👉 Annual and monthly price toggler -->
         <div class="d-flex align-center justify-center mx-auto mt-6 mb-16">
-          <VLabel
+          <!-- <VLabel
             for="pricing-plan-toggle"
             class="me-3"
           >
@@ -126,74 +125,74 @@ const technologies = [
                 Save 25%
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         <VRow>
           <VCol
             v-for="(plan, index) in technologies"
             :key="index"
           >
-            <VCard :style="plan.current ? 'border:2px solid rgb(var(--v-theme-primary))' : ''">
-              <VCardText class="pa-8 pt-12">
-                <VImg
-                  :src="plan.image"
-                  width="88"
-                  height="88"
-                  class="mx-auto mb-8"
-                />
-                <h4 class="text-h4 text-center">
-                  {{ plan.title }}
-                </h4>
-                <div class="d-flex justify-center mb-8 position-relative">
-                  <div class="d-flex align-end">
-                    <div class="pricing-title text-primary me-1">
-                      ${{ annualMonthlyPlanPriceToggler ? Math.floor(plan.yearlyPrice) / 12 : plan.monthlyPrice }}
-                    </div>
-                    <span class="text-disabled mb-2">/mo</span>
+          <VCard :style="'border:2px solid rgb(var(--v-theme-primary))'">
+            <VCardText class="pa-8 pt-12">
+              <VImg
+                :src="plan.image"
+                width="88"
+                height="88"
+                class="mx-auto mb-8"
+              />
+              <h4 class="text-h4 text-center">
+                {{ plan.title }}
+              </h4>
+              <div class="d-flex justify-center mb-8 position-relative">
+                <!-- <div class="d-flex align-end">
+                  <div class="pricing-title text-primary me-1">
+                    ${{ annualMonthlyPlanPriceToggler ? Math.floor(plan.yearlyPrice) / 12 : plan.monthlyPrice }}
                   </div>
+                  <span class="text-disabled mb-2">/mo</span>
+                </div> -->
 
-                  <!-- 👉 Annual Price -->
-                  <span
-                    v-show="annualMonthlyPlanPriceToggler"
-                    class="annual-price-text position-absolute text-sm text-disabled"
-                  >
-                    {{ plan.yearlyPrice === 0 ? 'free' : `USD ${plan.yearlyPrice}/Year` }}
-                  </span>
-                </div>
-                <VList class="card-list">
-                  <VListItem
-                    v-for="(item, i) in plan.features"
-                    :key="i"
-                  >
-                    <template #prepend>
-                      <VAvatar
-                        size="16"
-                        :variant="!plan.current ? 'tonal' : 'elevated'"
-                        color="primary"
-                        class="me-3"
-                      >
-                        <VIcon
-                          icon="tabler-check"
-                          size="12"
-                          :color="!plan.current ? 'primary' : 'white'"
-                        />
-                      </VAvatar>
-                      <h6 class="text-h6">
-                        {{ item }}
-                      </h6>
-                    </template>
-                  </VListItem>
-                </VList>
-                <VBtn
-                  block
-                  :variant="plan.current ? 'elevated' : 'tonal'"
-                  class="mt-8"
-                  :to="{ name: 'main-pages-payment' }"
+                <!-- 👉 Annual Price -->
+                <!-- <span
+                  v-show="annualMonthlyPlanPriceToggler"
+                  class="annual-price-text position-absolute text-sm text-disabled"
                 >
-                  Get Started
-                </VBtn>
-              </VCardText>
-            </VCard>
+                  {{ plan.yearlyPrice === 0 ? 'free' : `USD ${plan.yearlyPrice}/Year` }}
+                </span> -->
+              </div>
+              <VList class="card-list">
+                <VListItem
+                  v-for="(item, i) in plan.features"
+                  :key="i"
+                >
+                  <template #prepend>
+                    <VAvatar
+                      size="16"
+                      variant="elevated"
+                      color="primary"
+                      class="me-3"
+                    >
+                      <VIcon
+                        icon="tabler-check"
+                        size="12"
+                        color="white"
+                      />
+                    </VAvatar>
+                    <h6 class="text-h6">
+                      {{ item }}
+                    </h6>
+                  </template>
+                </VListItem>
+              </VList>
+              <VBtn
+                block
+                variant="elevated"
+                class="mt-8"
+                :to="{ name: 'main-pages-payment' }"
+              >
+                Explorar
+              </VBtn>
+            </VCardText>
+          </VCard>
           </VCol>
         </VRow>
       </div>
