@@ -121,7 +121,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
               class="page-link"
               @click="isMenuOpen = !isMenuOpen"
             >
-              Pages <VIcon :icon="isMenuOpen ? 'tabler-chevron-up' : 'tabler-chevron-down'" />
+              Mas ... <VIcon :icon="isMenuOpen ? 'tabler-chevron-up' : 'tabler-chevron-down'" />
             </div>
 
             <div
@@ -244,7 +244,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
               :class="isPageActive || isMegaMenuOpen ? 'active-link' : ''"
               style="color: rgba(var(--v-theme-on-surface));"
             >
-              Pages
+              Mas ...
               <VIcon
                 icon="tabler-chevron-down"
                 size="16"
