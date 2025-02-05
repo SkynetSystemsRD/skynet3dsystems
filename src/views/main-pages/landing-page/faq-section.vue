@@ -65,7 +65,7 @@ const faqData = [
                 width="330"
               /> -->
 
-              <video 
+              <video  
                 :src="video" 
                 height="330" 
                 width="330" 

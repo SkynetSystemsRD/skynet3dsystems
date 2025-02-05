@@ -5,9 +5,9 @@ import CustomersReview from '@/views/main-pages/landing-page/customers-review.vu
 import FaqSection from '@/views/main-pages/landing-page/faq-section.vue'
 import Home from '@/views/main-pages/landing-page/home.vue'
 import OurTeam from '@/views/main-pages/landing-page/our-team.vue'
-import PricingPlans from '@/views/main-pages/landing-page/pricing-plans.vue'
 import ProductStats from '@/views/main-pages/landing-page/product-stats.vue'
 import Services from '@/views/main-pages/landing-page/services.vue'
+import Tecnologies from '@/views/main-pages/landing-page/tecnologies.vue'
 import Footer from '@/views/main-pages/main-page-footer.vue'
 import Navbar from '@/views/main-pages/main-page-navbar.vue'
 import { useConfigStore } from '@core/stores/config'
@@ -64,9 +64,9 @@ useIntersectionObserver(
       <OurTeam ref="refTeam" />
     </div>
 
-    <!-- 👉 Pricing Plans -->
+    <!-- 👉 Tecnologies -->
     <div :style="{ 'background-color': 'rgb(var(--v-theme-surface))' }">
-      <PricingPlans />
+      <Tecnologies />
     </div>
 
     <!-- 👉 Product stats -->

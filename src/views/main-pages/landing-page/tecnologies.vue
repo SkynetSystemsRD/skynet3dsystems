@@ -6,71 +6,69 @@ import shuttleRocket from '@images/main-pages/icons/shuttle-rocket.png'
 
 const annualMonthlyPlanPriceToggler = ref(true)
 
-const pricingPlans = [
-  {
-    title: 'Basic',
-    image: paperPlane,
-    monthlyPrice: 19,
-    yearlyPrice: 168,
-    features: [
-      'Timeline',
-      'Basic search',
-      'Live chat widget',
-      'Email marketing',
-      'Custom Forms',
-      'Traffic analytics',
-      'Basic Support',
-    ],
-    supportType: 'Basic',
-    supportMedium: 'Only Email',
-    respondTime: 'AVG. Time: 24h',
-    current: false,
-  },
-  {
-    title: 'Favourite',
-    image: plane,
-    monthlyPrice: 29,
-    yearlyPrice: 264,
-    features: [
-      'Everything in basic',
-      'Timeline with database',
-      'Advanced search',
-      'Marketing automation',
-      'Advanced chatbot',
-      'Campaign management',
-      'Collaboration tools',
-    ],
-    supportType: 'Standard',
-    supportMedium: 'Email & Chat',
-    respondTime: 'AVG. Time: 6h',
-    current: true,
-  },
-  {
-    title: 'Standard',
-    image: shuttleRocket,
-    monthlyPrice: 49,
-    yearlyPrice: 444,
-    features: [
-      'Campaign management',
-      'Timeline with database',
-      'Fuzzy search',
-      'A/B testing sanbox',
-      'Custom permissions',
-      'Social media automation',
-      'Sales automation tools',
-    ],
-    supportType: 'Exclusive',
-    supportMedium: 'Email, Chat & Google Meet',
-    respondTime: 'Live Support',
-    current: false,
-  },
+// REPARAR EL ESPACIO ENTRE CADA SERVICIO O TECHNOLOGIA
+const technologies = [
+{
+  title: 'Impresión 3D',
+  image: paperPlane, // Puedes cambiar esta imagen por la que prefieras para la impresión 3D
+  monthlyPrice: 19,
+  yearlyPrice: 168,
+  features: [
+    'Impresión de piezas personalizadas',
+    'Variedad de materiales (PLA, ABS, PETG, etc)',
+    'Resolución alta para detalles finos',
+    'Soporte de diferentes tamaños de piezas',
+    'Diseño personalizado por encargo',
+    'Entrega rápida',
+  ],
+  supportType: 'Básico',
+  supportMedium: 'Solo Email',
+  respondTime: 'Tiempo promedio: 24h',
+  current: false,
+},
+{
+  title: 'Escaneo 3D',
+  image: plane, // Cambia la imagen por una relacionada con el escaneo 3D
+  monthlyPrice: 29,
+  yearlyPrice: 264,
+  features: [
+    'Escaneo 3D de alta precisión',
+    'Escaneo de objetos de diferentes tamaños',
+    'Modelado en 3D a partir del escaneo',
+    'Formato de archivo compatible con impresión 3D',
+    'Mejoras en la calidad de los modelos escaneados',
+    'Reparación de mallas 3D',
+  ],
+  supportType: 'Estándar',
+  supportMedium: 'Email y Chat',
+  respondTime: 'Tiempo promedio: 6h',
+  current: true,
+},
+{
+  title: 'Grabado/Corte Láser',
+  image: shuttleRocket, // Cambia la imagen por una relacionada con el grabado/corte láser
+  monthlyPrice: 49,
+  yearlyPrice: 444,
+  features: [
+    'Grabado y corte láser de alta precisión',
+    'Grabado en materiales como madera, acrílico, metal y más',
+    'Personalización de diseños',
+    'Corte de piezas en diferentes grosores',
+    'Diseños personalizados para grabado',
+    'Soporte para proyectos industriales y personales',
+  ],
+  supportType: 'Exclusivo',
+  supportMedium: 'Email, Chat y Google Meet',
+  respondTime: 'Soporte en vivo',
+  current: false,
+},
 ]
 </script>
 
 <template>
-  <div id="pricing-plan">
+  <div id="technologies">
     <VContainer>
-      <div class="pricing-plans">
+      <div class="technologies">
         <!-- 👉 Headers  -->
         <div class="headers d-flex justify-center flex-column align-center flex-wrap">
           <VChip
@@ -132,7 +130,7 @@ const pricingPlans = [
         </div>
         <VRow>
           <VCol
-            v-for="(plan, index) in pricingPlans"
+            v-for="(plan, index) in technologies"
             :key="index"
           >
             <VCard :style="plan.current ? 'border:2px solid rgb(var(--v-theme-primary))' : ''">
