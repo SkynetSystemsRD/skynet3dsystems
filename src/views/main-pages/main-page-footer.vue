@@ -173,7 +173,7 @@ const demoList = [
                       />
                       <div class="d-flex flex-column justify-content-start">
                         <div :class="$vuetify.theme.current.dark ? 'text-body-2' : 'text-white-variant text-body-2'">
-                          Download on the
+                          Descargala desde
                         </div>
                         <h6
                           class="text-h6 text-start"

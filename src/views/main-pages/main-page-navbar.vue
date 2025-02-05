@@ -105,7 +105,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
       <div>
         <div class="d-flex flex-column gap-y-4 pa-4">
           <RouterLink
-            v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contact us']"
+            v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contáctanos ']"
             :key="index"
             :to="{ name: 'main-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
             class="nav-link font-weight-medium"
@@ -169,13 +169,13 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
             </div>
           </div>
 
-          <RouterLink
+          <!-- <RouterLink
             to="/"
             target="_blank"
             class="font-weight-medium nav-link"
           >
             Admin
-          </RouterLink>
+          </RouterLink> -->
         </div>
       </div>
 
@@ -229,7 +229,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
           <!-- landing page sections -->
           <div class="text-base align-center d-none d-md-flex">
             <RouterLink
-              v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contact us']"
+              v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contáctanos']"
               :key="index"
               :to="{ name: 'main-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
               class="nav-link font-weight-medium py-2 px-2 px-lg-4"
@@ -319,13 +319,13 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
               </VMenu>
             </span>
 
-            <RouterLink
+            <!-- <RouterLink
               to="/"
               target="_blank"
               class="font-weight-medium nav-link"
             >
               Admin
-            </RouterLink>
+            </RouterLink> -->
           </div>
         </div>
 
@@ -336,14 +336,14 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
 
           <VBtn
             v-if="$vuetify.display.lgAndUp"
-            prepend-icon="tabler-shopping-cart"
+            prepend-icon="tabler-login"
             variant="elevated"
             color="primary"
-            href="https://1.envato.market/vuexy_admin"
+            href="http://localhost:5173/login"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Purchase Now
+            Iniciar Sección
           </VBtn>
 
           <VBtn
