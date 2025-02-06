@@ -333,20 +333,23 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
 
         <div class="d-flex gap-x-4">
           <!-- <NavbarThemeSwitcher /> -->
-
-          <VBtn
-            v-if="$vuetify.display.lgAndUp"
-            prepend-icon="tabler-login"
-            variant="elevated"
-            color="primary"
-            href="http://localhost:5173/pages/authentication/login-v1"
-            target="_blank"
-            rel="noopener noreferrer"
+          <RouterLink
+            class="mega-menu-item"
+            to="/pages/authentication/login-v1"
           >
-            Iniciar Sección
-          </VBtn>
+            <VBtn
+              v-if="$vuetify.display.lgAndUp"
+              prepend-icon="tabler-login"
+              variant="elevated"
+              color="primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Iniciar Sección
+            </VBtn>
+          </RouterLink>
 
-          <VBtn
+          <!-- <VBtn
             v-else
             rounded
             icon
@@ -357,7 +360,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
             rel="noopener noreferrer"
           >
             <VIcon icon="tabler-shopping-cart" />
-          </VBtn>
+          </VBtn> -->
         </div>
       </VAppBar>
     </div>
