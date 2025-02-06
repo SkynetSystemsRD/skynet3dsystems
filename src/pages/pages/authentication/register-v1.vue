@@ -45,7 +45,7 @@ const isPasswordVisible = ref(false)
       >
         <VCardItem class="justify-center">
           <VCardTitle>
-            <RouterLink to="/">
+            <RouterLink to="/main-pages/landing-page">
               <div class="app-logo">
                 <VNodeRenderer :nodes="themeConfig.app.logo" />
                 <h1 class="app-logo-title">
@@ -58,10 +58,10 @@ const isPasswordVisible = ref(false)
 
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Adventure starts here 🚀
+            La aventura empieza aqui🏗️
           </h4>
           <p class="mb-0">
-            Make your app management easy and fun!
+            Regístrate y empieza a imprimir el futuro con Skynet 3D Systems 
           </p>
         </VCardText>
 
@@ -73,7 +73,7 @@ const isPasswordVisible = ref(false)
                 <AppTextField
                   v-model="form.username"
                   autofocus
-                  label="Username"
+                  label="Usuario"
                   placeholder="Johndoe"
                 />
               </VCol>
@@ -91,7 +91,7 @@ const isPasswordVisible = ref(false)
               <VCol cols="12">
                 <AppTextField
                   v-model="form.password"
-                  label="Password"
+                  label="Contraseña"
                   placeholder="············"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   autocomplete="password"
@@ -109,11 +109,11 @@ const isPasswordVisible = ref(false)
                     for="privacy-policy"
                     style="opacity: 1;"
                   >
-                    <span class="me-1 text-high-emphasis">I agree to</span>
+                    <span class="me-1 text-high-emphasis">Estoy de acuerdo con</span>
                     <a
                       href="javascript:void(0)"
                       class="text-primary"
-                    >privacy policy & terms</a>
+                    >Política de privacidad y términos</a>
                   </VLabel>
                 </div>
 
@@ -121,7 +121,7 @@ const isPasswordVisible = ref(false)
                   block
                   type="submit"
                 >
-                  Sign up
+                  Registrarse
                 </VBtn>
               </VCol>
 
@@ -130,12 +130,12 @@ const isPasswordVisible = ref(false)
                 cols="12"
                 class="text-center text-base"
               >
-                <span>Already have an account?</span>
+                <span>Ya tienes una cuenta?</span>
                 <RouterLink
                   class="text-primary ms-1"
                   :to="{ name: 'pages-authentication-login-v1' }"
                 >
-                  Sign in instead
+                  Iniciar sesión en su lugar
                 </RouterLink>
               </VCol>
 
