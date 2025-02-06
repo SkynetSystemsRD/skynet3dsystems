@@ -44,7 +44,7 @@ const isPasswordVisible = ref(false)
       >
         <VCardItem class="justify-center">
           <VCardTitle>
-            <RouterLink to="/pages/authentication/login-v1">
+            <RouterLink to="/main-pages/landing-page">
               <div class="app-logo">
                 <VNodeRenderer :nodes="themeConfig.app.logo" />
                 <h1 class="app-logo-title">
