@@ -39,7 +39,7 @@ const form = ref({
       >
         <VCardItem class="justify-center">
           <VCardTitle>
-            <RouterLink to="/">
+            <RouterLink to="/main-pages/landing-page">
               <div class="app-logo">
                 <VNodeRenderer :nodes="themeConfig.app.logo" />
                 <h1 class="app-logo-title">
