@@ -44,7 +44,7 @@ const isPasswordVisible = ref(false)
       >
         <VCardItem class="justify-center">
           <VCardTitle>
-            <RouterLink to="/">
+            <RouterLink to="/pages/authentication/login-v1">
               <div class="app-logo">
                 <VNodeRenderer :nodes="themeConfig.app.logo" />
                 <h1 class="app-logo-title">
@@ -57,10 +57,10 @@ const isPasswordVisible = ref(false)
 
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Welcome to <span class="text-capitalize">{{ themeConfig.app.title }}</span>! 👋🏻
+            <!-- Bienvenido a <span class="text-capitalize">{{ themeConfig.app.title }}</span>! 👋🏻 -->
           </h4>
           <p class="mb-0">
-            Please sign-in to your account and start the adventure
+            Inicia sesión en tu cuenta y comienza la aventura.
           </p>
         </VCardText>
 
@@ -72,7 +72,7 @@ const isPasswordVisible = ref(false)
                 <AppTextField
                   v-model="form.email"
                   autofocus
-                  label="Email or Username"
+                  label="Email o Usuario"
                   type="email"
                   placeholder="johndoe@email.com"
                 />
@@ -82,7 +82,7 @@ const isPasswordVisible = ref(false)
               <VCol cols="12">
                 <AppTextField
                   v-model="form.password"
-                  label="Password"
+                  label="Contraseña"
                   placeholder="············"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   autocomplete="password"
@@ -94,14 +94,14 @@ const isPasswordVisible = ref(false)
                 <div class="d-flex align-center justify-space-between flex-wrap my-6">
                   <VCheckbox
                     v-model="form.remember"
-                    label="Remember me"
+                    label="Recordarme"
                   />
 
                   <RouterLink
                     class="text-primary"
                     :to="{ name: 'pages-authentication-forgot-password-v1' }"
                   >
-                    Forgot Password?
+                    Has olvidado tu contraseña?
                   </RouterLink>
                 </div>
 
@@ -110,7 +110,7 @@ const isPasswordVisible = ref(false)
                   block
                   type="submit"
                 >
-                  Login
+                  Acceso
                 </VBtn>
               </VCol>
 
@@ -120,13 +120,13 @@ const isPasswordVisible = ref(false)
                 class="text-body-1 text-center"
               >
                 <span class="d-inline-block">
-                  New on our platform?
+                  Eres nuevo en la plataforma?
                 </span>
                 <RouterLink
                   class="text-primary ms-1 d-inline-block text-body-1"
                   :to="{ name: 'pages-authentication-register-v1' }"
                 >
-                  Create an account
+                  Crear una cuenta
                 </RouterLink>
               </VCol>
 
@@ -135,7 +135,7 @@ const isPasswordVisible = ref(false)
                 class="d-flex align-center"
               >
                 <VDivider />
-                <span class="mx-4 text-high-emphasis">or</span>
+                <span class="mx-4 text-high-emphasis">o también</span>
                 <VDivider />
               </VCol>
 
