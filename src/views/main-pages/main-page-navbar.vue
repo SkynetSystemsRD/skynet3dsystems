@@ -213,7 +213,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
         <div class="d-flex align-center">
           <VAppBarTitle class="me-6">
             <RouterLink
-              to="/"
+              to="/main-pages/landing-page"
               class="d-flex gap-x-4"
               :class="$vuetify.display.mdAndUp ? 'd-none' : 'd-block'"
             >
