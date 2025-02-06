@@ -60,7 +60,7 @@ const isPasswordVisible = ref(false)
             <!-- Bienvenido a <span class="text-capitalize">{{ themeConfig.app.title }}</span>! 👋🏻 -->
           </h4>
           <p class="mb-0">
-            Inicia sesión en tu cuenta y comienza la aventura.
+            Inicia sesión en tu cuenta y comienza la aventura. 👋🏻
           </p>
         </VCardText>
 
