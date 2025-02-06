@@ -39,7 +39,7 @@ const form = ref({
       >
         <VCardItem class="justify-center">
           <VCardTitle>
-            <RouterLink to="/">
+            <RouterLink to="/main-pages/landing-page">
               <div class="app-logo">
                 <VNodeRenderer :nodes="themeConfig.app.logo" />
                 <h1 class="app-logo-title">
@@ -52,10 +52,10 @@ const form = ref({
 
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Forgot Password? 🔒
+            Haz olvidado la contraseña? 🔒
           </h4>
           <p class="mb-0">
-            Enter your email and we'll send you instructions to reset your password
+            Ingresa tu email y te enviaremos instrucciones para restablecer tu contraseña
           </p>
         </VCardText>
 
@@ -79,7 +79,7 @@ const form = ref({
                   block
                   type="submit"
                 >
-                  Send Reset Link
+                  Enviar enlace de restablecimiento
                 </VBtn>
               </VCol>
 
@@ -94,7 +94,7 @@ const form = ref({
                     size="20"
                     class="me-1 flip-in-rtl"
                   />
-                  <span>Back to login</span>
+                  <span>Volver al inicio de sesión</span>
                 </RouterLink>
               </VCol>
             </VRow>
