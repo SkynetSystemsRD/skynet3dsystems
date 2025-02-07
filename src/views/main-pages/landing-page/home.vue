@@ -79,9 +79,8 @@ const translateMouse = computed(() => {
       <div class="position-relative">
         <div class="blank-section" />
         <div class="hero-animation-img position-absolute">
-          <!-- AL DARLE CLICK A ESTA IMAGEN SE DEBE DE REDIRECCIONAR A UNA PAGINA LA CUAL PRESENTE EN CUADROS LAS IMAGENES DE LOS PROECTO , MAS BIEN UNA LISTA DE ELLO, Y AL  DARLE CLICK A UNA ABRIR UN CUADRADO QUE PERMITA VER MAS A DETALLE DE ELLO -->
           <RouterLink
-            :to="{ name: 'apps-academy-my-course' }"
+            :to="{ name: 'apps-all-projects-projects' }"
             class="mega-menu-item"
           >
             <div

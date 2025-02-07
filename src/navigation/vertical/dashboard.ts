@@ -16,8 +16,8 @@ export default [
         to: 'dashboards-ecommerce',
       },
       {
-        title: 'Academy',
-        to: 'dashboards-academy',
+        title: 'Projects',
+        to: 'dashboards-projects',
       },
       {
         title: 'Logistics',
