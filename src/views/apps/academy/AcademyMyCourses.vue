@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import academyCourseIllustration2Dark from '@images/pages/app-academy-tutor-1.png';
+
 interface Props {
   searchQuery: string
 }
@@ -15,7 +17,7 @@ const label = ref('All Projects')
 
 // Simulación de los datos de la API
 const coursesData = {
-  total: 42,
+  total: 21,
   currentPage: 1,
   itemsPerPage: 10,
   courses: [
@@ -27,6 +29,7 @@ const coursesData = {
       label: "Programación",
       instructor: "Juan Pérez",
       rating: 4.8,
+      tutorImg: academyCourseIllustration2Dark
     },
     {
       id: 2,
@@ -36,6 +39,7 @@ const coursesData = {
       label: "Desarrollo Web",
       instructor: "María García",
       rating: 4.9,
+      tutorImg: academyCourseIllustration2Dark
     },
     {
       id: 3,
@@ -45,6 +49,7 @@ const coursesData = {
       label: "Programación",
       instructor: "Carlos Ramírez",
       rating: 4.7,
+      tutorImg: academyCourseIllustration2Dark
     },
     {
       id: 4,
@@ -54,6 +59,187 @@ const coursesData = {
       label: "Bases de Datos",
       instructor: "Laura Fernández",
       rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 5,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 6,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 7,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 8,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 9,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 10,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 11,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 12,
+      title: "Introducción a JavaScript",
+      description: "Aprende los fundamentos de JavaScript desde cero.",
+      completed: false,
+      label: "Programación",
+      instructor: "Juan Pérez",
+      rating: 4.8,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 12,
+      title: "React para Principiantes",
+      description: "Construye aplicaciones web modernas con React.",
+      completed: false,
+      label: "Desarrollo Web",
+      instructor: "María García",
+      rating: 4.9,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 13,
+      title: "Python desde Cero",
+      description: "Domina los conceptos básicos de Python.",
+      completed: true,
+      label: "Programación",
+      instructor: "Carlos Ramírez",
+      rating: 4.7,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 14,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 15,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 16,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 17,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 18,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 19,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 20,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
+    },
+    {
+      id: 21,
+      title: "Bases de Datos SQL",
+      description: "Aprende a manejar bases de datos con SQL.",
+      completed: false,
+      label: "Bases de Datos",
+      instructor: "Laura Fernández",
+      rating: 4.6,
+      tutorImg: academyCourseIllustration2Dark
     },
   ],
 };

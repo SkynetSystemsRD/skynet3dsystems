@@ -8,6 +8,7 @@ import guitarCoursePoster from '@images/pages/guitar-course-poster.png'
 import singingCoursePoster from '@images/pages/singing-course-poster.png'
 import { VideoPlayer } from '@videojs-player/vue'
 
+const academyCourseIllustration1 = useGenerateImageVariant(academyCourseIllustration2Light, academyCourseIllustration2Dark)
 const academyCourseIllustration2 = useGenerateImageVariant(academyCourseIllustration2Light, academyCourseIllustration2Dark)
 
 const searchQuery = ref('')
