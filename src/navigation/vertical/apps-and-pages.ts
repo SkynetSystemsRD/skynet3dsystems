@@ -45,11 +45,11 @@ export default [
     ],
   },
   {
-    title: 'Academy',
+    title: 'All projects',
     icon: { icon: 'tabler-school' },
     children: [
       { title: 'Dashboard', to: 'apps-academy-dashboard' },
-      { title: 'My Course', to: 'apps-academy-my-course' },
+      { title: 'projects', to: 'apps-all-projects-projects' },
       { title: 'Course Details', to: 'apps-academy-course-details' },
     ],
   },

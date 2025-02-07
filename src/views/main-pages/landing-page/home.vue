@@ -79,10 +79,9 @@ const translateMouse = computed(() => {
       <div class="position-relative">
         <div class="blank-section" />
         <div class="hero-animation-img position-absolute">
-          <!-- AL DARLE CLICK A ESTA IMAGEN SE DEBE DE REDIRECCIONAR A UNA PAGINA LA CUAL PRESENTE EN CUADROS LAS IMAGENES DE LOS PROECTO , MAS BIEN UNA LISTA DE ELLO, Y AL  DARLE CLICK A UNA ABRIR UN CUADRADO QUE PERMITA VER MAS A DETALLE DE ELLO -->
           <RouterLink
-            :to="{ name: 'dashboards-ecommerce' }"
-            target="_blank"
+            :to="{ name: 'apps-all-projects-projects' }"
+            class="mega-menu-item"
           >
             <div
               class="hero-dashboard-img position-relative"
@@ -109,6 +108,12 @@ const translateMouse = computed(() => {
 </template>
 
 <style lang="scss" scoped>
+.mega-menu-item {
+  &:hover {
+    color: rgb(var(--v-theme-primary)) !important;
+  }
+}
+
 .landing-hero {
   border-radius: 0 0 50px 50px;
   padding-block: 9.75rem 22rem;
