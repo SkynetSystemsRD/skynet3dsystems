@@ -81,7 +81,7 @@ const verticalNavAttrs = computed(() => {
       </VerticalNav>
     </component>
     <div class="layout-content-wrapper">
-      <header
+      <!-- <header
         class="layout-navbar"
         :class="[{ 'navbar-blur': configStore.isNavbarBlurEnabled }]"
       >
@@ -91,7 +91,7 @@ const verticalNavAttrs = computed(() => {
             :toggle-vertical-overlay-nav-active="toggleIsOverlayNavActive"
           />
         </div>
-      </header>
+      </header> -->
       <main class="layout-page-content">
         <div class="page-content-container">
           <slot />

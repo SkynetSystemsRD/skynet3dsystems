@@ -1,8 +1,8 @@
+import { paginateArray } from '@api-utils/paginateArray'
+import { db } from '@db/apps/academy/db'
 import is from '@sindresorhus/is'
 import { destr } from 'destr'
 import { HttpResponse, http } from 'msw'
-import { db } from '@db/apps/academy/db'
-import { paginateArray } from '@api-utils/paginateArray'
 
 export const handlerAppsAcademy = [
 
@@ -11,7 +11,7 @@ export const handlerAppsAcademy = [
     const url = new URL(request.url)
 
     const q = url.searchParams.get('q')
-    const label = url.searchParams.get('label') || 'All Courses'
+    const label = url.searchParams.get('label') || 'All Projects'
     const hideCompleted = url.searchParams.get('hideCompleted')
     const page = url.searchParams.get('page')
     const itemsPerPage = url.searchParams.get('itemsPerPage')
@@ -43,7 +43,7 @@ export const handlerAppsAcademy = [
                 || course.user.toLowerCase().includes(queryLowered)
         )
             && !((course.completedTasks === course.totalTasks) && hideCompletedLocal)
-            && (label !== 'All Courses' ? course.tags.toLocaleLowerCase() === label?.toLowerCase() : true)
+            && (label !== 'All Projects' ? course.tags.toLocaleLowerCase() === label?.toLowerCase() : true)
       )
     })
 
