@@ -171,6 +171,8 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
   display: flex;
   flex-direction: column;
   block-size: 100%;
+
+  // inline-size: variables.$layout-vertical-nav-width;
   inline-size: variables.$layout-vertical-nav-width;
   inset-block-start: 0;
   inset-inline-start: 0;
