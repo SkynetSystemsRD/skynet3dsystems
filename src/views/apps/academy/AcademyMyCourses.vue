@@ -22,8 +22,8 @@ const coursesData = ref({
   itemsPerPage: 10,
   courses: Array.from({ length: 21 }, (_, i) => ({
     id: i + 1,
-    title: `Curso ${i + 1}`,
-    description: "Descripción del curso.",
+    title: `Proyecto ${i + 1}`,
+    description: "Descripción del proyecto.",
     completed: i % 2 === 0,
     label: "Programación",
     instructor: "Instructor X",
@@ -50,10 +50,10 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
     <VCardText>
       <div class="d-flex justify-space-between align-center flex-wrap gap-4 mb-6">
         <div>
-          <h5 class="text-h5">My Courses</h5>
-          <div class="text-body-1">Total {{ totalCourse }} courses available</div>
+          <h5 class="text-h5">Proyectos de nuestros clientes ya realizados</h5>
+          <div class="text-body-1">{{ totalCourse }} proyectos</div>
         </div>
-        <VSwitch v-model="hideCompleted" label="Hide Completed" />
+        <!-- <VSwitch v-model="hideCompleted" label="Hide Completed" /> -->
       </div>
 
       <div v-if="paginatedCourses.length" class="mb-6">

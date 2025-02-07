@@ -26,11 +26,11 @@ const searchQuery = ref('')
             class="text-h4 text-center text-wrap mx-auto"
             :class="$vuetify.display.mdAndUp ? 'w-75' : 'w-100'"
           >
-            Education, talents, and career
-            opportunities. <span class="text-primary text-no-wrap"> All in one place.</span>
+            Servicios de fabricación digital
+            <span class="text-primary text-no-wrap"> con tecnología avanzada.</span>
           </h4>
           <p class="text-center text-wrap text-body-1 mx-auto mb-0">
-            Grow your skill with the most reliable online courses and certifications in marketing, information technology, programming, and data science.
+            Skynet 3D Systems ofrece servicios de impresión 3D de alta calidad, escaneo 3D preciso y grabado y corte láser con tecnología de vanguardia para proyectos personalizados.
           </p>
           <div class="d-flex justify-center align-center gap-4 flex-wrap">
             <div
@@ -39,7 +39,7 @@ const searchQuery = ref('')
             >
               <AppTextField
                 v-model="searchQuery"
-                placeholder="Find your course"
+                placeholder="Busca un proyecto"
               />
             </div>
             <VBtn
@@ -50,11 +50,11 @@ const searchQuery = ref('')
             />
           </div>
         </div>
-        <img
+        <!-- <img
           :src="academyCourseIllustration1"
           class="illustration1 d-none d-md-block flip-in-rtl"
           height="180"
-        >
+        > -->
         <img
           :src="academyCourseIllustration2"
           class="illustration2 d-none d-md-block"
