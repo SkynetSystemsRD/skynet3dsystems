@@ -28,7 +28,7 @@ const coursesData = ref({
     label: "Programación",
     instructor: "Instructor X",
     rating: (Math.random() * (5 - 4) + 4).toFixed(1),
-    tutorImg: academyCourseIllustration2Dark,
+    projectImg: academyCourseIllustration2Dark,
   })),
 });
 
@@ -58,15 +58,23 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
 
       <div v-if="paginatedCourses.length" class="mb-6">
         <VRow>
+          <!-- <RouterLink>
+
+          </RouterLink> -->
           <VCol v-for="course in paginatedCourses" :key="course.id" cols="12" md="4" sm="6">
-            <VCard flat border>
-              <VImg :src="course.tutorImg" class="cursor-pointer" />
+            <RouterLink
+              :to="{ name: 'apps-all-projects-projects' }"
+            >
+              <VCard flat border>
+              <VImg :src="course.projectImg" class="cursor-pointer" />
               <VCardText>
                 <h5 class="text-h5 mb-1">{{ course.title }}</h5>
                 <p>{{ course.description }}</p>
-                <VProgressLinear :model-value="course.completed ? 100 : 0" rounded color="primary" height="8" class="mb-4" />
+                <!-- SE PUEDE USAR EL PROGRESS BAR EN UN FUTURO -->
+                <!-- <VProgressLinear :model-value="course.completed ? 100 : 0" rounded color="primary" height="8" class="mb-4" /> -->
               </VCardText>
             </VCard>
+            </RouterLink>
           </VCol>
         </VRow>
       </div>
@@ -89,4 +97,11 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
     color: rgba(var(--v-theme-on-surface), var(--v-text-high-emphasis));
   }
 }
+
+.mega-menu-item {
+  &:hover {
+    color: rgb(var(--v-theme-primary)) !important;
+  }
+}
+
 </style>
