@@ -50,7 +50,7 @@ export default [
     children: [
       { title: 'Dashboard', to: 'apps-academy-dashboard' },
       { title: 'Projects', to: 'apps-all-projects-projects' },
-      { title: 'Project Details', to: 'apps-academy-project-details' },
+      { title: 'Project Details', to: 'apps-project-details' },
     ],
   },
   {
