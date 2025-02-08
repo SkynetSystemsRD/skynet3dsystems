@@ -24,6 +24,21 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'; /* PartiallyE
         </h1>
       </RouterLink>
       <VSpacer />
+      <RouterLink
+        class="mega-menu-item"
+        to="/pages/authentication/login-v1"
+      >
+        <VBtn
+          v-if="$vuetify.display.lgAndUp"
+          prepend-icon="tabler-login"
+          variant="elevated"
+          color="primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Iniciar Sección
+        </VBtn>
+      </RouterLink>
 
       <!-- <NavSearchBar trigger-btn-class="ms-lg-n3" />
 
@@ -50,3 +65,11 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'; /* PartiallyE
     <TheCustomizer />
   </HorizontalNavLayout>
 </template>
+
+<style lang="css" module>
+.mega-menu-item {
+  &:hover {
+    color: rgb(var(--v-theme-primary)) !important;
+  }
+}
+</style>

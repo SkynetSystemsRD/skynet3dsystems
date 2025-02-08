@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import AcademyMyCourses from '@/views/apps/academy/AcademyMyCourses.vue'
-import boyAppAcademy from '@images/illustrations/boy-app-academy.png'
-import girlAppAcademy from '@images/illustrations/girl-app-academy.png'
 import academyCourseIllustration2Dark from '@images/pages/academy-course-illustration2-dark.png'
 import academyCourseIllustration2Light from '@images/pages/academy-course-illustration2-light.png'
 import guitarCoursePoster from '@images/pages/guitar-course-poster.png'
@@ -65,7 +63,7 @@ const searchQuery = ref('')
 
     <AcademyMyCourses :search-query="searchQuery" />
 
-    <div class="mb-6">
+    <!-- <div class="mb-6">
       <VRow>
         <VCol
           v-for="{ title, btnText, color, description, image } in [
@@ -124,7 +122,7 @@ const searchQuery = ref('')
           </VCard>
         </VCol>
       </VRow>
-    </div>
+    </div> -->
 
     <VCard>
       <VCardText>
