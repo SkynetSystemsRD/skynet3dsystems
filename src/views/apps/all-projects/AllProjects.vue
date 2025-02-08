@@ -13,7 +13,7 @@ const page = ref(1);
 const sortBy = ref();
 const orderBy = ref();
 const hideCompleted = ref(true);
-const label = ref('All Courses');
+const label = ref('All Projects');
 
 // Simulación de los datos de la API
 const coursesData = ref({

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AcademyMyCourses from '@/views/apps/academy/AcademyMyCourses.vue'
+import AcademyMyCourses from '@/views/apps/all-projects/AllProjects.vue'
 import academyCourseIllustration2Dark from '@images/pages/academy-course-illustration2-dark.png'
 import academyCourseIllustration2Light from '@images/pages/academy-course-illustration2-light.png'
 import guitarCoursePoster from '@images/pages/guitar-course-poster.png'
@@ -139,17 +139,22 @@ const searchQuery = ref('')
                 color="primary"
               >
                 <VIcon
-                  icon="tabler-gift"
+                  icon="tabler-cube"
                   size="36"
                 />
               </VAvatar>
               <h4 class="text-h4 font-weight-medium">
-                Today's Free Courses
+                Nuestros Servicios
               </h4>
-              <p class="text-body-1 text-center mb-0">
-                We offers 284 Free Online courses from top tutors and companies to help you start or advance your career skills. Learn online for free and fast today!
+              <p class="text-body-1 text-center mt-2 px-4">
+                Skynet 3D Systems ofrece servicios de <strong>impresión 3D</strong>, <strong>escaneo 3D</strong> y <strong>grabado/corte láser</strong> con alta precisión y calidad.
               </p>
-              <VBtn>Get Premium Courses</VBtn>
+              <p class="text-body-1 text-center mb-2 px-4">
+                ¡Contáctanos y transforma tu visión en realidad! 🔧✨
+
+                #Impresión3D #CorteLáser #Escaneo3D
+              </p>
+              <VBtn>Solicitar Cotización</VBtn>
             </div>
           </VCol>
           <VCol
