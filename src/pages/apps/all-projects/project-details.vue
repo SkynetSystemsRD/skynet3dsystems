@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import main3dImage1 from '@images/projects/image-project1.png';
+import main3dImage2 from '@images/projects/image-project2.png';
+import main3dImage3 from '@images/projects/image-project3.png';
+import main3dImage4 from '@images/projects/image-project4.png';
+import main3dImage5 from '@images/projects/image-project5.png';
+import main3dImage6 from '@images/projects/image-project6.png';
+import { register } from 'swiper/element/bundle';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
@@ -9,9 +16,18 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import 'video.js/dist/video-js.css';
 import { onMounted, ref } from 'vue';
 
+let selectedIndex = 0;
+const panelStatus = ref(0);
+
+register();
+
 function getFileExtention(filename: string): string {
   const parts = filename.split('.');
   return parts.length > 1 ? parts[parts.length - 1] : '';  // Returns the extension or an empty string if no extension
+}
+
+function selectImage(index: number) {
+  selectedIndex = index;
 }
  
 interface modelInstructionsMovements {
@@ -30,6 +46,11 @@ interface xyz {
   z: number
 }
 
+interface image {
+  alt: string;
+  imagePath: string;
+}
+
 interface projectDetails {
   title: string;
   about: string;
@@ -43,6 +64,7 @@ interface projectDetails {
   time: string;
   instructions: modelInstructionsMovements[];
   description: string;
+  images: image[];
 }
 
 const projectDetails = ref<projectDetails>({
@@ -85,10 +107,17 @@ const projectDetails = ref<projectDetails>({
         }
       ]
     },
+  ],
+  images: [
+    { alt: "1", imagePath: main3dImage1 },
+    { alt: "2", imagePath: main3dImage2 },
+    { alt: "3", imagePath: main3dImage3 },
+    { alt: "4", imagePath: main3dImage4 },
+    { alt: "5", imagePath: main3dImage5 },
+    { alt: "6", imagePath: main3dImage6 },
+    // { alt: "8", imagePath: main3dImage2 },
   ]
 });
-
-const panelStatus = ref(0);
 
 onMounted(() => {
   const scene = new THREE.Scene();
@@ -117,13 +146,13 @@ onMounted(() => {
   scene.add(hlight);
 
   // Luz direccional ejes positivos
-  const directionalLight_z_up = new THREE.DirectionalLight(0xFFFFFF, 3);  // Luz más intensa desde arriba
+  const directionalLight_z_up = new THREE.DirectionalLight(0xFFFFFF, 4);  // Luz más intensa desde arriba
   directionalLight_z_up.position.set(5, 5, 5);  // Aseguramos que la luz venga de arriba
   directionalLight_z_up.castShadow = true;
   scene.add(directionalLight_z_up);
 
   // Luz direccional ejes negativos
-  const directionalLight_z_down = new THREE.DirectionalLight(0xFFFFFF, 2);  // Luz más intensa desde arriba
+  const directionalLight_z_down = new THREE.DirectionalLight(0xFFFFFF, 3);  // Luz más intensa desde arriba
   directionalLight_z_down.position.set(-5, -5, -5);  // Aseguramos que la luz venga de arriba
   directionalLight_z_down.castShadow = true;
   scene.add(directionalLight_z_down);
@@ -188,7 +217,6 @@ onMounted(() => {
     requestAnimationFrame(animate);
   }
 });
-
 </script>
 
 <template>
@@ -234,9 +262,49 @@ onMounted(() => {
             flat
             border
           >
-            <div class="px-2 pt-2">
-              <div id="model-viewer" class="w-100 rounded"></div>
-            </div>
+            <!-- <div class="px-2 pt-2">
+              <div id="model-viewer" class="w-100 rounded">
+              </div>
+            </div> -->
+            <swiper-container
+              class="mySwiper"
+              thumbs-swiper=".mySwiper2"
+              loop="true"
+              space-between="10"
+              navigation="true"
+              centered-slides="true"
+              events-prefix="swiper-"
+            >
+              <swiper-slide
+                v-for="swiperImg in projectDetails?.images"
+                :key="swiperImg.alt"
+              >
+                <VImg
+                  :src="swiperImg.imagePath"
+                  cover
+                  class="swiper-img1"
+                />
+              </swiper-slide>
+            </swiper-container>
+
+            <swiper-container
+              class="mySwiper2"
+              loop="true"
+              free-mode="true"
+              events-prefix="swiper-"
+              slides-per-view="4"
+            >
+              <swiper-slide
+                v-for="swiperImg in projectDetails?.images"
+                :key="swiperImg.alt"
+              >
+                <VImg
+                  :src="swiperImg.imagePath"
+                  cover
+                  class="swiper-img2"
+                />
+              </swiper-slide>
+            </swiper-container>
             <VCardText>
               <h5 class="text-h5 mb-4">
                 📌 Acerca del Proyecto
@@ -418,17 +486,6 @@ onMounted(() => {
   </VRow>
 </template>
 
-<style lang="scss" scoped>
-.course-content {
-  position: sticky;
-  inset-block: 4rem 0;
-}
-
-.card-list {
-  --v-card-list-gap: 16px;
-}
-</style>
-
 <style lang="scss">
 @use "@layouts/styles/mixins" as layoutsMixins;
 
@@ -491,6 +548,33 @@ body .v-layout .v-application__wrap {
         inline-size: 8px !important;
       }
     }
+  }
+
+  swiper-container {
+    background-color: #fff;
+  }
+
+  .mySwiper2 {
+    swiper-slide {
+      border: 5px solid black;
+      block-size: 50%;
+      inline-size: 25%;
+      opacity: 0.4;
+    }
+
+    .swiper-slide-thumb-active {
+      opacity: 1;
+    }
+  }
+
+  .swiper-img1 {
+    block-size: 350px;
+    inline-size: 795px;
+  }
+
+  .swiper-img2 {
+    block-size: 75px;
+    inline-size: 275px;
   }
 }
 </style>
