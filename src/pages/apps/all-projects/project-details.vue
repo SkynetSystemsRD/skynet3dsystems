@@ -66,108 +66,66 @@ const courseDetails = ref<CourseDetails>({
 const panelStatus = ref(0);
 
 onMounted(() => {
-  // const scene = new THREE.Scene();
-  // const camera = new THREE.PerspectiveCamera(75, 440 / 250, 0.1, 1000);
-  // const renderer = new THREE.WebGLRenderer();
-  // renderer.setSize(440, 250);
-  // document.getElementById('model-viewer')?.appendChild(renderer.domElement);
-
-  // // Carga del modelo STL
-  // const loader = new STLLoader();
-  // loader.load(
-  //   '/xyzCalibration_cube.stl',
-  //   (geometry) => {
-  //     console.log('STL loaded', geometry);
-
-  //     if (geometry) {
-  //       const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-  //       const mesh = new THREE.Mesh(geometry, material);
-  //       mesh.scale.set(0.01, 0.01, 0.01); // Ajusta la escala si es necesario
-  //       scene.add(mesh);
-  //     } else {
-  //       console.error('La geometría está vacía o no válida.');
-  //     }
-  //   },
-  //   (progress) => {
-  //     console.log('Cargando STL...', progress);
-  //   },
-  //   (error) => {
-  //     console.error('Error al cargar STL:', error);
-  //   }
-  // );
-
-  // // Iluminación
-  // const light = new THREE.DirectionalLight(0xffffff, 1);
-  // light.position.set(5, 5, 5).normalize(); // Posición de la luz
-  // scene.add(light);
-
-
-  // const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-  // directionalLight.position.set(5, 5, 5).normalize();
-  // scene.add(directionalLight);
-
-  // // Cámara y renderizado
-  // camera.position.z = 1;  // Aleja la cámara
-  // function animate() {
-  //   requestAnimationFrame(animate);
-  //   renderer.render(scene, camera);
-  // }
-  // animate();
-
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdddddd);
 
+  // Configuración de la cámara
   const camera = new THREE.PerspectiveCamera(
     75, 440 / 250, 0.1, 1000
   );
   camera.rotation.y = 45 / 180 * Math.PI;
-  camera.position.x = 800;
-  camera.position.y = 100;
-  camera.position.x = 1000;
+  camera.position.set(0, 1, 5);  // Coloca la cámara a una distancia razonable
+  camera.fov = 75;  // Ajuste del FOV para un zoom moderado
 
-  const renderer = new THREE.WebGLRenderer({antialias:true});
-  renderer.setSize(440, 250);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(795, 350);
   document.getElementById('model-viewer')?.appendChild(renderer.domElement);
 
+  // Controles de órbita
   const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true; // Enable damping for smoother movements
-  controls.dampingFactor = 0.25; // Set damping factor
-  controls.screenSpacePanning = false; // Disable panning if desired
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.25;
+  controls.screenSpacePanning = false;
 
-  const hlight = new THREE.AmbientLight(0x404040, 100);
+  // Luz ambiental para iluminación general suave
+  const hlight = new THREE.AmbientLight(0x404040, 1);  // Luz más suave
   scene.add(hlight);
 
-  const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 100);
-  directionalLight.position.set(0, 1, 0);
+  // Luz direccional desde arriba
+  const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.5);  // Luz más intensa desde arriba
+  directionalLight.position.set(0, 5, 0);  // Aseguramos que la luz venga de arriba
   directionalLight.castShadow = true;
   scene.add(directionalLight);
 
-  const light1 = new THREE.PointLight(0xC4C4C4, 10);
-  light1.position.set(0, 300, 500);
+  // Otras luces direccionales para darle más luz al modelo, pero menos intensidad
+  const light1 = new THREE.PointLight(0xC4C4C4, 2);
+  light1.position.set(0, 500, 0);  // Luz desde arriba
   scene.add(light1);
 
-  const light2 = new THREE.PointLight(0xC4C4C4, 10);
-  light2.position.set(500, 100, 0);
+  const light2 = new THREE.PointLight(0xC4C4C4, 2);
+  light2.position.set(500, 100, 0);  // Luz desde la parte delantera
   scene.add(light2);
 
-  const light3 = new THREE.PointLight(0xC4C4C4, 10);
-  light3.position.set(0, 100, -500);
+  const light3 = new THREE.PointLight(0xC4C4C4, 2);
+  light3.position.set(0, 100, -500);  // Luz desde la parte trasera
   scene.add(light3);
 
-  const light4 = new THREE.PointLight(0xC4C4C4, 10);
-  light4.position.set(-50, 300, 0);
+  const light4 = new THREE.PointLight(0xC4C4C4, 2);
+  light4.position.set(-50, 300, 0);  // Luz desde un ángulo
   scene.add(light4);
 
+  // Carga el modelo
   const loader = new GLTFLoader();
   loader.load('/xyzCalibration_cube.gltf', (gltf) => {
     const model = gltf.scene.children[0];
-    model.scale.set(0.5, 0.5, 0.5);
+    model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+    model.position.set(0, 0, 0);  // Centra el modelo
     scene.add(gltf.scene);
-    // renderer.render(scene, camera);
     animate();
   });
 
-  function animate(){
+  // Función de animación
+  function animate() {
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
