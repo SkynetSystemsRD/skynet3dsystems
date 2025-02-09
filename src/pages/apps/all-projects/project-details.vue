@@ -5,14 +5,16 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import 'video.js/dist/video-js.css';
 import { onMounted, ref } from 'vue';
  
-interface CourseContent {
+interface modelInstructions {
   title: string;
-  status: string;
-  time: string;
-  topics: { title: string; time: string; isCompleted: boolean }[];
+  topics: { 
+    title: string; 
+    instruction: string; 
+    icon: string;  // You can use icon names or paths to icon images
+  }[];
 }
 
-interface CourseDetails {
+interface projectDetails {
   title: string;
   about: string;
   instructor: string;
@@ -24,11 +26,11 @@ interface CourseDetails {
   isCaptions: boolean;
   language: string;
   length: string;
-  content: CourseContent[];
+  instructions: modelInstructions[];
   description: string;
 }
 
-const courseDetails = ref<CourseDetails>({
+const projectDetails = ref<projectDetails>({
   title: "UI/UX Basic Fundamentals",
   about: "This course covers the fundamentals of UI/UX design, including wireframing, prototyping, and usability testing.",
   instructor: "John Doe",
@@ -41,25 +43,27 @@ const courseDetails = ref<CourseDetails>({
   language: "English",
   length: "4h 30m",
   description: "<p>Learn the essential skills for UI/UX design. This course is perfect for beginners and covers all the fundamental principles.</p>",
-  content: [
+  instructions: [
     {
-      title: "Introduction to UI/UX",
-      status: "Completed",
-      time: "30m",
+      title: "Manipulación del Modelo 3D",
       topics: [
-        { title: "What is UI/UX?", time: "10m", isCompleted: true },
-        { title: "Importance of UX", time: "20m", isCompleted: true }
+        { 
+          title: "Rotar el Modelo", 
+          instruction: "Mantén presionado el botón izquierdo del ratón\ny mueve el ratón para rotar el modelo.",
+          icon: "tabler-rotate"
+        },
+        { 
+          title: "Acercar/Lejar el Modelo", 
+          instruction: "Usa la rueda del ratón para acercar\n o alejar el modelo.",
+          icon: "tabler-zoom"
+        },
+        { 
+          title: "Mover el Modelo", 
+          instruction: "Mantén presionado el botón derecho del ratón\n y arrastra para mover el modelo.",
+          icon: "tabler-mouse"
+        }
       ]
     },
-    {
-      title: "Wireframing Basics",
-      status: "In Progress",
-      time: "45m",
-      topics: [
-        { title: "Tools for Wireframing", time: "15m", isCompleted: false },
-        { title: "Best Practices", time: "30m", isCompleted: false }
-      ]
-    }
   ]
 });
 
@@ -74,7 +78,7 @@ onMounted(() => {
     75, 440 / 250, 0.1, 1000
   );
   camera.rotation.y = 45 / 180 * Math.PI;
-  camera.position.set(0, 1, 5);  // Coloca la cámara a una distancia razonable
+  camera.position.set(18, 14, 5);  // Ajusta la posición de la cámara para un buen ángulo de visión
   camera.fov = 75;  // Ajuste del FOV para un zoom moderado
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -91,28 +95,17 @@ onMounted(() => {
   const hlight = new THREE.AmbientLight(0x404040, 1);  // Luz más suave
   scene.add(hlight);
 
-  // Luz direccional desde arriba
-  const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.5);  // Luz más intensa desde arriba
-  directionalLight.position.set(0, 5, 0);  // Aseguramos que la luz venga de arriba
-  directionalLight.castShadow = true;
-  scene.add(directionalLight);
+  // Luz direccional ejes positivos
+  const directionalLight_z_up = new THREE.DirectionalLight(0xFFFFFF, 3);  // Luz más intensa desde arriba
+  directionalLight_z_up.position.set(5, 5, 5);  // Aseguramos que la luz venga de arriba
+  directionalLight_z_up.castShadow = true;
+  scene.add(directionalLight_z_up);
 
-  // Otras luces direccionales para darle más luz al modelo, pero menos intensidad
-  const light1 = new THREE.PointLight(0xC4C4C4, 2);
-  light1.position.set(0, 500, 0);  // Luz desde arriba
-  scene.add(light1);
-
-  const light2 = new THREE.PointLight(0xC4C4C4, 2);
-  light2.position.set(500, 100, 0);  // Luz desde la parte delantera
-  scene.add(light2);
-
-  const light3 = new THREE.PointLight(0xC4C4C4, 2);
-  light3.position.set(0, 100, -500);  // Luz desde la parte trasera
-  scene.add(light3);
-
-  const light4 = new THREE.PointLight(0xC4C4C4, 2);
-  light4.position.set(-50, 300, 0);  // Luz desde un ángulo
-  scene.add(light4);
+  // Luz direccional ejes negativos
+  const directionalLight_z_down = new THREE.DirectionalLight(0xFFFFFF, 2);  // Luz más intensa desde arriba
+  directionalLight_z_down.position.set(-5, -5, -5);  // Aseguramos que la luz venga de arriba
+  directionalLight_z_down.castShadow = true;
+  scene.add(directionalLight_z_down);
 
   // Carga el modelo
   const loader = new GLTFLoader();
@@ -128,6 +121,9 @@ onMounted(() => {
   function animate() {
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
+    // console.log("x:", camera.position.x);
+    // console.log("y:", camera.position.y);
+    // console.log("z:", camera.position.z);
   }
 });
 </script>
@@ -145,7 +141,7 @@ onMounted(() => {
         >
           <template #subtitle>
             <div class="text-body-1">
-              Prof. <span class="text-h6 d-inline-block">{{ courseDetails?.instructor }}</span>
+              Prof. <span class="text-h6 d-inline-block">{{ projectDetails?.instructor }}</span>
             </div>
           </template>
           <template #append>
@@ -183,7 +179,7 @@ onMounted(() => {
                 About this course
               </h5>
               <p class="text-body-1">
-                {{ courseDetails?.about }}
+                {{ projectDetails?.about }}
               </p>
               <VDivider class="my-6" />
 
@@ -200,7 +196,7 @@ onMounted(() => {
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Skill Level: {{ courseDetails?.skillLevel }}</VListItemTitle>
+                      <VListItemTitle>Skill Level: {{ projectDetails?.skillLevel }}</VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
@@ -209,7 +205,7 @@ onMounted(() => {
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Students: {{ courseDetails?.totalStudents }}</VListItemTitle>
+                      <VListItemTitle>Students: {{ projectDetails?.totalStudents }}</VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
@@ -218,7 +214,7 @@ onMounted(() => {
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Languages: {{ courseDetails?.language }}</VListItemTitle>
+                      <VListItemTitle>Languages: {{ projectDetails?.language }}</VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
@@ -227,7 +223,7 @@ onMounted(() => {
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Captions: {{ courseDetails?.isCaptions }}</VListItemTitle>
+                      <VListItemTitle>Captions: {{ projectDetails?.isCaptions }}</VListItemTitle>
                     </VListItem>
                   </VList>
                 </div>
@@ -241,7 +237,7 @@ onMounted(() => {
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Lectures: {{ courseDetails?.totalLectures }}</VListItemTitle>
+                      <VListItemTitle>Lectures: {{ projectDetails?.totalLectures }}</VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
@@ -250,7 +246,7 @@ onMounted(() => {
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Video: {{ courseDetails?.length }}</VListItemTitle>
+                      <VListItemTitle>Video: {{ projectDetails?.length }}</VListItemTitle>
                     </VListItem>
                   </VList>
                 </div>
@@ -261,7 +257,7 @@ onMounted(() => {
                 Description
               </h5>
               <!-- eslint-disable-next-line vue/no-v-html -->
-              <div v-html="courseDetails?.description" />
+              <div v-html="projectDetails?.description" />
 
               <VDivider class="my-6" />
 
@@ -270,15 +266,15 @@ onMounted(() => {
               </h5>
               <div class="d-flex align-center gap-x-4">
                 <VAvatar
-                  :image="courseDetails?.instructorAvatar"
+                  :image="projectDetails?.instructorAvatar"
                   size="38"
                 />
                 <div>
                   <h6 class="text-h6 mb-1">
-                    {{ courseDetails?.instructor }}
+                    {{ projectDetails?.instructor }}
                   </h6>
                   <div class="text-body-2">
-                    {{ courseDetails?.instructorPosition }}
+                    {{ projectDetails?.instructorPosition }}
                   </div>
                 </div>
               </div>
@@ -299,7 +295,7 @@ onMounted(() => {
           class="expansion-panels-width-border"
         >
           <template
-            v-for="(section, index) in courseDetails?.content"
+            v-for="(section, index) in projectDetails?.instructions"
             :key="index"
           >
             <VExpansionPanel
@@ -312,10 +308,7 @@ onMounted(() => {
                 <div>
                   <h5 class="text-h5 mb-1">
                     {{ section.title }}
-                  </h5>
-                  <div class="text-medium-emphasis font-weight-normal">
-                    {{ section.status }} | {{ section.time }}
-                  </div>
+                  </h5> 
                 </div>
               </template>
               <template #text>
@@ -325,18 +318,22 @@ onMounted(() => {
                     :key="id"
                     class="py-4"
                   >
-                    <template #prepend>
+                    <!-- <template #prepend>
                       <VCheckbox
                         :model-value="topic.isCompleted"
                         class="me-1"
                       />
-                    </template>
+                    </template> -->
                     <VListItemTitle class="text-high-emphasis font-weight-medium">
-                      {{ id + 1 }} . {{ topic.title }}
+                      {{ id + 1 }} . {{ topic.title }} 
+                      <VIcon
+                        size="24"
+                        :icon="topic.icon"
+                      />
                     </VListItemTitle>
                     <VListItemSubtitle>
                       <div class="text-body-2">
-                        {{ topic.time }}
+                        {{ topic.instruction }}
                       </div>
                     </VListItemSubtitle>
                   </VListItem>
