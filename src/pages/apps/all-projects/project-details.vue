@@ -4,12 +4,18 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import 'video.js/dist/video-js.css';
 import { onMounted, ref } from 'vue';
+
+function getFileExtension(filename: string): string {
+  const parts = filename.split('.');
+  return parts.length > 1 ? parts[parts.length - 1] : '';  // Returns the extension or an empty string if no extension
+}
  
-interface modelInstructions {
+interface modelInstructionsMovements {
   title: string;
   topics: { 
     title: string; 
-    instruction: string; 
+    instruction1: string; 
+    instruction2: string; 
     icon: string;  // You can use icon names or paths to icon images
   }[];
 }
@@ -17,7 +23,8 @@ interface modelInstructions {
 interface projectDetails {
   title: string;
   about: string;
-  instructor: string;
+  client: string;
+  fileExtention: string;
   instructorAvatar: string;
   instructorPosition: string;
   skillLevel: string;
@@ -26,14 +33,15 @@ interface projectDetails {
   isCaptions: boolean;
   language: string;
   length: string;
-  instructions: modelInstructions[];
+  instructions: modelInstructionsMovements[];
   description: string;
 }
 
 const projectDetails = ref<projectDetails>({
-  title: "UI/UX Basic Fundamentals",
+  title: "Modelo 3D Cubo XYZ Test",
   about: "This course covers the fundamentals of UI/UX design, including wireframing, prototyping, and usability testing.",
-  instructor: "John Doe",
+  client: "John Doe",
+  fileExtention: getFileExtension('/xyzCalibration_cube.gltf'),
   instructorAvatar: "https://via.placeholder.com/150",
   instructorPosition: "Senior UI/UX Designer",
   skillLevel: "Beginner",
@@ -49,17 +57,20 @@ const projectDetails = ref<projectDetails>({
       topics: [
         { 
           title: "Rotar el Modelo", 
-          instruction: "Mantén presionado el botón izquierdo del ratón\ny mueve el ratón para rotar el modelo.",
+          instruction1: "Mantén presionado el botón izquierdo del ratón y mueve el ratón ",
+          instruction2: "y mueve el ratón para rotar el modelo.",
           icon: "tabler-rotate"
         },
         { 
           title: "Acercar/Lejar el Modelo", 
-          instruction: "Usa la rueda del ratón para acercar\n o alejar el modelo.",
+          instruction1: "Usa la rueda del ratón para acercar o alejar el modelo.",
+          instruction2: "",
           icon: "tabler-zoom"
         },
         { 
           title: "Mover el Modelo", 
-          instruction: "Mantén presionado el botón derecho del ratón\n y arrastra para mover el modelo.",
+          instruction1: "Mantén presionado el botón derecho del ratón y arrastra para ",
+          instruction2: "mover el modelo.",
           icon: "tabler-mouse"
         }
       ]
@@ -136,12 +147,12 @@ onMounted(() => {
     >
       <VCard>
         <VCardItem
-          title="UI/UX Basic Fundamentals"
+          :title="projectDetails.title"
           class="pb-6"
         >
           <template #subtitle>
             <div class="text-body-1">
-              Prof. <span class="text-h6 d-inline-block">{{ projectDetails?.instructor }}</span>
+              Cliente <span class="text-h6 d-inline-block">{{ projectDetails?.client }}</span>
             </div>
           </template>
           <template #append>
@@ -151,9 +162,9 @@ onMounted(() => {
                 color="error"
                 size="small"
               >
-                UI/UX
+                Formato del Modelo: {{ projectDetails.fileExtention }}
               </VChip>
-              <VIcon
+              <!-- <VIcon
                 size="24"
                 class="cursor-pointer"
                 icon="tabler-share"
@@ -162,7 +173,7 @@ onMounted(() => {
                 size="24"
                 class="cursor-pointer"
                 icon="tabler-bookmarks"
-              />
+              /> -->
             </div>
           </template>
         </VCardItem>
@@ -176,7 +187,7 @@ onMounted(() => {
             </div>
             <VCardText>
               <h5 class="text-h5 mb-4">
-                About this course
+                Acerca del projecto
               </h5>
               <p class="text-body-1">
                 {{ projectDetails?.about }}
@@ -246,7 +257,7 @@ onMounted(() => {
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Video: {{ projectDetails?.length }}</VListItemTitle>
+                      <VListItemTitle>Tiempo Impresión: {{ projectDetails?.length }}</VListItemTitle>
                     </VListItem>
                   </VList>
                 </div>
@@ -333,7 +344,12 @@ onMounted(() => {
                     </VListItemTitle>
                     <VListItemSubtitle>
                       <div class="text-body-2">
-                        {{ topic.instruction }}
+                        {{ topic.instruction1 }}
+                      </div>
+                    </VListItemSubtitle>
+                    <VListItemSubtitle>
+                      <div class="text-body-2">
+                        {{ topic.instruction2 }}
                       </div>
                     </VListItemSubtitle>
                   </VListItem>
