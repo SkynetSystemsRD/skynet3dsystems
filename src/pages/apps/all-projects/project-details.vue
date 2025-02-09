@@ -27,8 +27,8 @@ interface projectDetails {
   fileExtention: string;
   instructorAvatar: string;
   instructorPosition: string;
-  skillLevel: string;
-  totalLectures: number;
+  materials: string;
+  totalPrints: number;
   totalStudents: number;
   isCaptions: boolean;
   language: string;
@@ -39,13 +39,13 @@ interface projectDetails {
 
 const projectDetails = ref<projectDetails>({
   title: "Modelo 3D Cubo XYZ Test",
-  about: "This course covers the fundamentals of UI/UX design, including wireframing, prototyping, and usability testing.",
+  about: "Este proyecto muestra un Cubo XYZ en formato GLTF, utilizado para calibrar y verificar la orientación de los ejes en entornos 3D. Permite analizar la alineación, escala y rotación del modelo en un visor interactivo.",
   client: "John Doe",
   fileExtention: getFileExtension('/xyzCalibration_cube.gltf'),
   instructorAvatar: "https://via.placeholder.com/150",
   instructorPosition: "Senior UI/UX Designer",
-  skillLevel: "Beginner",
-  totalLectures: 20,
+  materials: "PLA, ABS, PETG, Resina, etc.",
+  totalPrints: 56,
   totalStudents: 1200,
   isCaptions: true,
   language: "English",
@@ -187,7 +187,7 @@ onMounted(() => {
             </div>
             <VCardText>
               <h5 class="text-h5 mb-4">
-                Acerca del projecto
+                📌 Acerca del Proyecto
               </h5>
               <p class="text-body-1">
                 {{ projectDetails?.about }}
@@ -195,7 +195,7 @@ onMounted(() => {
               <VDivider class="my-6" />
 
               <h5 class="text-h5 mb-4">
-                By the numbers
+                Propiedades del Projecto
               </h5>
               <div class="d-flex gap-x-12 gap-y-5 flex-wrap">
                 <div>
@@ -203,11 +203,11 @@ onMounted(() => {
                     <VListItem>
                       <template #prepend>
                         <VIcon
-                          icon="tabler-check"
+                          icon="tabler-atom"
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Skill Level: {{ projectDetails?.skillLevel }}</VListItemTitle>
+                      <VListItemTitle>Materiales: {{ projectDetails?.materials }}</VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
@@ -244,11 +244,11 @@ onMounted(() => {
                     <VListItem>
                       <template #prepend>
                         <VIcon
-                          icon="tabler-video"
+                          icon="tabler-number"
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Lectures: {{ projectDetails?.totalLectures }}</VListItemTitle>
+                      <VListItemTitle>Numero de impresiones: {{ projectDetails?.totalPrints }}</VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
