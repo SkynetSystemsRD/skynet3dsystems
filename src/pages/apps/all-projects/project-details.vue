@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+
 import 'video.js/dist/video-js.css';
 import { onMounted, ref } from 'vue';
 
-function getFileExtension(filename: string): string {
+function getFileExtention(filename: string): string {
   const parts = filename.split('.');
   return parts.length > 1 ? parts[parts.length - 1] : '';  // Returns the extension or an empty string if no extension
 }
@@ -31,14 +35,12 @@ interface projectDetails {
   about: string;
   client: string;
   fileExtention: string;
-  instructorAvatar: string;
-  instructorPosition: string;
+  filePath: string;
   materials: string;
   totalPrints: number;
   dimentions: xyz;
-  isCaptions: boolean;
   weight: number;
-  length: string;
+  time: string;
   instructions: modelInstructionsMovements[];
   description: string;
 }
@@ -47,9 +49,8 @@ const projectDetails = ref<projectDetails>({
   title: "Modelo 3D Cubo XYZ Test",
   about: "Este proyecto muestra un Cubo XYZ en formato GLTF, utilizado para calibrar y verificar la orientación de los ejes en entornos 3D. Permite analizar la alineación, escala y rotación del modelo en un visor interactivo.",
   client: "John Doe",
-  fileExtention: getFileExtension('/xyzCalibration_cube.gltf'),
-  instructorAvatar: "https://via.placeholder.com/150",
-  instructorPosition: "Senior UI/UX Designer",
+  fileExtention: getFileExtention('/xyzCalibration_cube.gltf'),
+  filePath: '/xyzCalibration_cube.gltf',
   materials: "PLA, ABS, PETG, Resina, etc.",
   totalPrints: 56,
   dimentions: {
@@ -57,10 +58,9 @@ const projectDetails = ref<projectDetails>({
       y: 42,
       z: 42
     },
-  isCaptions: true,
   weight: 250,
-  length: "4h 30m",
-  description: "Aprende las habilidades esenciales para visualizar y manipular modelos 3D. Este visor interactivo es ideal para principiantes y cubre los principios fundamentales de exploración y calibración en un entorno tridimensional.",
+  time: "4h 30m",
+  description: "Este proyecto presenta un Cubo XYZ en formato GLTF, diseñado para la calibración y verificación de los ejes en entornos 3D. Facilita la evaluación de la alineación, escala y rotación del modelo mediante un visor interactivo, asegurando una correcta orientación en el espacio tridimensional.",
   instructions: [
     {
       title: "Manipulación del Modelo 3D",
@@ -128,25 +128,67 @@ onMounted(() => {
   directionalLight_z_down.castShadow = true;
   scene.add(directionalLight_z_down);
 
-  // Carga el modelo
-  const loader = new GLTFLoader();
-  loader.load('/xyzCalibration_cube.gltf', (gltf) => {
-    const model = gltf.scene.children[0];
-    model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-    model.position.set(0, 0, 0);  // Centra el modelo
-    scene.add(gltf.scene);
-    animate();
-  });
+  // Cargar el modelo con la extensión correspondiente
+  const filePath = '/xyzCalibration_cube'; // Cambia este path para cargar el archivo deseado (sin extensión)
+
+  let loader;
+
+  switch (projectDetails?.value.fileExtention) {
+    case 'glb':
+    case 'gltf':
+      loader = new GLTFLoader();
+      loader.load(`${projectDetails?.value.filePath}`, (gltf) => {
+        const model = gltf.scene.children[0];
+        model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+        model.position.set(0, 0, 0);  // Centra el modelo
+        scene.add(gltf.scene);
+        animate();
+      });
+      break;
+
+    case 'obj':
+      loader = new OBJLoader();
+      loader.load(`${projectDetails?.value.filePath}`, (obj) => {
+        obj.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+        obj.position.set(0, 0, 0);  // Centra el modelo
+        scene.add(obj);
+        animate();
+      });
+      break;
+
+    case 'fbx':
+      loader = new FBXLoader();
+      loader.load(`${projectDetails?.value.filePath}`, (fbx) => {
+        fbx.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+        fbx.position.set(0, 0, 0);  // Centra el modelo
+        scene.add(fbx);
+        animate();
+      });
+      break;
+
+    case 'stl':
+      loader = new STLLoader();
+      loader.load(`${projectDetails?.value.filePath}`, (geometry) => {
+        const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+        mesh.position.set(0, 0, 0);  // Centra el modelo
+        scene.add(mesh);
+        animate();
+      });
+      break;
+
+    default:
+      console.error('Unsupported model format');
+  }
 
   // Función de animación
   function animate() {
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
-    // console.log("x:", camera.position.x);
-    // console.log("y:", camera.position.y);
-    // console.log("z:", camera.position.z);
   }
 });
+
 </script>
 
 <template>
@@ -241,15 +283,14 @@ onMounted(() => {
                           : projectDetails.weight + ' G' }}
                       </VListItemTitle>
                     </VListItem>
-                    <VListItem>
+                    <!-- <VListItem>
                       <template #prepend>
                         <VIcon
                           icon="tabler-file"
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Captions: {{ projectDetails?.isCaptions }}</VListItemTitle>
-                    </VListItem>
+                    </VListItem> -->
                   </VList>
                 </div>
 
@@ -271,7 +312,7 @@ onMounted(() => {
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Tiempo Impresión: {{ projectDetails?.length }}</VListItemTitle>
+                      <VListItemTitle>Tiempo Impresión: {{ projectDetails?.time }}</VListItemTitle>
                     </VListItem>
                   </VList>
                 </div>
