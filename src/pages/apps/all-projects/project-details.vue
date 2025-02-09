@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import cube_logo from '@images/3d-cube-logo.svg';
 import main3dImage1 from '@images/projects/image-project1.png';
 import main3dImage2 from '@images/projects/image-project2.png';
 import main3dImage3 from '@images/projects/image-project3.png';
@@ -16,18 +17,19 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import 'video.js/dist/video-js.css';
 import { onMounted, ref } from 'vue';
 
-let selectedIndex = 0;
+let selectedElement = ref('')
 const panelStatus = ref(0);
 
 register();
 
+const onSlideChange = (event: string) => {
+  console.log("event: ", event)
+  // selectedElement.value = event.detail[0].activeIndex; // Captura el slide activo
+};
+
 function getFileExtention(filename: string): string {
   const parts = filename.split('.');
   return parts.length > 1 ? parts[parts.length - 1] : '';  // Returns the extension or an empty string if no extension
-}
-
-function selectImage(index: number) {
-  selectedIndex = index;
 }
  
 interface modelInstructionsMovements {
@@ -49,6 +51,7 @@ interface xyz {
 interface image {
   alt: string;
   imagePath: string;
+  fileExtention: string;
 }
 
 interface projectDetails {
@@ -109,13 +112,13 @@ const projectDetails = ref<projectDetails>({
     },
   ],
   images: [
-    { alt: "1", imagePath: main3dImage1 },
-    { alt: "2", imagePath: main3dImage2 },
-    { alt: "3", imagePath: main3dImage3 },
-    { alt: "4", imagePath: main3dImage4 },
-    { alt: "5", imagePath: main3dImage5 },
-    { alt: "6", imagePath: main3dImage6 },
-    // { alt: "8", imagePath: main3dImage2 },
+    { alt: "1", imagePath: main3dImage1, fileExtention: "png" },
+    { alt: "2", imagePath: main3dImage2, fileExtention: "png" },
+    { alt: "3", imagePath: main3dImage3, fileExtention: "png" },
+    { alt: "4", imagePath: main3dImage4, fileExtention: "png" },
+    { alt: "5", imagePath: main3dImage5, fileExtention: "png" },
+    { alt: "6", imagePath: main3dImage6, fileExtention: "png" },
+    { alt: "8", imagePath: cube_logo, fileExtention: "svg" },
   ]
 });
 
@@ -293,16 +296,29 @@ onMounted(() => {
               free-mode="true"
               events-prefix="swiper-"
               slides-per-view="4"
+              @slideChange="onSlideChange"
             >
               <swiper-slide
-                v-for="swiperImg in projectDetails?.images"
-                :key="swiperImg.alt"
+              v-for="(swiperImg) in projectDetails?.images"
+              :key="swiperImg.alt"
+              :class="{ active: swiperImg.fileExtention === selectedElement }"
               >
                 <VImg
+                  v-if="swiperImg.fileExtention === 'png'"
                   :src="swiperImg.imagePath"
                   cover
                   class="swiper-img2"
                 />
+
+                <!-- SVG Logo -->
+                <svg v-if="swiperImg.fileExtention === 'svg'" class="swiper-svg2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="17.46" height="11.97"
+                  version="1.1" id="Capa_1" viewBox="0 0 58 58" xml:space="preserve">
+                  <g>
+                    <polygon style="fill: #26b99a;" points="29,58 3,45 3,13 29,26  " />
+                    <polygon style="fill: #556080;" points="29,58 55,45 55,13 29,26  " />
+                    <polygon style="fill: #434c6d;" points="3,13 28,0 55,13 29,26  " />
+                  </g>
+                </svg>
               </swiper-slide>
             </swiper-container>
             <VCardText>
@@ -556,7 +572,7 @@ body .v-layout .v-application__wrap {
 
   .mySwiper2 {
     swiper-slide {
-      border: 5px solid black;
+      border: 5px solid whitesmoke;
       block-size: 50%;
       inline-size: 25%;
       opacity: 0.4;
@@ -568,13 +584,19 @@ body .v-layout .v-application__wrap {
   }
 
   .swiper-img1 {
-    block-size: 350px;
+    block-size: 360px;
     inline-size: 795px;
   }
 
   .swiper-img2 {
     block-size: 75px;
     inline-size: 275px;
+  }
+
+  .swiper-svg2 {
+    block-size: 70px;
+    inline-size: 270px;
+    margin-inline-start: -30px; /* Mueve 20px a la izquierda */
   }
 }
 </style>
