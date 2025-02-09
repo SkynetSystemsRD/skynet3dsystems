@@ -20,6 +20,12 @@ interface modelInstructionsMovements {
   }[];
 }
 
+interface xyz {
+  x: number,
+  y: number,
+  z: number
+}
+
 interface projectDetails {
   title: string;
   about: string;
@@ -29,9 +35,9 @@ interface projectDetails {
   instructorPosition: string;
   materials: string;
   totalPrints: number;
-  totalStudents: number;
+  dimentions: xyz;
   isCaptions: boolean;
-  language: string;
+  weight: number;
   length: string;
   instructions: modelInstructionsMovements[];
   description: string;
@@ -46,11 +52,15 @@ const projectDetails = ref<projectDetails>({
   instructorPosition: "Senior UI/UX Designer",
   materials: "PLA, ABS, PETG, Resina, etc.",
   totalPrints: 56,
-  totalStudents: 1200,
+  dimentions: {
+      x: 42,
+      y: 42,
+      z: 42
+    },
   isCaptions: true,
-  language: "English",
+  weight: 250,
   length: "4h 30m",
-  description: "<p>Learn the essential skills for UI/UX design. This course is perfect for beginners and covers all the fundamental principles.</p>",
+  description: "Aprende las habilidades esenciales para visualizar y manipular modelos 3D. Este visor interactivo es ideal para principiantes y cubre los principios fundamentales de exploración y calibración en un entorno tridimensional.",
   instructions: [
     {
       title: "Manipulación del Modelo 3D",
@@ -212,20 +222,24 @@ onMounted(() => {
                     <VListItem>
                       <template #prepend>
                         <VIcon
-                          icon="tabler-users"
+                          icon="tabler-cube"
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Students: {{ projectDetails?.totalStudents }}</VListItemTitle>
+                      <VListItemTitle>Dimensiones: Altura: {{ projectDetails?.dimentions.z }}mm, Ancho: {{ projectDetails?.dimentions.x }}mm, Profundidad: {{ projectDetails?.dimentions.y }}mm</VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
                         <VIcon
-                          icon="tabler-world"
+                          icon="tabler-weight"
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Languages: {{ projectDetails?.language }}</VListItemTitle>
+                      <VListItemTitle>
+                        Peso: {{ projectDetails?.weight >= 1000 
+                          ? (projectDetails.weight / 1000).toFixed(2) + ' KG' 
+                          : projectDetails.weight + ' G' }}
+                      </VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
@@ -265,15 +279,15 @@ onMounted(() => {
               <VDivider class="my-6" />
 
               <h5 class="text-h5 mb-4">
-                Description
+                📌 Descripción
               </h5>
               <!-- eslint-disable-next-line vue/no-v-html -->
               <div v-html="projectDetails?.description" />
 
-              <VDivider class="my-6" />
+              <!-- <VDivider class="my-6" />
 
               <h5 class="text-h5 mb-4">
-                Instructor
+                Client
               </h5>
               <div class="d-flex align-center gap-x-4">
                 <VAvatar
@@ -282,13 +296,13 @@ onMounted(() => {
                 />
                 <div>
                   <h6 class="text-h6 mb-1">
-                    {{ projectDetails?.instructor }}
+                    {{ projectDetails?.client }}
                   </h6>
                   <div class="text-body-2">
                     {{ projectDetails?.instructorPosition }}
                   </div>
                 </div>
-              </div>
+              </div> -->
             </VCardText>
           </VCard>
         </VCardText>
