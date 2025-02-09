@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import AcademyMyCourses from '@/views/apps/academy/AcademyMyCourses.vue'
-import boyAppAcademy from '@images/illustrations/boy-app-academy.png'
-import girlAppAcademy from '@images/illustrations/girl-app-academy.png'
+import AcademyMyCourses from '@/views/apps/all-projects/AllProjects.vue'
+import poster1 from '@images/main-pages/landing-page/3d-poster1.png'
+import poster2 from '@images/main-pages/landing-page/3d-poster2.png'
+import video1 from '@images/main-pages/landing-page/all-project-video1.mp4'
+import video2 from '@images/main-pages/landing-page/all-project-video2.mp4'
 import academyCourseIllustration2Dark from '@images/pages/academy-course-illustration2-dark.png'
 import academyCourseIllustration2Light from '@images/pages/academy-course-illustration2-light.png'
-import guitarCoursePoster from '@images/pages/guitar-course-poster.png'
-import singingCoursePoster from '@images/pages/singing-course-poster.png'
 import { VideoPlayer } from '@videojs-player/vue'
 
 const academyCourseIllustration1 = useGenerateImageVariant(academyCourseIllustration2Light, academyCourseIllustration2Dark)
@@ -65,7 +65,7 @@ const searchQuery = ref('')
 
     <AcademyMyCourses :search-query="searchQuery" />
 
-    <div class="mb-6">
+    <!-- <div class="mb-6">
       <VRow>
         <VCol
           v-for="{ title, btnText, color, description, image } in [
@@ -124,7 +124,7 @@ const searchQuery = ref('')
           </VCard>
         </VCol>
       </VRow>
-    </div>
+    </div> -->
 
     <VCard>
       <VCardText>
@@ -141,17 +141,22 @@ const searchQuery = ref('')
                 color="primary"
               >
                 <VIcon
-                  icon="tabler-gift"
+                  icon="tabler-cube"
                   size="36"
                 />
               </VAvatar>
               <h4 class="text-h4 font-weight-medium">
-                Today's Free Courses
+                Nuestros Servicios y mas...
               </h4>
-              <p class="text-body-1 text-center mb-0">
-                We offers 284 Free Online courses from top tutors and companies to help you start or advance your career skills. Learn online for free and fast today!
+              <p class="text-body-1 text-center mt-2 px-4">
+                Skynet 3D Systems ofrece servicios de <strong>impresión 3D</strong>, <strong>escaneo 3D</strong> y <strong>grabado/corte láser</strong> con alta precisión y calidad.
               </p>
-              <VBtn>Get Premium Courses</VBtn>
+              <p class="text-body-1 text-center mb-2 px-4">
+                ¡Contáctanos y transforma tu visión en realidad! 🔧✨
+
+                #Impresión3D #CorteLáser #Escaneo3D
+              </p>
+              <VBtn>Solicitar Cotización</VBtn>
             </div>
           </VCol>
           <VCol
@@ -165,8 +170,8 @@ const searchQuery = ref('')
             >
               <div class="px-2 pt-2">
                 <VideoPlayer
-                  src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
-                  :poster="guitarCoursePoster"
+                  :src="video1"
+                  :poster="poster1"
                   controls
                   plays-inline
                   :height="$vuetify.display.mdAndUp ? 200 : 150"
@@ -175,10 +180,11 @@ const searchQuery = ref('')
               </div>
               <VCardText>
                 <h5 class="text-h5 mb-2">
-                  Your First Singing Lesson
+                  Escaneo 3D
                 </h5>
                 <p class="text-body-1 mb-0">
-                  In the same way as any other artistic domain, singing lends itself perfectly to self-teaching.
+                  Al igual que en otros campos tecnológicos, el escaneo 3D se adapta perfectamente a la precisión y detalle, 
+                  permitiendo resultados de alta calidad en cada proyecto.
                 </p>
               </VCardText>
             </VCard>
@@ -194,8 +200,8 @@ const searchQuery = ref('')
             >
               <div class="px-2 pt-2">
                 <VideoPlayer
-                  src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
-                  :poster="singingCoursePoster"
+                  :src="video2"
+                  :poster="poster2"
                   controls
                   plays-inline
                   :height="$vuetify.display.mdAndUp ? 200 : 150"
@@ -204,10 +210,11 @@ const searchQuery = ref('')
               </div>
               <VCardText>
                 <h5 class="text-h5 mb-2">
-                  Guitar for Beginners
+                  Impresión 3D
                 </h5>
                 <p class="text-body-1 mb-0">
-                  The Fender Acoustic Guitar is best choice for beginners and professionals.
+                  Y como también en otras áreas de la tecnología, la impresión 3D permite una creación detallada y precisa, 
+                  garantizando resultados de alta calidad en cada pieza.
                 </p>
               </VCardText>
             </VCard>

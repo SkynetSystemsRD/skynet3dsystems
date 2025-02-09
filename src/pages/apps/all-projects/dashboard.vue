@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import AcademyAssignmentProgress from '@/views/apps/academy/AcademyAssignmentProgress.vue'
-import AcademyCardPopularInstructors from '@/views/apps/academy/AcademyCardPopularInstructors.vue'
-import AcademyCardTopCourses from '@/views/apps/academy/AcademyCardTopCourses.vue'
-import AcademyCourseTable from '@/views/apps/academy/AcademyCourseTable.vue'
-import AcademyTopicYouAreInterested from '@/views/apps/academy/AcademyTopicYouAreInterested.vue'
-import AcademyUpcomingWebinar from '@/views/apps/academy/AcademyUpcomingWebinar.vue'
+import AcademyAssignmentProgress from '@/views/apps/all-projects/AcademyAssignmentProgress.vue'
+import AcademyCardPopularInstructors from '@/views/apps/all-projects/AcademyCardPopularInstructors.vue'
+import AcademyCardTopCourses from '@/views/apps/all-projects/AcademyCardTopCourses.vue'
+import AcademyCourseTable from '@/views/apps/all-projects/AcademyCourseTable.vue'
+import AcademyTopicYouAreInterested from '@/views/apps/all-projects/AcademyTopicYouAreInterested.vue'
+import AcademyUpcomingWebinar from '@/views/apps/all-projects/AcademyUpcomingWebinar.vue'
 import customCheck from '@images/svg/Check.svg'
 import customLaptop from '@images/svg/laptop.svg'
 import customLightbulb from '@images/svg/lightbulb.svg'
@@ -249,5 +249,5 @@ const timeSpendingChartSeries = [23, 35, 10, 20, 35, 23]
 </template>
 
 <style lang="scss">
-@use "@core/scss/template/libs/apex-chart.scss";
+@use "@core/scss/template/libs/apex-chart";
 </style>

@@ -20,8 +20,8 @@ declare module 'vue-router/auto-routes' {
   export interface RouteNamedMap {
     '$error': RouteRecordInfo<'$error', '/:error(.*)', { error: ParamValue<true> }, { error: ParamValue<false> }>,
     'access-control': RouteRecordInfo<'access-control', '/access-control', Record<never, never>, Record<never, never>>,
-    'apps-all-projects-course-details': RouteRecordInfo<'apps-all-projects-course-details', '/apps/all-projects/course-details', Record<never, never>, Record<never, never>>,
     'apps-all-projects-dashboard': RouteRecordInfo<'apps-all-projects-dashboard', '/apps/all-projects/dashboard', Record<never, never>, Record<never, never>>,
+    'apps-all-projects-project-details': RouteRecordInfo<'apps-all-projects-project-details', '/apps/all-projects/project-details', Record<never, never>, Record<never, never>>,
     'apps-all-projects-projects': RouteRecordInfo<'apps-all-projects-projects', '/apps/all-projects/projects', Record<never, never>, Record<never, never>>,
     'apps-calendar': RouteRecordInfo<'apps-calendar', '/apps/calendar', Record<never, never>, Record<never, never>>,
     'apps-chat': RouteRecordInfo<'apps-chat', '/apps/chat', Record<never, never>, Record<never, never>>,
