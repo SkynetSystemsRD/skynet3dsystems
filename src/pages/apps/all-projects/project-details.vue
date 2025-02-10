@@ -291,7 +291,7 @@ onMounted(() => {
               thumbs-swiper=".mySwiper2"
               loop="true"
               space-between="10"
-              navigation="true"
+              navigation="false" 
               centered-slides="true"
               events-prefix="swiper-"
             >
@@ -608,9 +608,9 @@ body .v-layout .v-application__wrap {
   }
 
   .swiper-svg2 {
-    block-size: 70px;
-    inline-size: 270px;
-    margin-inline-start: -30px; /* Mueve 20px a la izquierda */
+    block-size: 65px;
+    inline-size: 265px;
+    margin-inline-start: -40px; /* Mueve 20px a la izquierda */
   }
 }
 </style>
