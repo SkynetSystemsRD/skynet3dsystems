@@ -8,8 +8,8 @@ import PaymentContent from '@/views/wizard-examples/model-checkout/Payment.vue'
 import type { ModelCheckoutData } from '@/views/wizard-examples/model-checkout/types'
 import googleHome from '@images/pages/google-home.png'
 import iphone11 from '@images/pages/iphone-11.png'
-import customAddress from '@images/svg/address.svg'
-import customCart from '@images/svg/cart.svg'
+import uploadModel from '@images/svg/3d-printer6.svg'
+import viewModel from '@images/svg/3d-printer9.svg'
 import customPayment from '@images/svg/payment.svg'
 import customTrending from '@images/svg/trending.svg'
 
@@ -28,19 +28,19 @@ store.skin = 'default'
 
 const modelCheckoutSteps = [
   {
-    title: 'Cart',
-    icon: customCart,
+    title: 'Sube tus Modelos 3D',
+    icon: uploadModel,
   },
   {
-    title: 'Address',
-    icon: customAddress,
+    title: 'Verifica tus Modelos 3D',
+    icon: viewModel,
   },
   {
-    title: 'Payment',
+    title: 'Formas de Pago',
     icon: customPayment,
   },
   {
-    title: 'Confirmation',
+    title: 'Confirmación',
     icon: customTrending,
   },
 ]
