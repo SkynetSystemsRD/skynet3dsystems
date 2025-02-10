@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { CartItem, ModelCheckoutData } from './types'
 import emptyCartImg from '@images/pages/empty-cart.png'
+import type { CartItem, ModelCheckoutData } from './types'
 
 interface Props {
   currentStep?: number
@@ -53,15 +53,17 @@ watch(() => props.currentStep, updateCartData)
       <VAlert
         type="success"
         variant="tonal"
-        icon="tabler-percentage"
-        title="Available Offer"
+        icon="tabler-tag"
+        title="Ofertas Disponibles"
         closable
       >
         <template #text>
           <p class="mb-0">
-            - 0% Instant Discount on Bank of America Corp Bank Debit and Credit cards
+            - 🎉 5% de Descuento Instantáneo en tu primer pedido de impresión 3D con Visa, Mastercard y American Express.
             <br>
-            - 50% Cashback Voucher of up to $60 on first ever PayPal transaction. TCA
+            - 💰 RD$1,000 de Reembolso en compras superiores a RD$10,000 pagando con PayPal.
+            <br>
+            - 🚀 Envío Exprés Gratis en pedidos mayores a RD$7,000.
           </p>
         </template>
       </VAlert>
@@ -178,9 +180,9 @@ watch(() => props.currentStep, updateCartData)
         <a
           href="#"
           class="font-weight-medium"
-        >Add more products from wishlist</a>
+        >Sube más modelos 3D</a>
         <VIcon
-          icon="tabler-arrow-right"
+          icon="tabler-upload"
           size="16"
           class="flip-in-rtl text-primary"
         />
@@ -198,13 +200,13 @@ watch(() => props.currentStep, updateCartData)
         <!-- 👉 payment offer -->
         <VCardText>
           <h6 class="text-h6 mb-4">
-            Offer
+            Oferta
           </h6>
 
           <div class="d-flex align-center gap-4 flex-wrap">
             <AppTextField
               v-model="modelCheckoutCartDataLocal.promoCode"
-              placeholder="Enter Promo Code"
+              placeholder="Codigo de Promo"
               style="min-inline-size: 200px;"
             />
 
@@ -219,14 +221,14 @@ watch(() => props.currentStep, updateCartData)
           <!-- 👉 Gift wrap banner -->
           <div class="bg-var-theme-background rounded pa-6 mt-4">
             <h6 class="text-h6 mb-2">
-              Buying gift for a loved one?
+              ¿Personaliza tu pedido?
             </h6>
             <p class="mb-2">
-              Gift wrap and personalized message on card, Only for $2.
+              Agrega un acabado especial o una nota personalizada por solo $2.
             </p>
 
             <h6 class="text-h6">
-              <a href="#">Add a gift wrap</a>
+              <a href="#">Añadir personalización</a>
             </h6>
           </div>
         </VCardText>
@@ -236,27 +238,27 @@ watch(() => props.currentStep, updateCartData)
         <!-- 👉 Price details -->
         <VCardText>
           <h6 class="text-h6 mb-4">
-            Price Details
+            Detalles del Precio
           </h6>
 
           <div class="text-high-emphasis">
             <div class="d-flex justify-space-between mb-2">
-              <span>Bag Total</span>
+              <span>Bolsa Total</span>
               <span class="text-medium-emphasis">${{ totalCost }}.00</span>
             </div>
 
             <div class="d-flex justify-space-between mb-2">
-              <span>Coupon Discount</span>
-              <a href="#">Apply Coupon</a>
+              <span>Cupón de Descuento</span>
+              <a href="#">Aplicar Cupón</a>
             </div>
 
             <div class="d-flex justify-space-between mb-2">
-              <span>Order Total</span>
+              <span>Orden Total</span>
               <span class="text-medium-emphasis">${{ totalCost }}.00</span>
             </div>
 
             <div class="d-flex justify-space-between">
-              <span>Delivery Charges</span>
+              <span>Costo de Envio</span>
 
               <div class="d-flex align-center">
                 <div class="text-decoration-line-through text-disabled me-2">
@@ -266,7 +268,7 @@ watch(() => props.currentStep, updateCartData)
                   size="small"
                   color="success"
                 >
-                  FREE
+                  Gratis  
                 </VChip>
               </div>
             </div>
@@ -290,7 +292,7 @@ watch(() => props.currentStep, updateCartData)
         class="mt-4"
         @click="nextStep"
       >
-        Place Order
+        Continuar Pedido
       </VBtn>
     </VCol>
   </VRow>
