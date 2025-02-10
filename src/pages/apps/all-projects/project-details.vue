@@ -17,20 +17,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import 'video.js/dist/video-js.css';
 import { onMounted, ref } from 'vue';
 
-let selectedElement = ref('')
-const panelStatus = ref(0);
-
 register();
-
-const onSlideChange = (event: string) => {
-  console.log("event: ", event)
-  // selectedElement.value = event.detail[0].activeIndex; // Captura el slide activo
-};
-
-function getFileExtention(filename: string): string {
-  const parts = filename.split('.');
-  return parts.length > 1 ? parts[parts.length - 1] : '';  // Returns the extension or an empty string if no extension
-}
  
 interface modelInstructionsMovements {
   title: string;
@@ -69,6 +56,9 @@ interface projectDetails {
   description: string;
   images: image[];
 }
+
+const panelStatus = ref(0);
+const selectedElement = ref('svg')
 
 const projectDetails = ref<projectDetails>({
   title: "Modelo 3D Cubo XYZ Test",
@@ -122,7 +112,36 @@ const projectDetails = ref<projectDetails>({
   ]
 });
 
-onMounted(() => {
+function reload() {
+  var container = document.getElementById("model-viewer");
+
+  if (container) {  // Verifica si el contenedor existe
+    var content = "";
+    container.innerHTML = content;  // Recarga el contenido del contenedor
+    
+    // Esta línea es para ver el resultado en la consola, puedes eliminarla después
+    console.log("Refreshed");
+  } else {
+    console.error("El contenedor no se encuentra en el DOM.");
+  }
+}
+
+function getFileExtention(filename: string): string {
+  const parts = filename.split('.');
+  return parts.length > 1 ? parts[parts.length - 1] : '';  // Returns the extension or an empty string if no extension
+}
+
+function clickedElemt(element: string){
+  if (element == 'svg'){
+    selectedElement.value = element
+    reload()
+    initializeModel()
+  }
+  else 
+    selectedElement.value = element
+}
+
+function initializeModel() {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdddddd);
 
@@ -160,16 +179,13 @@ onMounted(() => {
   directionalLight_z_down.castShadow = true;
   scene.add(directionalLight_z_down);
 
-  // Cargar el modelo con la extensión correspondiente
-  const filePath = '/xyzCalibration_cube'; // Cambia este path para cargar el archivo deseado (sin extensión)
-
   let loader;
 
   switch (projectDetails?.value.fileExtention) {
     case 'glb':
     case 'gltf':
       loader = new GLTFLoader();
-      loader.load(`${projectDetails?.value.filePath}`, (gltf) => {
+      loader.load(projectDetails?.value.filePath, (gltf) => {
         const model = gltf.scene.children[0];
         model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
         model.position.set(0, 0, 0);  // Centra el modelo
@@ -180,7 +196,7 @@ onMounted(() => {
 
     case 'obj':
       loader = new OBJLoader();
-      loader.load(`${projectDetails?.value.filePath}`, (obj) => {
+      loader.load(projectDetails?.value.filePath, (obj) => {
         obj.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
         obj.position.set(0, 0, 0);  // Centra el modelo
         scene.add(obj);
@@ -190,7 +206,7 @@ onMounted(() => {
 
     case 'fbx':
       loader = new FBXLoader();
-      loader.load(`${projectDetails?.value.filePath}`, (fbx) => {
+      loader.load(projectDetails?.value.filePath, (fbx) => {
         fbx.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
         fbx.position.set(0, 0, 0);  // Centra el modelo
         scene.add(fbx);
@@ -200,7 +216,7 @@ onMounted(() => {
 
     case 'stl':
       loader = new STLLoader();
-      loader.load(`${projectDetails?.value.filePath}`, (geometry) => {
+      loader.load(projectDetails?.value.filePath, (geometry) => {
         const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
         const mesh = new THREE.Mesh(geometry, material);
         mesh.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
@@ -219,6 +235,10 @@ onMounted(() => {
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
+}
+
+onMounted(() => {
+  initializeModel();
 });
 </script>
 
@@ -265,12 +285,9 @@ onMounted(() => {
             flat
             border
           >
-            <!-- <div class="px-2 pt-2">
-              <div id="model-viewer" class="w-100 rounded">
-              </div>
-            </div> -->
             <swiper-container
-              class="mySwiper"
+              v-show="selectedElement === 'png'"
+              class="mySwiper w-100 rounded"
               thumbs-swiper=".mySwiper2"
               loop="true"
               space-between="10"
@@ -282,26 +299,23 @@ onMounted(() => {
                 v-for="swiperImg in projectDetails?.images"
                 :key="swiperImg.alt"
               >
-                <VImg
-                  :src="swiperImg.imagePath"
-                  cover
-                  class="swiper-img1"
-                />
+                <VImg :src="swiperImg.imagePath" cover class="swiper-img1" />
               </swiper-slide>
             </swiper-container>
-
+            <div v-show="selectedElement === 'svg'" class="px-2 pt-2">
+              <div id="model-viewer" class="w-100 rounded"></div>
+            </div>
             <swiper-container
               class="mySwiper2"
               loop="true"
               free-mode="true"
               events-prefix="swiper-"
               slides-per-view="4"
-              @slideChange="onSlideChange"
             >
               <swiper-slide
               v-for="(swiperImg) in projectDetails?.images"
               :key="swiperImg.alt"
-              :class="{ active: swiperImg.fileExtention === selectedElement }"
+              @click="clickedElemt(swiperImg.fileExtention)"
               >
                 <VImg
                   v-if="swiperImg.fileExtention === 'png'"
