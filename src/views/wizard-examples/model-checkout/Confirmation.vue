@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ModelCheckoutData } from './types'
+import type { ModelCheckoutData } from './types';
 
 const props = defineProps<{
   currentStep?: number
@@ -152,7 +152,7 @@ const resolveDeliveryMethod = computed(() => {
         <!-- 👉 cart items -->
         <div class="border rounded">
           <template
-            v-for="(item, index) in props.modelCheckoutData.cartItems"
+            v-for="(item, index) in props.modelCheckoutData.modelItems"
             :key="item.name"
           >
             <div
@@ -172,18 +172,18 @@ const resolveDeliveryMethod = computed(() => {
               >
                 <div>
                   <h6 class="text-h6 mb-2">
-                    {{ item.name }}
+                    {{ item.fileName }}
                   </h6>
                   <div class="text-body-1 mb-2">
                     Sold by:
-                    <span class="d-inline-block text-primary">  {{ item.seller }}</span>
+                    <span class="d-inline-block text-primary">  {{ item.format }}</span>
                   </div>
                   <VChip
-                    :color="item.inStock ? 'success' : 'error'"
+                    :color="item.isSupported ? 'success' : 'error'"
                     label
                     size="small"
                   >
-                    {{ item.inStock ? 'In Stock' : 'Out of Stock' }}
+                    {{ item.isSupported ? 'Soportado' : 'No Soportado' }}
                   </VChip>
                 </div>
 
@@ -193,12 +193,12 @@ const resolveDeliveryMethod = computed(() => {
                   class="d-flex text-base"
                   :class="$vuetify.display.width <= 700 ? 'align-self-start' : 'align-self-center'"
                 >
-                  <div class="text-primary">
+                  <!-- <div class="text-primary">
                     ${{ item.price }}
                   </div>
-                  <div>/</div>
+                  <div>/</div> -->
                   <div class="text-decoration-line-through text-disabled">
-                    ${{ item.discountPrice }}
+                    ${{ item.size }}
                   </div>
                 </div>
               </div>

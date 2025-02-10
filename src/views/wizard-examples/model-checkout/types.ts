@@ -1,13 +1,10 @@
-export interface CartItem {
+export interface ModelItem {
   id: number
-  name: string
-  seller: string
-  inStock: boolean
-  rating: number
-  price: number
-  discountPrice: number
+  fileName: string
+  format: string
+  isSupported: boolean
+  size: number
   image: string
-  quantity: number
   estimatedDelivery: string
 }
 export interface Addresses {
@@ -18,7 +15,7 @@ export interface Addresses {
 }
 
 export interface ModelCheckoutData {
-  cartItems: CartItem[]
+  modelItems: ModelItem[]
   promoCode: string
   orderAmount: number
   deliveryAddress: string

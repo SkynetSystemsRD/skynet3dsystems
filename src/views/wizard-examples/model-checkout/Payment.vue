@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ModelCheckoutData } from './types'
+import type { ModelCheckoutData } from './types';
 
 const prop = defineProps<{
   currentStep?: number
@@ -55,20 +55,23 @@ watch(() => prop.currentStep, updateCartData)
       <!-- 👉 Offers alert -->
       <VAlert
         type="success"
-        class="mb-6"
         variant="tonal"
-        icon="tabler-percentage"
-        title="Available Offer"
+        icon="tabler-tag"
+        title="Ofertas Disponibles"
         closable
       >
         <template #text>
           <p class="mb-0">
-            - 0% Instant Discount on Bank of America Corp Bank Debit and Credit cards
+            - 🎉 5% de Descuento Instantáneo en tu primer pedido de impresión 3D con Visa, Mastercard y American Express.
             <br>
-            - 50% Cashback Voucher of up to $60 on first ever PayPal transaction. TCA
+            - 💰 RD$1,000 de Reembolso en compras superiores a RD$10,000 pagando con PayPal.
+            <br>
+            - 🚀 Envío Exprés Gratis en pedidos mayores a RD$7,000.
           </p>
         </template>
       </VAlert>
+
+      <br>
 
       <VTabs
         v-model="selectedPaymentMethod"

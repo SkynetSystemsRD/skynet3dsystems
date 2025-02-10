@@ -46,29 +46,23 @@ const modelCheckoutSteps = [
 ]
 
 const modelCheckoutData = ref<ModelCheckoutData>({
-  cartItems: [
+  modelItems: [
     {
       id: 1,
-      name: 'Google - Google Home - White',
-      seller: 'Google',
-      inStock: true,
-      rating: 4,
-      price: 299,
-      discountPrice: 359,
+      fileName: 'XYZ 3D Model Cube',
+      format: 'STL',
+      isSupported: true,
+      size: 359,
       image: googleHome,
-      quantity: 1,
       estimatedDelivery: '18th Nov 2021',
     },
     {
       id: 2,
-      name: 'Apple iPhone 11 (64GB, Black)',
-      seller: 'Apple',
-      inStock: true,
-      rating: 4,
-      price: 899,
-      discountPrice: 999,
+      fileName: 'Modelo 3D Carro Deportivo',
+      format: 'GLTF',
+      isSupported: true,
+      size: 452,
       image: iphone11,
-      quantity: 1,
       estimatedDelivery: '20th Nov 2021',
     },
   ],
@@ -127,13 +121,17 @@ const currentStep = ref(0)
                 />
               </VWindowItem>
               <VWindowItem>
-                <AddressContent
+                <!-- <AddressContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
-                />
+                /> -->
               </VWindowItem>
               <VWindowItem>
                 <PaymentContent
+                  v-model:current-step="currentStep"
+                  v-model:model-checkout-data="modelCheckoutData"
+                />
+                <AddressContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
                 />

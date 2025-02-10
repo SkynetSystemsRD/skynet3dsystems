@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import emptyCartImg from '@images/pages/empty-cart.png'
-import type { CartItem, ModelCheckoutData } from './types'
+import type { ModelCheckoutData, ModelItem } from './types'
 
 interface Props {
   currentStep?: number
@@ -19,14 +19,15 @@ const emit = defineEmits<Emit>()
 const modelCheckoutCartDataLocal = ref(props.modelCheckoutData)
 
 // remove item from cart
-const removeItem = (item: CartItem) => {
-  modelCheckoutCartDataLocal.value.cartItems = modelCheckoutCartDataLocal.value.cartItems.filter(i => i.id !== item.id)
+const removeItem = (item: ModelItem) => {
+  modelCheckoutCartDataLocal.value.modelItems = modelCheckoutCartDataLocal.value.modelItems.filter(i => i.id !== item.id)
 }
 
 //  cart total
 const totalCost = computed(() => {
-  return modelCheckoutCartDataLocal.value.cartItems.reduce((acc, item) => {
-    return acc + item.price * item.quantity
+  return modelCheckoutCartDataLocal.value.modelItems.reduce((acc, item) => {
+    // return acc + item.price * item.quantity
+    return 0
   }, 0)
 })
 
@@ -69,16 +70,16 @@ watch(() => props.currentStep, updateCartData)
       </VAlert>
 
       <h5 class="text-h5 my-4">
-        My Shopping Bag ({{ modelCheckoutCartDataLocal.cartItems.length }} Items)
+        My Shopping Bag ({{ modelCheckoutCartDataLocal.modelItems.length }} Items)
       </h5>
 
       <!-- 👉 Cart items -->
       <div
-        v-if="modelCheckoutCartDataLocal.cartItems.length"
+        v-if="modelCheckoutCartDataLocal.modelItems.length"
         class="border rounded"
       >
         <template
-          v-for="(item, index) in modelCheckoutCartDataLocal.cartItems"
+          v-for="(item, index) in modelCheckoutCartDataLocal.modelItems"
           :key="item.name"
         >
           <div
@@ -106,35 +107,35 @@ watch(() => props.currentStep, updateCartData)
             <div class="d-flex w-100 flex-column flex-md-row">
               <div class="d-flex flex-column gap-y-2">
                 <h6 class="text-h6">
-                  {{ item.name }}
+                  {{ item.fileName }}
                 </h6>
                 <div class="d-flex align-center text-no-wrap gap-4 text-body-1">
                   <div class="text-disabled">
-                    Sold by:
-                    <span class="d-inline-block text-primary">  {{ item.seller }}</span>
+                    Formato:
+                    <span class="d-inline-block text-primary">  {{ item.format }}</span>
                   </div>
                   <VChip
-                    :color="item.inStock ? 'success' : 'error'"
+                    :color="item.isSupported ? 'success' : 'error'"
                     label
                     size="small"
                   >
-                    {{ item.inStock ? 'In Stock' : 'Out of Stock' }}
+                    {{ item.isSupported ? 'Soportado' : 'No Soportado' }}
                   </VChip>
                 </div>
 
-                <VRating
+                <!-- <VRating
                   density="compact"
                   :model-value="item.rating"
                   size="24"
                   readonly
-                />
+                /> -->
 
-                <AppTextField
+                <!-- <AppTextField
                   v-model="item.quantity"
                   type="number"
                   style="inline-size: 9.375rem;"
                   density="compact"
-                />
+                /> -->
               </div>
 
               <VSpacer />
@@ -145,21 +146,21 @@ watch(() => props.currentStep, updateCartData)
               >
                 <div class="d-flex text-base align-self-md-end">
                   <div class="text-primary">
-                    ${{ item.price }}
+                    Peso:
                   </div>
                   <div>/</div>
                   <div class="text-decoration-line-through">
-                    ${{ item.discountPrice }}
+                    ${{ item.size }}
                   </div>
                 </div>
 
                 <div>
-                  <VBtn
+                  <!-- <VBtn
                     variant="tonal"
                     size="small"
                   >
                     move to wishlist
-                  </VBtn>
+                  </VBtn> -->
                 </div>
               </div>
             </div>
@@ -236,8 +237,8 @@ watch(() => props.currentStep, updateCartData)
         <VDivider />
 
         <!-- 👉 Price details -->
-        <VCardText>
-          <h6 class="text-h6 mb-4">
+        <!-- <VCardText>
+        <h6 class="text-h6 mb-4">
             Detalles del Precio
           </h6>
 
@@ -273,9 +274,9 @@ watch(() => props.currentStep, updateCartData)
               </div>
             </div>
           </div>
-        </VCardText>
+        </VCardText> -->
 
-        <VDivider />
+        <!-- <VDivider />
 
         <VCardText class="d-flex justify-space-between pa-6">
           <h6 class="text-h6">
@@ -284,12 +285,12 @@ watch(() => props.currentStep, updateCartData)
           <h6 class="text-h6">
             ${{ totalCost }}.00
           </h6>
-        </VCardText>
+        </VCardText> -->
       </VCard>
 
       <VBtn
         block
-        class="mt-4"
+        class="mt-auto"
         @click="nextStep"
       >
         Continuar Pedido

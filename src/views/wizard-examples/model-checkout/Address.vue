@@ -189,8 +189,8 @@ watch(() => props.currentStep, updateAddressData)
 
           <VList class="card-list">
             <VListItem
-              v-for="product in modelCheckoutAddressDataLocal.cartItems"
-              :key="product.name"
+              v-for="product in modelCheckoutAddressDataLocal.modelItems"
+              :key="product.fileName"
             >
               <template #prepend>
                 <img
@@ -202,7 +202,7 @@ watch(() => props.currentStep, updateAddressData)
               </template>
 
               <div class="text-body-1">
-                {{ product.name }}
+                {{ product.fileName }}
               </div>
               <h6 class="text-h6 text-medium-emphasis">
                 {{ product.estimatedDelivery }}
