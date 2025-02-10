@@ -57,7 +57,7 @@ export const db: DB = {
           title: 'Payment Front',
         },
         {
-          url: { name: 'main-pages-checkout' },
+          url: { name: 'main-pages-model-checkout' },
           icon: 'tabler-file-description',
           title: 'Checkout Front',
         },

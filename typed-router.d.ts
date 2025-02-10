@@ -93,10 +93,10 @@ declare module 'vue-router/auto-routes' {
     'forms-textarea': RouteRecordInfo<'forms-textarea', '/forms/textarea', Record<never, never>, Record<never, never>>,
     'forms-textfield': RouteRecordInfo<'forms-textfield', '/forms/textfield', Record<never, never>, Record<never, never>>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
-    'main-pages-checkout': RouteRecordInfo<'main-pages-checkout', '/main-pages/checkout', Record<never, never>, Record<never, never>>,
     'main-pages-help-center': RouteRecordInfo<'main-pages-help-center', '/main-pages/help-center', Record<never, never>, Record<never, never>>,
     'main-pages-help-center-article-title': RouteRecordInfo<'main-pages-help-center-article-title', '/main-pages/help-center/article/:title', { title: ParamValue<true> }, { title: ParamValue<false> }>,
     'main-pages-landing-page': RouteRecordInfo<'main-pages-landing-page', '/main-pages/landing-page', Record<never, never>, Record<never, never>>,
+    'main-pages-model-checkout': RouteRecordInfo<'main-pages-model-checkout', '/main-pages/model-checkout', Record<never, never>, Record<never, never>>,
     'main-pages-payment': RouteRecordInfo<'main-pages-payment', '/main-pages/payment', Record<never, never>, Record<never, never>>,
     'main-pages-pricing': RouteRecordInfo<'main-pages-pricing', '/main-pages/pricing', Record<never, never>, Record<never, never>>,
     'not-authorized': RouteRecordInfo<'not-authorized', '/not-authorized', Record<never, never>, Record<never, never>>,
@@ -130,8 +130,8 @@ declare module 'vue-router/auto-routes' {
     'register': RouteRecordInfo<'register', '/register', Record<never, never>, Record<never, never>>,
     'tables-data-table': RouteRecordInfo<'tables-data-table', '/tables/data-table', Record<never, never>, Record<never, never>>,
     'tables-simple-table': RouteRecordInfo<'tables-simple-table', '/tables/simple-table', Record<never, never>, Record<never, never>>,
-    'wizard-examples-checkout': RouteRecordInfo<'wizard-examples-checkout', '/wizard-examples/checkout', Record<never, never>, Record<never, never>>,
     'wizard-examples-create-deal': RouteRecordInfo<'wizard-examples-create-deal', '/wizard-examples/create-deal', Record<never, never>, Record<never, never>>,
+    'wizard-examples-model-checkout': RouteRecordInfo<'wizard-examples-model-checkout', '/wizard-examples/model-checkout', Record<never, never>, Record<never, never>>,
     'wizard-examples-property-listing': RouteRecordInfo<'wizard-examples-property-listing', '/wizard-examples/property-listing', Record<never, never>, Record<never, never>>,
   }
 }

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import Footer from '@/views/main-pages/main-page-footer.vue'
 import Navbar from '@/views/main-pages/main-page-navbar.vue'
-import AddressContent from '@/views/wizard-examples/checkout/Address.vue'
-import CartContent from '@/views/wizard-examples/checkout/Cart.vue'
-import ConfirmationContent from '@/views/wizard-examples/checkout/Confirmation.vue'
-import PaymentContent from '@/views/wizard-examples/checkout/Payment.vue'
-import type { CheckoutData } from '@/views/wizard-examples/checkout/types'
+import AddressContent from '@/views/wizard-examples/model-checkout/Address.vue'
+import CartContent from '@/views/wizard-examples/model-checkout/Cart.vue'
+import ConfirmationContent from '@/views/wizard-examples/model-checkout/Confirmation.vue'
+import PaymentContent from '@/views/wizard-examples/model-checkout/Payment.vue'
+import type { ModelCheckoutData } from '@/views/wizard-examples/model-checkout/types'
 import googleHome from '@images/pages/google-home.png'
 import iphone11 from '@images/pages/iphone-11.png'
 import customAddress from '@images/svg/address.svg'
@@ -26,7 +26,7 @@ const store = useConfigStore()
 
 store.skin = 'default'
 
-const checkoutSteps = [
+const modelCheckoutSteps = [
   {
     title: 'Cart',
     icon: customCart,
@@ -45,7 +45,7 @@ const checkoutSteps = [
   },
 ]
 
-const checkoutData = ref<CheckoutData>({
+const modelCheckoutData = ref<ModelCheckoutData>({
   cartItems: [
     {
       id: 1,
@@ -97,17 +97,17 @@ const currentStep = ref(0)
 </script>
 
 <template>
-  <div class="checkout-page">
+  <div class="model-checkout-page">
     <Navbar />
     <VContainer>
-      <div class="checkout-card">
+      <div class="model-checkout-card">
         <VCard>
           <VCardText>
             <!-- 👉 Stepper -->
             <AppStepper
               v-model:current-step="currentStep"
-              class="checkout-stepper"
-              :items="checkoutSteps"
+              class="model-checkout-stepper"
+              :items="modelCheckoutSteps"
               :direction="$vuetify.display.mdAndUp ? 'horizontal' : 'vertical'"
               align="center"
             />
@@ -123,23 +123,23 @@ const currentStep = ref(0)
               <VWindowItem>
                 <CartContent
                   v-model:current-step="currentStep"
-                  v-model:checkout-data="checkoutData"
+                  v-model:model-checkout-data="modelCheckoutData"
                 />
               </VWindowItem>
               <VWindowItem>
                 <AddressContent
                   v-model:current-step="currentStep"
-                  v-model:checkout-data="checkoutData"
+                  v-model:model-checkout-data="modelCheckoutData"
                 />
               </VWindowItem>
               <VWindowItem>
                 <PaymentContent
                   v-model:current-step="currentStep"
-                  v-model:checkout-data="checkoutData"
+                  v-model:model-checkout-data="modelCheckoutData"
                 />
               </VWindowItem>
               <VWindowItem>
-                <ConfirmationContent v-model:checkout-data="checkoutData" />
+                <ConfirmationContent v-model:model-checkout-data="modelCheckoutData" />
               </VWindowItem>
             </VWindow>
           </VCardText>
@@ -151,12 +151,12 @@ const currentStep = ref(0)
 </template>
 
 <style lang="scss">
-.checkout-card {
+.model-checkout-card {
   margin-block: 10.5rem 5.25rem;
 }
 
 @media (max-width: 960px) and (min-width: 600px) {
-  .checkout-page {
+  .model-checkout-page {
     .v-container {
       padding-inline: 2rem !important;
     }
@@ -164,7 +164,7 @@ const currentStep = ref(0)
 }
 
 @media (max-width: 600px) {
-  .checkout-card {
+  .model-checkout-card {
     margin-block-start: 6rem;
   }
 }

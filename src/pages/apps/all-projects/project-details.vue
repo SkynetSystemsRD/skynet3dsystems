@@ -141,6 +141,41 @@ function clickedElemt(element: string){
     selectedElement.value = element
 }
 
+function clickedElemt1(){
+  // // Get the Swiper container by its ID
+  // const swiperContainer = document.getElementById('swiperContainer');
+
+  // // Check if the Swiper container exists
+  // if (swiperContainer) {
+  //   // Example: Get the class name of the Swiper container
+  //   const className = swiperContainer.onchange;
+  //   console.log('Swiper Container Class Name:', className);
+
+  //   // Example: Get the style (CSS properties) of the Swiper container
+  //   const containerWidth = swiperContainer.offsetWidth;
+  //   const containerHeight = swiperContainer.offsetHeight;
+  //   console.log('Swiper Container Width:', containerWidth);
+  //   console.log('Swiper Container Height:', containerHeight);
+
+  //   // Example: Get the Swiper-specific data or properties
+  //   if (swiperContainer.swiper) {
+  //       const swiperInstance = swiperContainer.swiper;
+  //       console.log('Swiper Instance:', swiperInstance);
+  //       console.log('Current Active Index:', swiperInstance.activeIndex);
+  //   }
+  // }
+
+  // Get the swiper container by ID
+  const swiperContainer = document.getElementById('swiperContainer');
+
+  // Check if swiperContainer is not null before adding the event listener
+  if (swiperContainer) {
+    console.log('Swiper container changed!');
+  } else {
+    console.log('Swiper container not found.');
+  }
+}
+
 function initializeModel() {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdddddd);
@@ -286,6 +321,7 @@ onMounted(() => {
             border
           >
             <swiper-container
+              id="swiperContainer"
               v-show="selectedElement === 'png'"
               class="mySwiper w-100 rounded"
               thumbs-swiper=".mySwiper2"
@@ -294,6 +330,7 @@ onMounted(() => {
               navigation="false" 
               centered-slides="true"
               events-prefix="swiper-"
+              @click="clickedElemt1"
             >
               <swiper-slide
                 v-for="swiperImg in projectDetails?.images"

@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import type { CheckoutData } from './types'
+import type { ModelCheckoutData } from './types'
 
 const props = defineProps<{
   currentStep?: number
-  checkoutData: CheckoutData
+  modelCheckoutData: ModelCheckoutData
 }>()
 
 defineEmits<{
   (e: 'update:currentStep', value: number): void
-  (e: 'update:checkout-data', value: CheckoutData): void
+  (e: 'update:checkout-data', value: ModelCheckoutData): void
 }>()
 
 const selectedDeliveryAddress = computed(() => {
-  return props.checkoutData.addresses.filter(address => {
-    return address.value === props.checkoutData.deliveryAddress
+  return props.modelCheckoutData.addresses.filter(address => {
+    return address.value === props.modelCheckoutData.deliveryAddress
   })
 })
 
 const resolveDeliveryMethod = computed(() => {
-  if (props.checkoutData.deliverySpeed === 'overnight')
+  if (props.modelCheckoutData.deliverySpeed === 'overnight')
     return { method: 'Overnight Delivery', desc: 'In 1 business day.' }
-  else if (props.checkoutData.deliverySpeed === 'express')
+  else if (props.modelCheckoutData.deliverySpeed === 'express')
     return { method: 'Express Delivery', desc: 'Normally in 3-4 business days' }
   else
     return { method: 'Standard Delivery', desc: 'Normally in 1 Week' }
@@ -152,7 +152,7 @@ const resolveDeliveryMethod = computed(() => {
         <!-- 👉 cart items -->
         <div class="border rounded">
           <template
-            v-for="(item, index) in props.checkoutData.cartItems"
+            v-for="(item, index) in props.modelCheckoutData.cartItems"
             :key="item.name"
           >
             <div
@@ -219,7 +219,7 @@ const resolveDeliveryMethod = computed(() => {
 
             <div class="d-flex align-center justify-space-between text-base mb-4">
               <span class="text-high-emphasis">Order Total</span>
-              <span>${{ props.checkoutData.orderAmount }}.00</span>
+              <span>${{ props.modelCheckoutData.orderAmount }}.00</span>
             </div>
 
             <div class="d-flex justify-space-between text-base">
@@ -227,7 +227,7 @@ const resolveDeliveryMethod = computed(() => {
                 Charges
               </div>
               <div
-                v-if="props.checkoutData.deliverySpeed === 'free'"
+                v-if="props.modelCheckoutData.deliverySpeed === 'free'"
                 class="d-flex align-center"
               >
                 <div class="text-decoration-line-through text-disabled me-2">
@@ -241,13 +241,13 @@ const resolveDeliveryMethod = computed(() => {
                 </VChip>
               </div>
               <div v-else>
-                <span>${{ props.checkoutData.deliveryCharges }}</span>
+                <span>${{ props.modelCheckoutData.deliveryCharges }}</span>
               </div>
             </div>
           </div>
           <div class="d-flex align-center justify-space-between text-high-emphasis font-weight-medium pa-6">
             <span>Total</span>
-            <span>${{ props.checkoutData.orderAmount + props.checkoutData.deliveryCharges }}.00</span>
+            <span>${{ props.modelCheckoutData.orderAmount + props.modelCheckoutData.deliveryCharges }}.00</span>
           </div>
         </div>
       </VCol>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import AddressContent from '@/views/wizard-examples/checkout/Address.vue'
-import CartContent from '@/views/wizard-examples/checkout/Cart.vue'
-import ConfirmationContent from '@/views/wizard-examples/checkout/Confirmation.vue'
-import PaymentContent from '@/views/wizard-examples/checkout/Payment.vue'
-import type { CheckoutData } from '@/views/wizard-examples/checkout/types'
+import AddressContent from '@/views/wizard-examples/model-checkout/Address.vue'
+import CartContent from '@/views/wizard-examples/model-checkout/Cart.vue'
+import ConfirmationContent from '@/views/wizard-examples/model-checkout/Confirmation.vue'
+import PaymentContent from '@/views/wizard-examples/model-checkout/Payment.vue'
+import type { ModelCheckoutData } from '@/views/wizard-examples/model-checkout/types'
 import googleHome from '@images/pages/google-home.png'
 import iphone11 from '@images/pages/iphone-11.png'
 import customAddress from '@images/svg/address.svg'
@@ -11,7 +11,7 @@ import customCart from '@images/svg/cart.svg'
 import customPayment from '@images/svg/payment.svg'
 import customTrending from '@images/svg/trending.svg'
 
-const checkoutSteps = [
+const modelCheckoutSteps = [
   {
     title: 'Cart',
     icon: customCart,
@@ -30,7 +30,7 @@ const checkoutSteps = [
   },
 ]
 
-const checkoutData = ref<CheckoutData>({
+const modelCheckoutData = ref<ModelCheckoutData>({
   cartItems: [
     {
       id: 1,
@@ -88,7 +88,7 @@ const currentStep = ref(0)
       <AppStepper
         v-model:current-step="currentStep"
         class="checkout-stepper"
-        :items="checkoutSteps"
+        :items="modelCheckoutSteps"
         :direction="$vuetify.display.mdAndUp ? 'horizontal' : 'vertical'"
         align="center"
       />
@@ -106,26 +106,26 @@ const currentStep = ref(0)
         <VWindowItem>
           <CartContent
             v-model:current-step="currentStep"
-            v-model:checkout-data="checkoutData"
+            v-model:checkout-data="modelCheckoutData"
           />
         </VWindowItem>
 
         <VWindowItem>
           <AddressContent
             v-model:current-step="currentStep"
-            v-model:checkout-data="checkoutData"
+            v-model:checkout-data="modelCheckoutData"
           />
         </VWindowItem>
 
         <VWindowItem>
           <PaymentContent
             v-model:current-step="currentStep"
-            v-model:checkout-data="checkoutData"
+            v-model:checkout-data="modelCheckoutData"
           />
         </VWindowItem>
 
         <VWindowItem>
-          <ConfirmationContent v-model:checkout-data="checkoutData" />
+          <ConfirmationContent v-model:checkout-data="modelCheckoutData" />
         </VWindowItem>
       </VWindow>
     </VCardText>

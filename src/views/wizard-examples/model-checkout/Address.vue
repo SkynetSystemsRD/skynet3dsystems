@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import type { CheckoutData } from './types'
+import type { ModelCheckoutData } from './types'
 
 interface Props {
   currentStep?: number
-  checkoutData: CheckoutData
+  modelCheckoutData: ModelCheckoutData
 }
 interface Emit {
   (e: 'update:currentStep', value: number): void
-  (e: 'update:checkout-data', value: CheckoutData): void
+  (e: 'update:checkout-data', value: ModelCheckoutData): void
 }
 const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
 
-const checkoutAddressDataLocal = ref<CheckoutData>(JSON.parse(JSON.stringify(props.checkoutData)))
+const modelCheckoutAddressDataLocal = ref<ModelCheckoutData>(JSON.parse(JSON.stringify(props.modelCheckoutData)))
 const isEditAddressDialogVisible = ref(false)
 
-watch(() => props.checkoutData, value => {
-  checkoutAddressDataLocal.value = JSON.parse(JSON.stringify(value))
+watch(() => props.modelCheckoutData, value => {
+  modelCheckoutAddressDataLocal.value = JSON.parse(JSON.stringify(value))
 })
 
 const deliveryOptions = [
@@ -54,15 +54,15 @@ const resolveDeliveryBadgeData: any = {
 
 const totalPriceWithDeliveryCharges = computed(() => {
   let deliveryCharges = 0
-  if (checkoutAddressDataLocal.value.deliverySpeed !== 'free')
-    deliveryCharges = resolveDeliveryBadgeData[checkoutAddressDataLocal.value.deliverySpeed].price
+  if (modelCheckoutAddressDataLocal.value.deliverySpeed !== 'free')
+    deliveryCharges = resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.value.deliverySpeed].price
 
-  return checkoutAddressDataLocal.value.orderAmount + deliveryCharges
+  return modelCheckoutAddressDataLocal.value.orderAmount + deliveryCharges
 })
 
 const updateAddressData = () => {
-  checkoutAddressDataLocal.value.deliveryCharges = resolveDeliveryBadgeData[checkoutAddressDataLocal.value.deliverySpeed].price
-  emit('update:checkout-data', checkoutAddressDataLocal.value)
+  modelCheckoutAddressDataLocal.value.deliveryCharges = resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.value.deliverySpeed].price
+  emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
 }
 
 const nextStep = () => {
@@ -86,8 +86,8 @@ watch(() => props.currentStep, updateAddressData)
 
       <!-- 👉 Address custom input -->
       <CustomRadios
-        v-model:selected-radio="checkoutAddressDataLocal.deliveryAddress"
-        :radio-content="checkoutAddressDataLocal.addresses"
+        v-model:selected-radio="modelCheckoutAddressDataLocal.deliveryAddress"
+        :radio-content="modelCheckoutAddressDataLocal.addresses"
         :grid-column="{ cols: '12', sm: '6' }"
       >
         <template #default="{ item }">
@@ -141,7 +141,7 @@ watch(() => props.currentStep, updateAddressData)
 
       <!-- 👉 Delivery options custom input -->
       <CustomRadiosWithIcon
-        v-model:selected-radio="checkoutAddressDataLocal.deliverySpeed"
+        v-model:selected-radio="modelCheckoutAddressDataLocal.deliverySpeed"
         :radio-content="deliveryOptions"
         :grid-column="{ cols: '12', sm: '4' }"
       >
@@ -158,7 +158,7 @@ watch(() => props.currentStep, updateAddressData)
             </div>
 
             <VIcon
-              v-bind="item.icon"
+              
               size="28"
             />
 
@@ -189,7 +189,7 @@ watch(() => props.currentStep, updateAddressData)
 
           <VList class="card-list">
             <VListItem
-              v-for="product in checkoutAddressDataLocal.cartItems"
+              v-for="product in modelCheckoutAddressDataLocal.cartItems"
               :key="product.name"
             >
               <template #prepend>
@@ -221,14 +221,14 @@ watch(() => props.currentStep, updateAddressData)
 
           <div class="d-flex align-center justify-space-between mb-2">
             <span class="text-high-emphasis">Order Total</span>
-            <span>${{ checkoutAddressDataLocal.orderAmount }}</span>
+            <span>${{ modelCheckoutAddressDataLocal.orderAmount }}</span>
           </div>
 
           <div class="d-flex align-center justify-space-between">
             <span class="text-high-emphasis">Delivery Charges</span>
             <div class="text-end">
               <div
-                v-if="checkoutAddressDataLocal.deliverySpeed === 'free'"
+                v-if="modelCheckoutAddressDataLocal.deliverySpeed === 'free'"
                 class="d-flex align-center"
               >
                 <div class="text-decoration-line-through text-disabled me-2">
@@ -241,7 +241,7 @@ watch(() => props.currentStep, updateAddressData)
                   FREE
                 </VChip>
               </div>
-              <span v-else>${{ resolveDeliveryBadgeData[checkoutAddressDataLocal.deliverySpeed ].price }}.00</span>
+              <span v-else>${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed ].price }}.00</span>
             </div>
           </div>
         </VCardText>

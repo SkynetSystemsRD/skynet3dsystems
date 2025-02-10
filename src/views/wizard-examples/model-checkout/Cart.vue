@@ -1,38 +1,38 @@
 <script setup lang="ts">
-import type { CartItem, CheckoutData } from './types'
+import type { CartItem, ModelCheckoutData } from './types'
 import emptyCartImg from '@images/pages/empty-cart.png'
 
 interface Props {
   currentStep?: number
-  checkoutData: CheckoutData
+  modelCheckoutData: ModelCheckoutData
 }
 
 interface Emit {
   (e: 'update:currentStep', value: number): void
-  (e: 'update:checkout-data', value: CheckoutData): void
+  (e: 'update:checkout-data', value: ModelCheckoutData): void
 }
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
 
-const checkoutCartDataLocal = ref(props.checkoutData)
+const modelCheckoutCartDataLocal = ref(props.modelCheckoutData)
 
 // remove item from cart
 const removeItem = (item: CartItem) => {
-  checkoutCartDataLocal.value.cartItems = checkoutCartDataLocal.value.cartItems.filter(i => i.id !== item.id)
+  modelCheckoutCartDataLocal.value.cartItems = modelCheckoutCartDataLocal.value.cartItems.filter(i => i.id !== item.id)
 }
 
 //  cart total
 const totalCost = computed(() => {
-  return checkoutCartDataLocal.value.cartItems.reduce((acc, item) => {
+  return modelCheckoutCartDataLocal.value.cartItems.reduce((acc, item) => {
     return acc + item.price * item.quantity
   }, 0)
 })
 
 const updateCartData = () => {
-  checkoutCartDataLocal.value.orderAmount = totalCost.value
-  emit('update:checkout-data', checkoutCartDataLocal.value)
+  modelCheckoutCartDataLocal.value.orderAmount = totalCost.value
+  emit('update:checkout-data', modelCheckoutCartDataLocal.value)
 }
 
 const nextStep = () => {
@@ -44,7 +44,7 @@ watch(() => props.currentStep, updateCartData)
 </script>
 
 <template>
-  <VRow v-if="checkoutCartDataLocal">
+  <VRow v-if="modelCheckoutCartDataLocal">
     <VCol
       cols="12"
       lg="8"
@@ -67,16 +67,16 @@ watch(() => props.currentStep, updateCartData)
       </VAlert>
 
       <h5 class="text-h5 my-4">
-        My Shopping Bag ({{ checkoutCartDataLocal.cartItems.length }} Items)
+        My Shopping Bag ({{ modelCheckoutCartDataLocal.cartItems.length }} Items)
       </h5>
 
       <!-- 👉 Cart items -->
       <div
-        v-if="checkoutCartDataLocal.cartItems.length"
+        v-if="modelCheckoutCartDataLocal.cartItems.length"
         class="border rounded"
       >
         <template
-          v-for="(item, index) in checkoutCartDataLocal.cartItems"
+          v-for="(item, index) in modelCheckoutCartDataLocal.cartItems"
           :key="item.name"
         >
           <div
@@ -203,7 +203,7 @@ watch(() => props.currentStep, updateCartData)
 
           <div class="d-flex align-center gap-4 flex-wrap">
             <AppTextField
-              v-model="checkoutCartDataLocal.promoCode"
+              v-model="modelCheckoutCartDataLocal.promoCode"
               placeholder="Enter Promo Code"
               style="min-inline-size: 200px;"
             />

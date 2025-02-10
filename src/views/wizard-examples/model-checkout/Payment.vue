@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type { CheckoutData } from './types'
+import type { ModelCheckoutData } from './types'
 
 const prop = defineProps<{
   currentStep?: number
-  checkoutData: CheckoutData
+  modelCheckoutData: ModelCheckoutData
 }>()
 
 const emit = defineEmits<{
   (e: 'update:currentStep', value: number): void
-  (e: 'update:checkout-data', value: CheckoutData): void
+  (e: 'update:checkout-data', value: ModelCheckoutData): void
 }>()
 
-const checkoutPaymentDataLocal = ref(prop.checkoutData)
+const modelCheckoutPaymentDataLocal = ref(prop.modelCheckoutData)
 
 const selectedPaymentMethod = ref('card')
 
@@ -29,13 +29,13 @@ const giftCardFormData = ref({
 })
 
 const selectedDeliveryAddress = computed(() => {
-  return checkoutPaymentDataLocal.value.addresses.filter(address => {
-    return address.value === checkoutPaymentDataLocal.value.deliveryAddress
+  return modelCheckoutPaymentDataLocal.value.addresses.filter(address => {
+    return address.value === modelCheckoutPaymentDataLocal.value.deliveryAddress
   })
 })
 
 const updateCartData = () => {
-  emit('update:checkout-data', checkoutPaymentDataLocal.value)
+  emit('update:checkout-data', modelCheckoutPaymentDataLocal.value)
 }
 
 const nextStep = () => {
@@ -241,13 +241,13 @@ watch(() => prop.currentStep, updateCartData)
 
           <div class="d-flex justify-space-between text-base mb-2">
             <span class="text-high-emphasis">Order Total</span>
-            <span>${{ checkoutPaymentDataLocal.orderAmount }}.00</span>
+            <span>${{ modelCheckoutPaymentDataLocal.orderAmount }}.00</span>
           </div>
 
           <div class="d-flex justify-space-between text-base">
             <span class="text-high-emphasis">Delivery Charges</span>
             <div
-              v-if="checkoutPaymentDataLocal.deliverySpeed === 'free'"
+              v-if="modelCheckoutPaymentDataLocal.deliverySpeed === 'free'"
               class="d-flex align-center"
             >
               <div class="text-decoration-line-through text-disabled me-2">
@@ -261,7 +261,7 @@ watch(() => prop.currentStep, updateCartData)
               </VChip>
             </div>
             <div v-else>
-              <span>${{ checkoutPaymentDataLocal.deliveryCharges }}</span>
+              <span>${{ modelCheckoutPaymentDataLocal.deliveryCharges }}</span>
             </div>
           </div>
         </VCardText>
@@ -271,7 +271,7 @@ watch(() => prop.currentStep, updateCartData)
         <VCardText>
           <div class="d-flex justify-space-between text-base mb-2">
             <span class="text-high-emphasis font-weight-medium">Total</span>
-            <span class="font-weight-medium">${{ checkoutPaymentDataLocal.orderAmount + checkoutPaymentDataLocal.deliveryCharges }}.00</span>
+            <span class="font-weight-medium">${{ modelCheckoutPaymentDataLocal.orderAmount + modelCheckoutPaymentDataLocal.deliveryCharges }}.00</span>
           </div>
 
           <div class="d-flex justify-space-between text-base mb-4">
@@ -282,7 +282,7 @@ watch(() => prop.currentStep, updateCartData)
               label
               size="small"
             >
-              {{ checkoutPaymentDataLocal.deliveryAddress }}
+              {{ modelCheckoutPaymentDataLocal.deliveryAddress }}
             </VChip>
           </div>
 

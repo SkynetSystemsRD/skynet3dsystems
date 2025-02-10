@@ -17,7 +17,7 @@ export interface Addresses {
   value: string
 }
 
-export interface CheckoutData {
+export interface ModelCheckoutData {
   cartItems: CartItem[]
   promoCode: string
   orderAmount: number
