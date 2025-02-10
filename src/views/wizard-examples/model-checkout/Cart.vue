@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import emptyCartImg from '@images/pages/empty-cart.png'
 import type { ModelCheckoutData, ModelItem } from './types'
 
 interface Props {
@@ -70,7 +69,7 @@ watch(() => props.currentStep, updateCartData)
       </VAlert>
 
       <h5 class="text-h5 my-4">
-        My Shopping Bag ({{ modelCheckoutCartDataLocal.modelItems.length }} Items)
+        Mi Projecto tiene ({{ modelCheckoutCartDataLocal.modelItems.length }} Modelos 3D)
       </h5>
 
       <!-- 👉 Cart items -->
@@ -146,11 +145,8 @@ watch(() => props.currentStep, updateCartData)
               >
                 <div class="d-flex text-base align-self-md-end">
                   <div class="text-primary">
-                    Peso:
-                  </div>
-                  <div>/</div>
-                  <div class="text-decoration-line-through">
-                    ${{ item.size }}
+                    Peso: 
+                    {{ item.size < 1024 ? item.size + ' KB' : (item.size / 1024).toFixed(2) + ' MB' }} 
                   </div>
                 </div>
 
@@ -169,9 +165,9 @@ watch(() => props.currentStep, updateCartData)
       </div>
 
       <!-- 👉 Empty Cart -->
-      <div v-else>
+      <!-- <div v-else>
         <VImg :src="emptyCartImg" />
-      </div>
+      </div> -->
 
       <!-- 👉 Add more from wishlist -->
       <div
@@ -181,7 +177,7 @@ watch(() => props.currentStep, updateCartData)
         <a
           href="#"
           class="font-weight-medium"
-        >Sube más modelos 3D</a>
+        >Sube más modelos 3D 🚀</a>
         <VIcon
           icon="tabler-upload"
           size="16"
@@ -215,7 +211,7 @@ watch(() => props.currentStep, updateCartData)
               variant="tonal"
               @click="updateCartData"
             >
-              Apply
+              Aplicar
             </VBtn>
           </div>
 
@@ -287,6 +283,10 @@ watch(() => props.currentStep, updateCartData)
           </h6>
         </VCardText> -->
       </VCard>
+
+      <!-- <div>
+        <br v-for="n in 14" :key="n" />
+      </div> -->
 
       <VBtn
         block
