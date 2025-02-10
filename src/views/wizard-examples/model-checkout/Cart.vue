@@ -40,6 +40,10 @@ const nextStep = () => {
   emit('update:currentStep', props.currentStep ? props.currentStep + 1 : 1)
 }
 
+function handleFileChange(files: File[]) {
+  console.log("files: ", files)
+}
+
 watch(() => props.currentStep, updateCartData)
 </script>
 
@@ -164,26 +168,25 @@ watch(() => props.currentStep, updateCartData)
         </template>
       </div>
 
+      <br>
+
       <!-- 👉 Empty Cart -->
       <!-- <div v-else>
         <VImg :src="emptyCartImg" />
       </div> -->
 
       <!-- 👉 Add more from wishlist -->
-      <div
-        class="d-flex align-center justify-space-between rounded py-2 px-5 text-base mt-4"
-        style="border: 1px solid rgb(var(--v-theme-primary));"
-      >
-        <a
-          href="#"
-          class="font-weight-medium"
-        >Sube más modelos 3D 🚀</a>
-        <VIcon
-          icon="tabler-upload"
-          size="16"
-          class="flip-in-rtl text-primary"
-        />
-      </div>
+      <VFileInput
+        multiple
+        prepend-icon="tabler-upload"
+        label="Sube más modelos 3D 🚀"
+        @change="handleFileChange"
+      />
+      <!-- <VIcon
+        icon="tabler-upload"
+        size="16"
+        class="flip-in-rtl text-primary"
+      /> -->
     </VCol>
 
     <VCol
@@ -203,7 +206,7 @@ watch(() => props.currentStep, updateCartData)
           <div class="d-flex align-center gap-4 flex-wrap">
             <AppTextField
               v-model="modelCheckoutCartDataLocal.promoCode"
-              placeholder="Codigo de Promo"
+              placeholder="Codigo Promo"
               style="min-inline-size: 200px;"
             />
 
@@ -287,6 +290,8 @@ watch(() => props.currentStep, updateCartData)
       <!-- <div>
         <br v-for="n in 14" :key="n" />
       </div> -->
+
+      <br>
 
       <VBtn
         block
