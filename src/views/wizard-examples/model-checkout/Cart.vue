@@ -15,12 +15,17 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
 
-const modelCheckoutCartDataLocal = ref(props.modelCheckoutData)
+const modelCheckoutCartDataLocal = ref({ ...props.modelCheckoutData });
+
+watch(() => props.modelCheckoutData, (newData) => {
+  modelCheckoutCartDataLocal.value = { ...newData };
+});
 
 // remove item from cart
 const removeItem = (item: ModelItem) => {
-  modelCheckoutCartDataLocal.value.modelItems = modelCheckoutCartDataLocal.value.modelItems.filter(i => i.id !== item.id)
-}
+  modelCheckoutCartDataLocal.value.modelItems = modelCheckoutCartDataLocal.value.modelItems.filter(i => i.id !== item.id);
+  updateCartData(); // Emitir actualización después de eliminar un ítem
+};
 
 //  cart total
 const totalCost = computed(() => {
@@ -31,9 +36,9 @@ const totalCost = computed(() => {
 })
 
 const updateCartData = () => {
-  modelCheckoutCartDataLocal.value.orderAmount = totalCost.value
-  emit('update:checkout-data', modelCheckoutCartDataLocal.value)
-}
+  modelCheckoutCartDataLocal.value.orderAmount = totalCost.value;
+  emit("update:checkout-data", { ...modelCheckoutCartDataLocal.value });
+};
 
 const nextStep = () => {
   updateCartData()
@@ -41,7 +46,32 @@ const nextStep = () => {
 }
 
 function handleFileChange(files: File[]) {
-  console.log("files: ", files)
+  console.log(files.target.files.length); // Log the file objects to inspect
+  let last_id = modelCheckoutCartDataLocal.value.modelItems.length;
+  const supportedFormats = ['stl', 'fbx', 'gltf'];
+
+  if (files.target.files.length > 0) {
+
+    for (let count = 0; count < files.target.files.length; count++) {
+      // Example to read the file content (if it's a text file)
+      
+      console.log("fileName:", files.target.files[count].name);
+      console.log("size:", files.target.files[count].size < 1024000 ? files.target.files[count].size + ' KB' : (files.target.files[count].size / 1024000).toFixed(2) + ' MB');
+
+      modelCheckoutCartDataLocal.value.modelItems.push({
+        id: last_id++,
+        fileName: files.target.files[count].name,
+        format: files.target.files[count].name.split('.').pop().toUpperCase(),
+        isSupported: supportedFormats.includes(files.target.files[count].name.split('.').pop()),
+        size: files.target.files[count].size,
+        image: "",
+
+      })
+      
+      // Emitir los cambios al componente padre
+      emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
+    };
+  }
 }
 
 watch(() => props.currentStep, updateCartData)
@@ -110,7 +140,7 @@ watch(() => props.currentStep, updateCartData)
             <div class="d-flex w-100 flex-column flex-md-row">
               <div class="d-flex flex-column gap-y-2">
                 <h6 class="text-h6">
-                  {{ item.fileName }}
+                  {{ item.fileName.split('.').slice(0, -1).join('.') }}
                 </h6>
                 <div class="d-flex align-center text-no-wrap gap-4 text-body-1">
                   <div class="text-disabled">

@@ -5,7 +5,6 @@ export interface ModelItem {
   isSupported: boolean
   size: number
   image: string
-  estimatedDelivery: string
 }
 export interface Addresses {
   title: string

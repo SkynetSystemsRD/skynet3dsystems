@@ -45,25 +45,23 @@ const modelCheckoutSteps = [
   },
 ]
 
-const modelCheckoutData = ref<ModelCheckoutData>({
+let modelCheckoutData = ref<ModelCheckoutData>({
   modelItems: [
     {
       id: 1,
-      fileName: 'XYZ 3D Model Cube',
+      fileName: 'XYZ 3D Model Cube.stl',
       format: 'STL',
       isSupported: true,
       size: 359,
       image: googleHome,
-      estimatedDelivery: '18th Nov 2021',
     },
     {
       id: 2,
-      fileName: 'Modelo 3D Carro Deportivo',
+      fileName: 'Modelo 3D Carro Deportivo.gltf',
       format: 'GLTF',
       isSupported: true,
       size: 452,
       image: iphone11,
-      estimatedDelivery: '20th Nov 2021',
     },
   ],
   promoCode: '',
@@ -86,6 +84,12 @@ const modelCheckoutData = ref<ModelCheckoutData>({
     },
   ],
 })
+
+function updateModels(data: ModelCheckoutData){
+  modelCheckoutData.value = data
+
+  console.log("modelCheckoutData.value: ", modelCheckoutData.value)
+}
 
 const currentStep = ref(0)
 </script>
@@ -118,6 +122,7 @@ const currentStep = ref(0)
                 <CartContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
+                  @update:checkout-data="(data) => updateModels(data)"
                 />
               </VWindowItem>
               <VWindowItem>
