@@ -129,7 +129,6 @@ function handleFileChange(files: File[]) {
               imageData = renderer.domElement.toDataURL("image/png");
         
               // Download or display the image
-              console.log("imageData: ", imageData); // Base64 PNG data
               console.log('file format: gltf')
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
@@ -138,11 +137,11 @@ function handleFileChange(files: File[]) {
                 format: file.name.split('.').pop().toUpperCase(),
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
-                content: imageData
+                imageContent: imageData,
+                octetStreamContent: content
               });
             });
             break;
-
           case 'obj':
             loader = new OBJLoader();
             loader.load(content, (obj) => {
@@ -154,7 +153,6 @@ function handleFileChange(files: File[]) {
               imageData = renderer.domElement.toDataURL("image/png");
         
               // Download or display the image
-              console.log("imageData: ", imageData); // Base64 PNG data
               console.log('file format: obj')
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
@@ -163,11 +161,11 @@ function handleFileChange(files: File[]) {
                 format: file.name.split('.').pop().toUpperCase(),
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
-                content: imageData
+                imageContent: imageData,
+                octetStreamContent: content
               });
             });
             break;
-
           case 'fbx':
             loader = new FBXLoader();
             loader.load(content, (fbx) => {
@@ -179,7 +177,6 @@ function handleFileChange(files: File[]) {
               imageData = renderer.domElement.toDataURL("image/png");
         
               // Download or display the image
-              console.log("imageData: ", imageData); // Base64 PNG data
               console.log('file format: fbx')
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
@@ -188,11 +185,11 @@ function handleFileChange(files: File[]) {
                 format: file.name.split('.').pop().toUpperCase(),
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
-                content: imageData
+                imageContent: imageData,
+                octetStreamContent: content
               });
             });
             break;
-
           case 'stl':
             loader = new STLLoader();
             loader.load(content, (geometry) => {
@@ -206,9 +203,7 @@ function handleFileChange(files: File[]) {
               imageData = renderer.domElement.toDataURL("image/png");
         
               // Download or display the image
-              console.log("imageData: ", imageData); // Base64 PNG data
               console.log('file format: stl')
-
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
@@ -216,7 +211,8 @@ function handleFileChange(files: File[]) {
                 format: file.name.split('.').pop().toUpperCase(),
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
-                content: imageData
+                imageContent: imageData,
+                octetStreamContent: content
               });
             });
             break;
@@ -393,7 +389,7 @@ watch(() => props.currentStep, updateCartData)
 
             <div>
               <VImg
-                :src="item.content"
+                :src="item.imageContent"
                 width="140"
               />
             </div>
