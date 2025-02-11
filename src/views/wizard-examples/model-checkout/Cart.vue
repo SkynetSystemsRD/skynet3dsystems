@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import type { ModelCheckoutData, ModelItem } from './types'
+import * as THREE from 'three';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+import type { ModelCheckoutData, ModelItem } from './types';
 
 interface Props {
   currentStep?: number
@@ -45,6 +50,33 @@ const nextStep = () => {
   emit('update:currentStep', props.currentStep ? props.currentStep + 1 : 1)
 }
 
+function createModelViewer(id: number, fileName: string, format: string) {
+  // Buscar el contenedor padre donde se agregará el model-viewer
+  const parentContainer = document.getElementById("models-container");
+  if (!parentContainer) {
+    console.error("No se encontró el contenedor principal.");
+    return;
+  }
+
+  // Crear el div model-viewer dinámicamente
+  const modelViewerDiv = document.createElement("div");
+  modelViewerDiv.id = `model-viewer-${id}`;
+  modelViewerDiv.classList.add("w-100", "rounded");
+  modelViewerDiv.style.width = "300px"; // Ajusta según necesidad
+  modelViewerDiv.style.height = "300px"; // Ajusta según necesidad
+  modelViewerDiv.style.border = "1px solid #ccc"; // Opcional: solo para ver el contenedor
+
+  // Agregarlo al contenedor principal
+  parentContainer.appendChild(modelViewerDiv);
+
+  console.log(`Se creó el model-viewer-${id}`);
+
+  // Llamar a initializeModel() después de que el div se agregue
+  setTimeout(() => {
+    initializeModel(fileName, id, format)
+  }, 500); // Esperar para asegurar que el DOM se actualizó
+}
+
 function handleFileChange(files: File[]) {
   console.log(files.target.files.length); // Log the file objects to inspect
   let last_id = modelCheckoutCartDataLocal.value.modelItems.length + 1;
@@ -70,27 +102,168 @@ function handleFileChange(files: File[]) {
 
       // Push the new item to the modelCheckoutCartDataLocal
       fileContent.then(content => {
-        modelCheckoutCartDataLocal.value.modelItems.push({
-          id: last_id++,
-          fileName: file.name,
-          format: file.name.split('.').pop().toUpperCase(),
-          isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
-          size: file.size,
-          content: content  // Set the content here
-        });
+        let imageData = ''
+        let loader;
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xdddddd);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(800, 600); // Set canvas size
+        const camera = new THREE.PerspectiveCamera(
+          75, 440 / 250, 0.1, 1000
+        );
+        camera.rotation.y = 45 / 180 * Math.PI;
+        camera.position.set(18, 14, 5);  // Ajusta la posición de la cámara para un buen ángulo de visión
+        camera.fov = 75;  // Ajuste del FOV para un zoom moderado
 
+        switch (file.name.split('.').pop().toLowerCase()) {
+          case 'glb':
+          case 'gltf':
+            loader = new GLTFLoader();
+            loader.load(content, (gltf) => {
+              const model = gltf.scene.children[0];
+              model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+              model.position.set(0, 0, 0);  // Centra el modelo
+              scene.add(gltf.scene);
+              // animate();
+              renderer.render(scene, camera);
+              imageData = renderer.domElement.toDataURL("image/png");
+        
+              // Download or display the image
+              console.log("imageData: ", imageData); // Base64 PNG data
+              console.log('file format: gltf')
+              modelCheckoutCartDataLocal.value.modelItems.push({
+                id: last_id++,
+                fileName: file.name,
+                filePath: '/xyzCalibration_cube.stl',
+                format: file.name.split('.').pop().toUpperCase(),
+                isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
+                size: file.size,
+                content: imageData
+              });
+            });
+            break;
+
+          case 'obj':
+            loader = new OBJLoader();
+            loader.load(content, (obj) => {
+              obj.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+              obj.position.set(0, 0, 0);  // Centra el modelo
+              scene.add(obj);
+              // animate();
+              renderer.render(scene, camera);
+              imageData = renderer.domElement.toDataURL("image/png");
+        
+              // Download or display the image
+              console.log("imageData: ", imageData); // Base64 PNG data
+              console.log('file format: obj')
+              modelCheckoutCartDataLocal.value.modelItems.push({
+                id: last_id++,
+                fileName: file.name,
+                filePath: '/xyzCalibration_cube.stl',
+                format: file.name.split('.').pop().toUpperCase(),
+                isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
+                size: file.size,
+                content: imageData
+              });
+            });
+            break;
+
+          case 'fbx':
+            loader = new FBXLoader();
+            loader.load(content, (fbx) => {
+              fbx.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+              fbx.position.set(0, 0, 0);  // Centra el modelo
+              scene.add(fbx);
+              // animate();
+              renderer.render(scene, camera);
+              imageData = renderer.domElement.toDataURL("image/png");
+        
+              // Download or display the image
+              console.log("imageData: ", imageData); // Base64 PNG data
+              console.log('file format: fbx')
+              modelCheckoutCartDataLocal.value.modelItems.push({
+                id: last_id++,
+                fileName: file.name,
+                filePath: '/xyzCalibration_cube.stl',
+                format: file.name.split('.').pop().toUpperCase(),
+                isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
+                size: file.size,
+                content: imageData
+              });
+            });
+            break;
+
+          case 'stl':
+            loader = new STLLoader();
+            loader.load(content, (geometry) => {
+              const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
+              const mesh = new THREE.Mesh(geometry, material);
+              mesh.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+              mesh.position.set(0, 0, 0);  // Centra el modelo
+              scene.add(mesh);
+              // animate();
+              renderer.render(scene, camera);
+              imageData = renderer.domElement.toDataURL("image/png");
+        
+              // Download or display the image
+              console.log("imageData: ", imageData); // Base64 PNG data
+              console.log('file format: stl')
+
+              modelCheckoutCartDataLocal.value.modelItems.push({
+                id: last_id++,
+                fileName: file.name,
+                filePath: '/xyzCalibration_cube.stl',
+                format: file.name.split('.').pop().toUpperCase(),
+                isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
+                size: file.size,
+                content: imageData
+              });
+            });
+            break;
+
+          default:
+            console.error('Unsupported model format');
+        }
+        // console.log('hey: ', initializeModel(content, file.name.split('.').pop().toLowerCase()))
         // Emitir los cambios al componente padre
         emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
+        // Llamar a initializeModel() después de que el div se agregue
+        
+        // initializeModel('/xyzCalibration_cube.stl', last_id , file.name.split('.').pop().toLowerCase())
       });
     }
+
+    // reload()
+    // initializeModel()
   }
 }
 
-function initializeModel() {
+// Function to reload model viewers
+const reload = (id: number) => {
+  var modelsContainer = document.getElementById('models-container-' + id);
+  var modelViewers = document.getElementById('model-viewer-' + id); 
+
+  if (modelsContainer) {
+    // Clear the content of the container
+    modelsContainer.innerHTML = '';
+    console.log(`Model Container ${id} refreshed`);
+  }
+  else if (modelViewers){
+    // Clear the content of the container
+    modelViewers.innerHTML = '';
+    console.log(`Model Viewer ${id} refreshed`);
+  }
+  else {
+    console.error(`The models-containers and model-viewers '${id}' does not exist.`);
+  }
+}
+
+function initializeModel (content: string | ArrayBuffer | null, format: string): string {
+  let loader;
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdddddd);
-
-  // Configuración de la cámara
+  const renderer = new THREE.WebGLRenderer();
+  renderer.setSize(800, 600); // Set canvas size
   const camera = new THREE.PerspectiveCamera(
     75, 440 / 250, 0.1, 1000
   );
@@ -98,76 +271,80 @@ function initializeModel() {
   camera.position.set(18, 14, 5);  // Ajusta la posición de la cámara para un buen ángulo de visión
   camera.fov = 75;  // Ajuste del FOV para un zoom moderado
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(795, 350);
-  document.getElementById('model-viewer')?.appendChild(renderer.domElement);
-
-  // Controles de órbita
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.25;
-  controls.screenSpacePanning = false;
-
-  // Luz ambiental para iluminación general suave
-  const hlight = new THREE.AmbientLight(0x404040, 1);  // Luz más suave
-  scene.add(hlight);
-
-  // Luz direccional ejes positivos
-  const directionalLight_z_up = new THREE.DirectionalLight(0xFFFFFF, 4);  // Luz más intensa desde arriba
-  directionalLight_z_up.position.set(5, 5, 5);  // Aseguramos que la luz venga de arriba
-  directionalLight_z_up.castShadow = true;
-  scene.add(directionalLight_z_up);
-
-  // Luz direccional ejes negativos
-  const directionalLight_z_down = new THREE.DirectionalLight(0xFFFFFF, 3);  // Luz más intensa desde arriba
-  directionalLight_z_down.position.set(-5, -5, -5);  // Aseguramos que la luz venga de arriba
-  directionalLight_z_down.castShadow = true;
-  scene.add(directionalLight_z_down);
-
-  let loader;
-
-  switch (projectDetails?.value.fileExtention) {
+  switch (format) {
     case 'glb':
     case 'gltf':
       loader = new GLTFLoader();
-      loader.load(projectDetails?.value.filePath, (gltf) => {
+      loader.load(content, (gltf) => {
         const model = gltf.scene.children[0];
         model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
         model.position.set(0, 0, 0);  // Centra el modelo
         scene.add(gltf.scene);
-        animate();
+        // animate();
+        renderer.render(scene, camera);
+        const imageData = renderer.domElement.toDataURL("image/png");
+  
+        // Download or display the image
+        console.log("imageData: ", imageData); // Base64 PNG data
+        console.log('file format: gltf')
+
+        return imageData
       });
       break;
 
     case 'obj':
       loader = new OBJLoader();
-      loader.load(projectDetails?.value.filePath, (obj) => {
+      loader.load(content, (obj) => {
         obj.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
         obj.position.set(0, 0, 0);  // Centra el modelo
         scene.add(obj);
-        animate();
+        // animate();
+        renderer.render(scene, camera);
+        const imageData = renderer.domElement.toDataURL("image/png");
+  
+        // Download or display the image
+        console.log("imageData: ", imageData); // Base64 PNG data
+        console.log('file format: obj')
+
+        return imageData
       });
       break;
 
     case 'fbx':
       loader = new FBXLoader();
-      loader.load(projectDetails?.value.filePath, (fbx) => {
+      loader.load(content, (fbx) => {
         fbx.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
         fbx.position.set(0, 0, 0);  // Centra el modelo
         scene.add(fbx);
-        animate();
+        // animate();
+        renderer.render(scene, camera);
+        const imageData = renderer.domElement.toDataURL("image/png");
+  
+        // Download or display the image
+        console.log("imageData: ", imageData); // Base64 PNG data
+        console.log('file format: fbx')
+
+        return imageData
       });
       break;
 
     case 'stl':
       loader = new STLLoader();
-      loader.load(projectDetails?.value.filePath, (geometry) => {
+      loader.load(content, (geometry) => {
         const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
         const mesh = new THREE.Mesh(geometry, material);
         mesh.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
         mesh.position.set(0, 0, 0);  // Centra el modelo
         scene.add(mesh);
-        animate();
+        // animate();
+        renderer.render(scene, camera);
+        const imageData = renderer.domElement.toDataURL("image/png");
+  
+        // Download or display the image
+        console.log("imageData: ", imageData); // Base64 PNG data
+        console.log('file format: stl')
+
+        return imageData
       });
       break;
 
@@ -175,11 +352,7 @@ function initializeModel() {
       console.error('Unsupported model format');
   }
 
-  // Función de animación
-  function animate() {
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
-  }
+  return ''
 }
 
 watch(() => props.currentStep, updateCartData)
@@ -239,11 +412,10 @@ watch(() => props.currentStep, updateCartData)
             </IconBtn>
 
             <div>
-              <div id="model-viewer" class="w-100 rounded"></div>
-              <!-- <VImg
-                width="140"
+              <VImg
                 :src="item.content"
-              /> -->
+                width="140"
+              />
             </div>
 
             <div class="d-flex w-100 flex-column flex-md-row">

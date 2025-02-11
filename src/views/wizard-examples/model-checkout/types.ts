@@ -1,10 +1,11 @@
 export interface ModelItem {
   id: number
   fileName: string
+  filePath: string
   format: string
   isSupported: boolean
   size: number
-  content: string | ArrayBuffer | null
+  content: string
 }
 
 export interface Addresses {
