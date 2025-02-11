@@ -54,9 +54,6 @@ function handleFileChange(files: File[]) {
 
     for (let count = 0; count < files.target.files.length; count++) {
       // Example to read the file content (if it's a text file)
-      
-      console.log("fileName:", files.target.files[count].name);
-      console.log("size:", files.target.files[count].size < 1024000 ? files.target.files[count].size + ' KB' : (files.target.files[count].size / 1024000).toFixed(2) + ' MB');
 
       modelCheckoutCartDataLocal.value.modelItems.push({
         id: last_id++,
@@ -64,9 +61,16 @@ function handleFileChange(files: File[]) {
         format: files.target.files[count].name.split('.').pop().toUpperCase(),
         isSupported: supportedFormats.includes(files.target.files[count].name.split('.').pop()),
         size: files.target.files[count].size,
-        image: "",
-
+        image: files.target.files[count].name
       })
+
+      // Si quieres leer el contenido del archivo (por ejemplo, para mostrar una imagen)
+      const reader = new FileReader();
+      reader.onload = () => {
+        // `reader.result` contiene el contenido del archivo cargado
+        console.log("FILE CONTENT: ", reader.result);
+      };
+      reader.readAsDataURL(files.target.files[count]);  // Lee el archivo como una URL de datos
       
       // Emitir los cambios al componente padre
       emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
@@ -180,7 +184,7 @@ watch(() => props.currentStep, updateCartData)
                 <div class="d-flex text-base align-self-md-end">
                   <div class="text-primary">
                     Peso: 
-                    {{ item.size < 1024 ? item.size + ' KB' : (item.size / 1024).toFixed(2) + ' MB' }} 
+                    {{ item.size < 1024 ? item.size + ' bytes' : item.size < 1024 * 1024 ? (item.size / 1024).toFixed(2) + ' KB' : (item.size / (1024 * 1024)).toFixed(2) + ' MB' }}
                   </div>
                 </div>
 
