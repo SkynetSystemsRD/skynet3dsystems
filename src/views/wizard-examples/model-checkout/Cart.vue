@@ -238,26 +238,6 @@ function handleFileChange(files: File[]) {
   }
 }
 
-// Function to reload model viewers
-const reload = (id: number) => {
-  var modelsContainer = document.getElementById('models-container-' + id);
-  var modelViewers = document.getElementById('model-viewer-' + id); 
-
-  if (modelsContainer) {
-    // Clear the content of the container
-    modelsContainer.innerHTML = '';
-    console.log(`Model Container ${id} refreshed`);
-  }
-  else if (modelViewers){
-    // Clear the content of the container
-    modelViewers.innerHTML = '';
-    console.log(`Model Viewer ${id} refreshed`);
-  }
-  else {
-    console.error(`The models-containers and model-viewers '${id}' does not exist.`);
-  }
-}
-
 function initializeModel (content: string | ArrayBuffer | null, format: string): string {
   let loader;
   const scene = new THREE.Scene();
