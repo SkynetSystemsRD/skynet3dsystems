@@ -102,7 +102,25 @@ function handleFileChange(files: File[]) {
       fileContent.then(content => {
         let imageData = ''
         let loader;
+
         const scene = new THREE.Scene();
+
+        // Luz ambiental para iluminación general suave
+        const hlight = new THREE.AmbientLight(0x404040, 1);  // Luz más suave
+        scene.add(hlight);
+
+        // Luz direccional ejes positivos
+        const directionalLight_z_up = new THREE.DirectionalLight(0xFFFFFF, 4);  // Luz más intensa desde arriba
+        directionalLight_z_up.position.set(5, 5, 5);  // Aseguramos que la luz venga de arriba
+        directionalLight_z_up.castShadow = true;
+        scene.add(directionalLight_z_up);
+
+        // Luz direccional ejes negativos
+        const directionalLight_z_down = new THREE.DirectionalLight(0xFFFFFF, 3);  // Luz más intensa desde arriba
+        directionalLight_z_down.position.set(-5, -5, -5);  // Aseguramos que la luz venga de arriba
+        directionalLight_z_down.castShadow = true;
+        scene.add(directionalLight_z_down);
+
         scene.background = new THREE.Color(0xdddddd);
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(600, 400); // Set canvas size
@@ -110,7 +128,7 @@ function handleFileChange(files: File[]) {
           75, 440 / 250, 0.1, 1000
         );
         camera.rotation.y = 45 / 180 * Math.PI;
-        camera.position.set(18, 14, 5);  // Ajusta la posición de la cámara para un buen ángulo de visión
+        camera.position.set(30, 25, 10);  // Move the camera farther back
         camera.fov = 75;  // Ajuste del FOV para un zoom moderado
 
         switch (file.name.split('.').pop().toLowerCase()) {
@@ -122,18 +140,6 @@ function handleFileChange(files: File[]) {
               model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
               model.position.set(0, 0, 0);  // Centra el modelo
               scene.add(gltf.scene);
-              // Calcular límites del modelo
-              const box = new THREE.Box3().setFromObject(model);
-              const center = box.getCenter(new THREE.Vector3());
-
-              // Centrando el modelo
-              model.position.sub(center);   
-
-              // Ajustando cámara para encajar el modelo
-              const size = box.getSize(new THREE.Vector3()).length();
-              const distance = size / (2 * Math.tan((camera.fov * Math.PI) / 360));
-              camera.position.set(center.x, center.y + distance, center.z + distance);
-              camera.lookAt(center);
 
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
@@ -158,7 +164,7 @@ function handleFileChange(files: File[]) {
               obj.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
               obj.position.set(0, 0, 0);  // Centra el modelo
               scene.add(obj);
-              // animate();
+              
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
         
@@ -182,7 +188,7 @@ function handleFileChange(files: File[]) {
               fbx.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
               fbx.position.set(0, 0, 0);  // Centra el modelo
               scene.add(fbx);
-              // animate();
+              
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
         
@@ -208,7 +214,6 @@ function handleFileChange(files: File[]) {
               mesh.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
               mesh.position.set(0, 0, 0);  // Centra el modelo
               scene.add(mesh);
-              // animate();
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
         
@@ -230,17 +235,10 @@ function handleFileChange(files: File[]) {
           default:
             console.error('Unsupported model format');
         }
-        // console.log('hey: ', initializeModel(content, file.name.split('.').pop().toLowerCase()))
-        // Emitir los cambios al componente padre
-        emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
-        // Llamar a initializeModel() después de que el div se agregue
         
-        // initializeModel('/xyzCalibration_cube.stl', last_id , file.name.split('.').pop().toLowerCase())
+        emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
       });
     }
-
-    // reload()
-    // initializeModel()
   }
 }
 
