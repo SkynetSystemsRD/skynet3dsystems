@@ -6,8 +6,6 @@ import CartContent from '@/views/wizard-examples/model-checkout/Cart.vue'
 import ConfirmationContent from '@/views/wizard-examples/model-checkout/Confirmation.vue'
 import PaymentContent from '@/views/wizard-examples/model-checkout/Payment.vue'
 import type { ModelCheckoutData } from '@/views/wizard-examples/model-checkout/types'
-import googleHome from '@images/pages/google-home.png'
-import iphone11 from '@images/pages/iphone-11.png'
 import uploadModel from '@images/svg/3d-printer6.svg'
 import viewModel from '@images/svg/3d-printer9.svg'
 import customPayment from '@images/svg/payment.svg'
@@ -46,24 +44,7 @@ const modelCheckoutSteps = [
 ]
 
 let modelCheckoutData = ref<ModelCheckoutData>({
-  modelItems: [
-    {
-      id: 1,
-      fileName: 'XYZ 3D Model Cube.stl',
-      format: 'STL',
-      isSupported: true,
-      size: 359,
-      image: googleHome,
-    },
-    {
-      id: 2,
-      fileName: 'Modelo 3D Carro Deportivo.gltf',
-      format: 'GLTF',
-      isSupported: true,
-      size: 452,
-      image: iphone11,
-    },
-  ],
+  modelItems: [],
   promoCode: '',
   orderAmount: 1198,
   deliveryAddress: 'home',

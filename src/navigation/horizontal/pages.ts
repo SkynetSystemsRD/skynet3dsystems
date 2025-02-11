@@ -79,7 +79,7 @@ export default [
         title: 'Wizard Pages',
         icon: { icon: 'tabler-forms' },
         children: [
-          { title: 'Checkout', to: { name: 'wizard-examples-checkout' } },
+          { title: 'Checkout', to: { name: 'wizard-examples-model-checkout' } },
           { title: 'Property Listing', to: { name: 'wizard-examples-property-listing' } },
           { title: 'Create Deal', to: { name: 'wizard-examples-create-deal' } },
         ],

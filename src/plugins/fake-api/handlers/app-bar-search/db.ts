@@ -333,7 +333,7 @@ export const db: DB = {
           title: 'Register Multi-Steps',
         },
         {
-          url: { name: 'wizard-examples-checkout' },
+          url: { name: 'wizard-examples-model-checkout' },
           icon: 'tabler-shopping-cart',
           title: 'Wizard - Checkout',
         },

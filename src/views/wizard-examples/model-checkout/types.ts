@@ -4,8 +4,9 @@ export interface ModelItem {
   format: string
   isSupported: boolean
   size: number
-  image: string
+  content: string | ArrayBuffer | null
 }
+
 export interface Addresses {
   title: string
   desc: string

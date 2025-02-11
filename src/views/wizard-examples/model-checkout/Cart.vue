@@ -47,7 +47,7 @@ const nextStep = () => {
 
 function handleFileChange(files: File[]) {
   console.log(files.target.files.length); // Log the file objects to inspect
-  let last_id = modelCheckoutCartDataLocal.value.modelItems.length;
+  let last_id = modelCheckoutCartDataLocal.value.modelItems.length + 1;
   const supportedFormats = ['stl', 'fbx', 'gltf'];
 
   if (files.target.files.length > 0) {
@@ -55,26 +55,130 @@ function handleFileChange(files: File[]) {
     for (let count = 0; count < files.target.files.length; count++) {
       // Example to read the file content (if it's a text file)
 
-      modelCheckoutCartDataLocal.value.modelItems.push({
-        id: last_id++,
-        fileName: files.target.files[count].name,
-        format: files.target.files[count].name.split('.').pop().toUpperCase(),
-        isSupported: supportedFormats.includes(files.target.files[count].name.split('.').pop()),
-        size: files.target.files[count].size,
-        image: files.target.files[count].name
-      })
-
-      // Si quieres leer el contenido del archivo (por ejemplo, para mostrar una imagen)
+      // Crear un FileReader para leer el archivo
       const reader = new FileReader();
-      reader.onload = () => {
-        // `reader.result` contiene el contenido del archivo cargado
-        console.log("FILE CONTENT: ", reader.result);
-      };
-      reader.readAsDataURL(files.target.files[count]);  // Lee el archivo como una URL de datos
+      const file = files.target.files[count];
       
-      // Emitir los cambios al componente padre
-      emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
-    };
+      // Create a Promise to handle the file reading asynchronously
+      const fileContent = new Promise<string | ArrayBuffer | null>((resolve) => {
+        reader.onload = () => {
+          // `reader.result` contains the content of the loaded file
+          resolve(reader.result);  // Resolve the promise with the content
+        };
+        reader.readAsDataURL(file);  // Read the file as a Data URL (for images, for example)
+      });
+
+      // Push the new item to the modelCheckoutCartDataLocal
+      fileContent.then(content => {
+        modelCheckoutCartDataLocal.value.modelItems.push({
+          id: last_id++,
+          fileName: file.name,
+          format: file.name.split('.').pop().toUpperCase(),
+          isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
+          size: file.size,
+          content: content  // Set the content here
+        });
+
+        // Emitir los cambios al componente padre
+        emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
+      });
+    }
+  }
+}
+
+function initializeModel() {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xdddddd);
+
+  // Configuración de la cámara
+  const camera = new THREE.PerspectiveCamera(
+    75, 440 / 250, 0.1, 1000
+  );
+  camera.rotation.y = 45 / 180 * Math.PI;
+  camera.position.set(18, 14, 5);  // Ajusta la posición de la cámara para un buen ángulo de visión
+  camera.fov = 75;  // Ajuste del FOV para un zoom moderado
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(795, 350);
+  document.getElementById('model-viewer')?.appendChild(renderer.domElement);
+
+  // Controles de órbita
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.25;
+  controls.screenSpacePanning = false;
+
+  // Luz ambiental para iluminación general suave
+  const hlight = new THREE.AmbientLight(0x404040, 1);  // Luz más suave
+  scene.add(hlight);
+
+  // Luz direccional ejes positivos
+  const directionalLight_z_up = new THREE.DirectionalLight(0xFFFFFF, 4);  // Luz más intensa desde arriba
+  directionalLight_z_up.position.set(5, 5, 5);  // Aseguramos que la luz venga de arriba
+  directionalLight_z_up.castShadow = true;
+  scene.add(directionalLight_z_up);
+
+  // Luz direccional ejes negativos
+  const directionalLight_z_down = new THREE.DirectionalLight(0xFFFFFF, 3);  // Luz más intensa desde arriba
+  directionalLight_z_down.position.set(-5, -5, -5);  // Aseguramos que la luz venga de arriba
+  directionalLight_z_down.castShadow = true;
+  scene.add(directionalLight_z_down);
+
+  let loader;
+
+  switch (projectDetails?.value.fileExtention) {
+    case 'glb':
+    case 'gltf':
+      loader = new GLTFLoader();
+      loader.load(projectDetails?.value.filePath, (gltf) => {
+        const model = gltf.scene.children[0];
+        model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+        model.position.set(0, 0, 0);  // Centra el modelo
+        scene.add(gltf.scene);
+        animate();
+      });
+      break;
+
+    case 'obj':
+      loader = new OBJLoader();
+      loader.load(projectDetails?.value.filePath, (obj) => {
+        obj.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+        obj.position.set(0, 0, 0);  // Centra el modelo
+        scene.add(obj);
+        animate();
+      });
+      break;
+
+    case 'fbx':
+      loader = new FBXLoader();
+      loader.load(projectDetails?.value.filePath, (fbx) => {
+        fbx.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+        fbx.position.set(0, 0, 0);  // Centra el modelo
+        scene.add(fbx);
+        animate();
+      });
+      break;
+
+    case 'stl':
+      loader = new STLLoader();
+      loader.load(projectDetails?.value.filePath, (geometry) => {
+        const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+        mesh.position.set(0, 0, 0);  // Centra el modelo
+        scene.add(mesh);
+        animate();
+      });
+      break;
+
+    default:
+      console.error('Unsupported model format');
+  }
+
+  // Función de animación
+  function animate() {
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
   }
 }
 
@@ -135,10 +239,11 @@ watch(() => props.currentStep, updateCartData)
             </IconBtn>
 
             <div>
-              <VImg
+              <div id="model-viewer" class="w-100 rounded"></div>
+              <!-- <VImg
                 width="140"
-                :src="item.image"
-              />
+                :src="item.content"
+              /> -->
             </div>
 
             <div class="d-flex w-100 flex-column flex-md-row">
