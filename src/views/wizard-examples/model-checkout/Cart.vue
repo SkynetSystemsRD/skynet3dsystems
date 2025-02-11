@@ -50,37 +50,10 @@ const nextStep = () => {
   emit('update:currentStep', props.currentStep ? props.currentStep + 1 : 1)
 }
 
-function createModelViewer(id: number, fileName: string, format: string) {
-  // Buscar el contenedor padre donde se agregará el model-viewer
-  const parentContainer = document.getElementById("models-container");
-  if (!parentContainer) {
-    console.error("No se encontró el contenedor principal.");
-    return;
-  }
-
-  // Crear el div model-viewer dinámicamente
-  const modelViewerDiv = document.createElement("div");
-  modelViewerDiv.id = `model-viewer-${id}`;
-  modelViewerDiv.classList.add("w-100", "rounded");
-  modelViewerDiv.style.width = "300px"; // Ajusta según necesidad
-  modelViewerDiv.style.height = "300px"; // Ajusta según necesidad
-  modelViewerDiv.style.border = "1px solid #ccc"; // Opcional: solo para ver el contenedor
-
-  // Agregarlo al contenedor principal
-  parentContainer.appendChild(modelViewerDiv);
-
-  console.log(`Se creó el model-viewer-${id}`);
-
-  // Llamar a initializeModel() después de que el div se agregue
-  setTimeout(() => {
-    initializeModel(fileName, id, format)
-  }, 500); // Esperar para asegurar que el DOM se actualizó
-}
-
 function handleFileChange(files: File[]) {
   console.log(files.target.files.length); // Log the file objects to inspect
   let last_id = modelCheckoutCartDataLocal.value.modelItems.length + 1;
-  const supportedFormats = ['stl', 'fbx', 'gltf'];
+  const supportedFormats = ['stl', 'fbx', 'gltf', 'obj'];
 
   if (files.target.files.length > 0) {
 
@@ -129,7 +102,7 @@ function handleFileChange(files: File[]) {
         );
         camera.rotation.y = 45 / 180 * Math.PI;
         camera.position.set(30, 25, 10);  // Move the camera farther back
-        camera.fov = 75;  // Ajuste del FOV para un zoom moderado
+        camera.fov = 20;  // Ajuste del FOV para un zoom moderado
 
         switch (file.name.split('.').pop().toLowerCase()) {
           case 'glb':
