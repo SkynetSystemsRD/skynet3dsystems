@@ -85,8 +85,6 @@ function handleFileChange(files: File[]) {
   if (files.target.files.length > 0) {
 
     for (let count = 0; count < files.target.files.length; count++) {
-      // Example to read the file content (if it's a text file)
-
       // Crear un FileReader para leer el archivo
       const reader = new FileReader();
       const file = files.target.files[count];
@@ -107,7 +105,7 @@ function handleFileChange(files: File[]) {
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xdddddd);
         const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(800, 600); // Set canvas size
+        renderer.setSize(600, 400); // Set canvas size
         const camera = new THREE.PerspectiveCamera(
           75, 440 / 250, 0.1, 1000
         );
@@ -124,7 +122,19 @@ function handleFileChange(files: File[]) {
               model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
               model.position.set(0, 0, 0);  // Centra el modelo
               scene.add(gltf.scene);
-              // animate();
+              // Calcular límites del modelo
+              const box = new THREE.Box3().setFromObject(model);
+              const center = box.getCenter(new THREE.Vector3());
+
+              // Centrando el modelo
+              model.position.sub(center);   
+
+              // Ajustando cámara para encajar el modelo
+              const size = box.getSize(new THREE.Vector3()).length();
+              const distance = size / (2 * Math.tan((camera.fov * Math.PI) / 360));
+              camera.position.set(center.x, center.y + distance, center.z + distance);
+              camera.lookAt(center);
+
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
         
@@ -133,7 +143,7 @@ function handleFileChange(files: File[]) {
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
-                filePath: '/xyzCalibration_cube.stl',
+                filePath: '/' + file.name,
                 format: file.name.split('.').pop().toUpperCase(),
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
@@ -157,7 +167,7 @@ function handleFileChange(files: File[]) {
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
-                filePath: '/xyzCalibration_cube.stl',
+                filePath: '/' + file.name,
                 format: file.name.split('.').pop().toUpperCase(),
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
@@ -181,7 +191,7 @@ function handleFileChange(files: File[]) {
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
-                filePath: '/xyzCalibration_cube.stl',
+                filePath: '/' + file.name,
                 format: file.name.split('.').pop().toUpperCase(),
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
@@ -207,7 +217,7 @@ function handleFileChange(files: File[]) {
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
-                filePath: '/xyzCalibration_cube.stl',
+                filePath: '/' + file.name,
                 format: file.name.split('.').pop().toUpperCase(),
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
@@ -232,103 +242,6 @@ function handleFileChange(files: File[]) {
     // reload()
     // initializeModel()
   }
-}
-
-function initializeModel (content: string | ArrayBuffer | null, format: string): string {
-  let loader;
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xdddddd);
-  const renderer = new THREE.WebGLRenderer();
-  renderer.setSize(800, 600); // Set canvas size
-  const camera = new THREE.PerspectiveCamera(
-    75, 440 / 250, 0.1, 1000
-  );
-  camera.rotation.y = 45 / 180 * Math.PI;
-  camera.position.set(18, 14, 5);  // Ajusta la posición de la cámara para un buen ángulo de visión
-  camera.fov = 75;  // Ajuste del FOV para un zoom moderado
-
-  switch (format) {
-    case 'glb':
-    case 'gltf':
-      loader = new GLTFLoader();
-      loader.load(content, (gltf) => {
-        const model = gltf.scene.children[0];
-        model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-        model.position.set(0, 0, 0);  // Centra el modelo
-        scene.add(gltf.scene);
-        // animate();
-        renderer.render(scene, camera);
-        const imageData = renderer.domElement.toDataURL("image/png");
-  
-        // Download or display the image
-        console.log("imageData: ", imageData); // Base64 PNG data
-        console.log('file format: gltf')
-
-        return imageData
-      });
-      break;
-
-    case 'obj':
-      loader = new OBJLoader();
-      loader.load(content, (obj) => {
-        obj.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-        obj.position.set(0, 0, 0);  // Centra el modelo
-        scene.add(obj);
-        // animate();
-        renderer.render(scene, camera);
-        const imageData = renderer.domElement.toDataURL("image/png");
-  
-        // Download or display the image
-        console.log("imageData: ", imageData); // Base64 PNG data
-        console.log('file format: obj')
-
-        return imageData
-      });
-      break;
-
-    case 'fbx':
-      loader = new FBXLoader();
-      loader.load(content, (fbx) => {
-        fbx.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-        fbx.position.set(0, 0, 0);  // Centra el modelo
-        scene.add(fbx);
-        // animate();
-        renderer.render(scene, camera);
-        const imageData = renderer.domElement.toDataURL("image/png");
-  
-        // Download or display the image
-        console.log("imageData: ", imageData); // Base64 PNG data
-        console.log('file format: fbx')
-
-        return imageData
-      });
-      break;
-
-    case 'stl':
-      loader = new STLLoader();
-      loader.load(content, (geometry) => {
-        const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
-        const mesh = new THREE.Mesh(geometry, material);
-        mesh.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-        mesh.position.set(0, 0, 0);  // Centra el modelo
-        scene.add(mesh);
-        // animate();
-        renderer.render(scene, camera);
-        const imageData = renderer.domElement.toDataURL("image/png");
-  
-        // Download or display the image
-        console.log("imageData: ", imageData); // Base64 PNG data
-        console.log('file format: stl')
-
-        return imageData
-      });
-      break;
-
-    default:
-      console.error('Unsupported model format');
-  }
-
-  return ''
 }
 
 watch(() => props.currentStep, updateCartData)
