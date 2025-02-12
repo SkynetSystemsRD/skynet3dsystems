@@ -94,15 +94,16 @@ function handleFileChange(files: File[]) {
         directionalLight_z_down.castShadow = true;
         scene.add(directionalLight_z_down);
 
-        scene.background = new THREE.Color(0xdddddd);
+        scene.background = new THREE.Color(0xFFFFFF);
         const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(600, 400); // Set canvas size
+        renderer.setSize(300, 200); // Set canvas size
         const camera = new THREE.PerspectiveCamera(
-          75, 440 / 250, 0.1, 1000
+          90, 440 / 250, 0.1, 1000
         );
         camera.rotation.y = 45 / 180 * Math.PI;
-        camera.position.set(30, 25, 10);  // Move the camera farther back
-        camera.fov = 20;  // Ajuste del FOV para un zoom moderado
+        camera.position.set(50, 50, 50); // Alejar más la cámara
+        camera.fov = 90; // Reducir el FOV para un efecto de zoom alejado
+        camera.updateProjectionMatrix(); // Aplicar los cambios en el FOV
 
         switch (file.name.split('.').pop().toLowerCase()) {
           case 'glb':
@@ -110,7 +111,7 @@ function handleFileChange(files: File[]) {
             loader = new GLTFLoader();
             loader.load(content, (gltf) => {
               const model = gltf.scene.children[0];
-              model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+              model.scale.set(1, 1, 1);  // Ajusta la escala del modelo
               model.position.set(0, 0, 0);  // Centra el modelo
               scene.add(gltf.scene);
 
@@ -134,8 +135,8 @@ function handleFileChange(files: File[]) {
           case 'obj':
             loader = new OBJLoader();
             loader.load(content, (obj) => {
-              obj.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-              obj.position.set(0, 0, 0);  // Centra el modelo
+              obj.scale.set(1, 1, 1);   // Ajusta la escala del modelo
+              obj.position.set(0, 0, 0);  // Centra el modelo.
               scene.add(obj);
               
               renderer.render(scene, camera);
@@ -158,7 +159,7 @@ function handleFileChange(files: File[]) {
           case 'fbx':
             loader = new FBXLoader();
             loader.load(content, (fbx) => {
-              fbx.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+              fbx.scale.set(1, 1, 1);   // Ajusta la escala del modelo
               fbx.position.set(0, 0, 0);  // Centra el modelo
               scene.add(fbx);
               
@@ -184,7 +185,7 @@ function handleFileChange(files: File[]) {
             loader.load(content, (geometry) => {
               const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
               const mesh = new THREE.Mesh(geometry, material);
-              mesh.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
+              mesh.scale.set(1, 1, 1);   // Ajusta la escala del modelo
               mesh.position.set(0, 0, 0);  // Centra el modelo
               scene.add(mesh);
               renderer.render(scene, camera);

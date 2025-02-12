@@ -185,7 +185,7 @@ function initializeModel() {
     75, 440 / 250, 0.1, 1000
   );
   camera.rotation.y = 45 / 180 * Math.PI;
-  camera.position.set(18, 14, 5);  // Ajusta la posición de la cámara para un buen ángulo de visión
+  camera.position.set(30, 30, 30);  // Ajusta la posición de la cámara para un buen ángulo de visión
   camera.fov = 75;  // Ajuste del FOV para un zoom moderado
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
