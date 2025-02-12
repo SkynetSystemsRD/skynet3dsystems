@@ -78,74 +78,72 @@ const nextStep = () => {
 
 watch(() => props.currentStep, updateAddressData)
 
+
 onMounted(() => {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdddddd);
 
-  // Configuración de la cámara
-  const camera = new THREE.PerspectiveCamera(
-    75, 440 / 250, 0.1, 1000
-  );
-  camera.rotation.y = 45 / 180 * Math.PI;
-  camera.position.set(30, 30, 30);  // Ajusta la posición de la cámara para un buen ángulo de visión
-  camera.fov = 75;  // Ajuste del FOV para un zoom moderado
+  const camera = new THREE.PerspectiveCamera(75, 1000 / 600, 0.1, 1000);
+  camera.position.set(30, 30, 30);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(1000, 600);
   document.getElementById('model-viewer')?.appendChild(renderer.domElement);
 
-  // Controles de órbita
+  function resizeRenderer() {
+    const container = document.getElementById('model-viewer');
+    if (container) {
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      renderer.setSize(width, height);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    }
+  }
+
+  window.addEventListener('resize', resizeRenderer);
+  resizeRenderer(); // Ajustar al inicio
+
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
-  controls.dampingFactor = 0.25;
-  controls.screenSpacePanning = false;
 
-  // Luz ambiental para iluminación general suave
-  const hlight = new THREE.AmbientLight(0x404040, 1);  // Luz más suave
+  const hlight = new THREE.AmbientLight(0x404040, 1);
   scene.add(hlight);
 
-  // Luz direccional ejes positivos
-  const directionalLight_z_up = new THREE.DirectionalLight(0xFFFFFF, 4);  // Luz más intensa desde arriba
-  directionalLight_z_up.position.set(5, 5, 5);  // Aseguramos que la luz venga de arriba
-  directionalLight_z_up.castShadow = true;
-  scene.add(directionalLight_z_up);
+  const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 4);
+  directionalLight.position.set(5, 5, 5);
+  scene.add(directionalLight);
 
-  // Luz direccional ejes negativos
-  const directionalLight_z_down = new THREE.DirectionalLight(0xFFFFFF, 3);  // Luz más intensa desde arriba
-  directionalLight_z_down.position.set(-5, -5, -5);  // Aseguramos que la luz venga de arriba
-  directionalLight_z_down.castShadow = true;
-  scene.add(directionalLight_z_down);
+  let loadedModels: THREE.Object3D[] = [];
+  let selectedModel: THREE.Object3D | null = null;
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let isDragging = false;
 
-  modelCheckoutAddressDataLocal.value.modelItems.forEach((item, index) => {
-    let loader;
+  function loadModel(item: any) {
+    let loader: any;
+    let fileType = item.fileName.split('.').pop()?.toLowerCase();
 
-    switch (item.fileName.split('.').pop()?.toLocaleLowerCase()) {
+    switch (fileType) {
       case 'glb':
       case 'gltf':
         loader = new GLTFLoader();
         loader.load(item.octetStreamContent, (gltf) => {
-          const model = gltf.scene.children[0];
-          model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-          model.position.set(0, 0, 0);  // Centra el modelo
-          scene.add(gltf.scene);
+          addModelToScene(gltf.scene);
         });
         break;
 
       case 'obj':
         loader = new OBJLoader();
         loader.load(item.octetStreamContent, (obj) => {
-          obj.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-          obj.position.set(0, 0, 0);  // Centra el modelo
-          scene.add(obj);
+          addModelToScene(obj);
         });
         break;
 
       case 'fbx':
         loader = new FBXLoader();
         loader.load(item.octetStreamContent, (fbx) => {
-          fbx.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-          fbx.position.set(0, 0, 0);  // Centra el modelo
-          scene.add(fbx);
+          addModelToScene(fbx);
         });
         break;
 
@@ -154,24 +152,71 @@ onMounted(() => {
         loader.load(item.octetStreamContent, (geometry) => {
           const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
           const mesh = new THREE.Mesh(geometry, material);
-          mesh.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-          mesh.position.set(0, 0, 0);  // Centra el modelo
-          scene.add(mesh);
+          addModelToScene(mesh);
         });
         break;
 
       default:
         console.error('Unsupported model format');
     }
-  });
+  }
 
-  // Función de animación
+  function addModelToScene(model: THREE.Object3D) {
+    model.scale.set(0.5, 0.5, 0.5);
+    model.position.set(0, 0, 0);
+    scene.add(model);
+    loadedModels.push(model);
+  }
+
+  modelCheckoutAddressDataLocal.value.modelItems.forEach(loadModel);
+
+  function selectModel(event: MouseEvent) {
+    if (!event.ctrlKey && !event.shiftKey) return;
+
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(loadedModels, true);
+
+    if (intersects.length > 0) {
+      selectedModel = intersects[0].object;
+      console.log("Modelo seleccionado:", selectedModel);
+      isDragging = true;
+    }
+  }
+
+  function moveModel(event: MouseEvent) {
+    if (!isDragging || !selectedModel) return;
+
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
+
+    if (intersects.length > 0) {
+      const point = intersects[0].point;
+      selectedModel.position.set(point.x, point.y, point.z);
+    }
+  }
+
+  function releaseModel() {
+    isDragging = false;
+  }
+
+  renderer.domElement.addEventListener('mousedown', selectModel);
+  renderer.domElement.addEventListener('mousemove', moveModel);
+  renderer.domElement.addEventListener('mouseup', releaseModel);
+
   function animate() {
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
 
-  animate()
+  animate();
 });
 </script>
 
@@ -195,7 +240,7 @@ onMounted(() => {
       type="error"
       variant="tonal"
     >
-      Invoice with ID  {{ route.params.id }} not found!
+      <!-- Invoice with ID  {{ route.params.id }} not found! -->
     </VAlert>
   </section>
 </template>

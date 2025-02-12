@@ -29,18 +29,22 @@ const modelCheckoutSteps = [
   {
     title: 'Sube tus Modelos 3D',
     icon: uploadModel,
+    enabled: true
   },
   {
     title: 'Verifica tus Modelos 3D',
     icon: viewModel,
+    enabled: false
   },
   {
     title: 'Formas de Pago',
     icon: customPayment,
+    enabled: false
   },
   {
     title: 'Confirmación',
     icon: customTrending,
+    enabled: false
   },
 ]
 
@@ -72,7 +76,6 @@ function updateModels(data: ModelCheckoutData){
 
   // console.log("modelCheckoutData.value: ", modelCheckoutData.value)
 }
-
 const currentStep = ref(0)
 </script>
 
