@@ -91,7 +91,7 @@ onMounted(() => {
   camera.fov = 75;  // Ajuste del FOV para un zoom moderado
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(700, 600);
+  renderer.setSize(1000, 600);
   document.getElementById('model-viewer')?.appendChild(renderer.domElement);
 
   // Controles de órbita
