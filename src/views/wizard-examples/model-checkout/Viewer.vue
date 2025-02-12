@@ -5,6 +5,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+import { nextTick, onMounted } from 'vue';
 import type { ModelCheckoutData } from './types';
 
 interface Props {
@@ -87,22 +88,31 @@ onMounted(() => {
   camera.position.set(30, 30, 30);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(1000, 600);
+  // renderer.setSize(1000, 600);
   document.getElementById('model-viewer')?.appendChild(renderer.domElement);
 
+  // Redimensiona el renderizador según el tamaño del contenedor
   function resizeRenderer() {
     const container = document.getElementById('model-viewer');
     if (container) {
       const width = container.clientWidth;
       const height = container.clientHeight;
-      renderer.setSize(width, height);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
+      if (width !== 0 && height !== 0) {  // Verifica que el tamaño no sea 0
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      }
     }
   }
 
-  window.addEventListener('resize', resizeRenderer);
-  resizeRenderer(); // Ajustar al inicio
+  nextTick(() => {
+    resizeRenderer();
+    window.addEventListener('resize', resizeRenderer);
+  });
+
+  setTimeout(() => {
+    resizeRenderer();  // Llamar a resizeRenderer después de un pequeño retraso
+  }, 100);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
