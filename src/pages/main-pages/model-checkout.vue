@@ -6,6 +6,7 @@ import CartContent from '@/views/wizard-examples/model-checkout/Cart.vue'
 import ConfirmationContent from '@/views/wizard-examples/model-checkout/Confirmation.vue'
 import PaymentContent from '@/views/wizard-examples/model-checkout/Payment.vue'
 import type { ModelCheckoutData } from '@/views/wizard-examples/model-checkout/types'
+import ViewerContent from '@/views/wizard-examples/model-checkout/Viewer.vue'
 import uploadModel from '@images/svg/3d-printer6.svg'
 import viewModel from '@images/svg/3d-printer9.svg'
 import customPayment from '@images/svg/payment.svg'
@@ -107,10 +108,10 @@ const currentStep = ref(0)
                 />
               </VWindowItem>
               <VWindowItem>
-                <!-- <AddressContent
+                <ViewerContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
-                /> -->
+                />
               </VWindowItem>
               <VWindowItem>
                 <PaymentContent

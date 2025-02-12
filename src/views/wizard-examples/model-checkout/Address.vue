@@ -196,7 +196,7 @@ watch(() => props.currentStep, updateAddressData)
                 <img
                   height="70"
                   width="60"
-                  :src="product.image"
+                  :src="product.imageContent"
                   class="me-4"
                 >
               </template>
@@ -204,9 +204,6 @@ watch(() => props.currentStep, updateAddressData)
               <div class="text-body-1">
                 {{ product.fileName }}
               </div>
-              <h6 class="text-h6 text-medium-emphasis">
-                {{ product.estimatedDelivery }}
-              </h6>
             </VListItem>
           </VList>
         </VCardText>
