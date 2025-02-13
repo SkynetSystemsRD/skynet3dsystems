@@ -88,24 +88,6 @@ const nextStep = () => {
 
 watch(() => props.currentStep, updateAddressData)
 
-// 
-// function calcularCostoPorModelo(longitudFilamentoModelo) {
-//   // Datos proporcionados
-//   const costoFilamentoTotal = 25000; // en pesos
-//   const longitudFilamentoTotal = 402; // en metros
-//   const costoPorMetro = costoFilamentoTotal / longitudFilamentoTotal; // Costo por metro de filamento
-  
-//   // Cálculo del costo para el modelo
-//   const costoModelo = longitudFilamentoModelo * costoPorMetro;
-  
-//   return costoModelo;
-// }
-
-// // Ejemplo de uso: si el modelo usa 10 metros de filamento
-// const costoDelModelo = calcularCostoPorModelo(10); 
-// console.log(`El costo del modelo es: ${costoDelModelo} pesos.`);
-
-
 onMounted(() => {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdddddd);
@@ -253,6 +235,25 @@ onMounted(() => {
     isDragging = false;
   }
 
+  function removeModel() {
+    if (!selectedModel) return;
+
+    scene.remove(selectedModel);
+    loadedModels = loadedModels.filter(model => model !== selectedModel);
+
+    if (selectedModel.geometry) selectedModel.geometry.dispose();
+    if (selectedModel.material) {
+      if (Array.isArray(selectedModel.material)) {
+        selectedModel.material.forEach(mat => mat.dispose());
+      } else {
+        selectedModel.material.dispose();
+      }
+    }
+
+    console.log("Modelo eliminado:", selectedModel);
+    selectedModel = null; // Limpiar modelo seleccionado
+  }
+
   renderer.domElement.addEventListener('mousedown', selectModel);
   renderer.domElement.addEventListener('mouseup', releaseModel);
 
@@ -260,6 +261,10 @@ onMounted(() => {
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
+
+  // Aquí el botón de eliminación
+  const removeButton = document.getElementById("removeButton");
+  removeButton?.addEventListener("click", removeModel); // Añadir evento al botón
 
   animate();
 });
@@ -276,6 +281,28 @@ onMounted(() => {
           <div class="px-2 pt-2">
             <div id="model-viewer" class="w-100 rounded" style=" block-size: 600px;inline-size: 800px;"></div>
           </div>
+
+          <br>
+
+          <v-container>
+            <v-row>
+              <v-col>
+                <div style="display: flex; gap: 30px;">
+                  <VBtn>
+                    <VIcon size="34" icon="tabler-arrows-move" />
+                    Mover 
+                  </VBtn>
+                  <VBtn
+                    id="removeButton"
+                    color="error"
+                  >
+                    <VIcon size="34" icon="tabler-x" />
+                    Eliminar
+                  </VBtn>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
         </VCard>
       </VCol>
     </VRow>
