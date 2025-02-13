@@ -43,6 +43,10 @@ const totalCost = computed(() => {
 const updateCartData = () => {
   modelCheckoutCartDataLocal.value.orderAmount = totalCost.value;
   emit("update:checkout-data", { ...modelCheckoutCartDataLocal.value });
+
+  // if (modelCheckoutCartDataLocal.value.modelItems.length > 0)
+  //   emit('update:currentStep', 1)
+  // else emit('update:currentStep', 0)
 };
 
 const nextStep = () => {

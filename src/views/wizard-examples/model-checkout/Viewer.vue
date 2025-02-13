@@ -18,13 +18,16 @@ interface Emit {
 }
 const props = defineProps<Props>()
 
+const models_counts = ref(0);
+
 const emit = defineEmits<Emit>()
 
 const modelCheckoutAddressDataLocal = ref<ModelCheckoutData>(JSON.parse(JSON.stringify(props.modelCheckoutData)))
-const isEditAddressDialogVisible = ref(false)
 
 watch(() => props.modelCheckoutData, value => {
   modelCheckoutAddressDataLocal.value = JSON.parse(JSON.stringify(value))
+
+  models_counts.value = modelCheckoutAddressDataLocal.value.modelItems.length
 })
 
 const deliveryOptions = [
@@ -78,6 +81,23 @@ const nextStep = () => {
 }
 
 watch(() => props.currentStep, updateAddressData)
+
+// 
+// function calcularCostoPorModelo(longitudFilamentoModelo) {
+//   // Datos proporcionados
+//   const costoFilamentoTotal = 25000; // en pesos
+//   const longitudFilamentoTotal = 402; // en metros
+//   const costoPorMetro = costoFilamentoTotal / longitudFilamentoTotal; // Costo por metro de filamento
+  
+//   // Cálculo del costo para el modelo
+//   const costoModelo = longitudFilamentoModelo * costoPorMetro;
+  
+//   return costoModelo;
+// }
+
+// // Ejemplo de uso: si el modelo usa 10 metros de filamento
+// const costoDelModelo = calcularCostoPorModelo(10); 
+// console.log(`El costo del modelo es: ${costoDelModelo} pesos.`);
 
 
 onMounted(() => {
@@ -180,8 +200,41 @@ onMounted(() => {
 
   modelCheckoutAddressDataLocal.value.modelItems.forEach(loadModel);
 
+  // function selectModel(event: MouseEvent) {
+  //   if (!event.ctrlKey && !event.shiftKey) return;
+
+  //   const rect = renderer.domElement.getBoundingClientRect();
+  //   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  //   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+  //   raycaster.setFromCamera(mouse, camera);
+  //   const intersects = raycaster.intersectObjects(loadedModels, true);
+
+  //   if (intersects.length > 0) {
+  //     selectedModel = intersects[0].object;
+  //     console.log("Modelo seleccionado:", selectedModel);
+  //     isDragging = true;
+  //   }
+  // }
+
+  // function moveModel(event: MouseEvent) {
+  //   if (!isDragging || !selectedModel) return;
+
+  //   const rect = renderer.domElement.getBoundingClientRect();
+  //   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  //   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+  //   raycaster.setFromCamera(mouse, camera);
+  //   const intersects = raycaster.intersectObjects(scene.children, true);
+
+  //   if (intersects.length > 0) {
+  //     const point = intersects[0].point;
+  //     selectedModel.position.set(point.x, point.y, point.z);
+  //   }
+  // }
+
   function selectModel(event: MouseEvent) {
-    if (!event.ctrlKey && !event.shiftKey) return;
+    if (event.button !== 0) return; // Detecta solo clic izquierdo
 
     const rect = renderer.domElement.getBoundingClientRect();
     mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -191,34 +244,37 @@ onMounted(() => {
     const intersects = raycaster.intersectObjects(loadedModels, true);
 
     if (intersects.length > 0) {
-      selectedModel = intersects[0].object;
-      console.log("Modelo seleccionado:", selectedModel);
-      isDragging = true;
+        // Restaurar el color del modelo previamente seleccionado
+        if (selectedModel) {
+            selectedModel.traverse((child) => {
+                if ((child as THREE.Mesh).isMesh) {
+                    ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0x555555); // Color original
+                }
+            });
+        }
+
+        selectedModel = intersects[0].object;
+        console.log("Modelo seleccionado:", selectedModel);
+
+        // Cambiar el color del modelo seleccionado
+        selectedModel.traverse((child) => {
+            if ((child as THREE.Mesh).isMesh) {
+                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xff0000); // Rojo
+            }
+        });
+
+        isDragging = true;
     }
-  }
+  } 
 
-  function moveModel(event: MouseEvent) {
-    if (!isDragging || !selectedModel) return;
 
-    const rect = renderer.domElement.getBoundingClientRect();
-    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(scene.children, true);
-
-    if (intersects.length > 0) {
-      const point = intersects[0].point;
-      selectedModel.position.set(point.x, point.y, point.z);
-    }
-  }
 
   function releaseModel() {
     isDragging = false;
   }
 
   renderer.domElement.addEventListener('mousedown', selectModel);
-  renderer.domElement.addEventListener('mousemove', moveModel);
+  // renderer.domElement.addEventListener('mousemove', moveModel);
   renderer.domElement.addEventListener('mouseup', releaseModel);
 
   function animate() {
