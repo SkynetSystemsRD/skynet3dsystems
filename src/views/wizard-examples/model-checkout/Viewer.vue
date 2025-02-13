@@ -27,6 +27,12 @@ const modelCheckoutAddressDataLocal = ref<ModelCheckoutData>(JSON.parse(JSON.str
 watch(() => props.modelCheckoutData, value => {
   modelCheckoutAddressDataLocal.value = JSON.parse(JSON.stringify(value))
 
+  if (models_counts.value !== modelCheckoutAddressDataLocal.value.modelItems.length){
+    console.log('modelos actuales: ', modelCheckoutAddressDataLocal.value.modelItems.length)
+    console.log('modelo anteriores: ', models_counts.value)
+  }
+  else console.log('modelos actuales: ', models_counts.value)
+
   models_counts.value = modelCheckoutAddressDataLocal.value.modelItems.length
 })
 
@@ -209,39 +215,6 @@ onMounted(() => {
 
   modelCheckoutAddressDataLocal.value.modelItems.forEach(loadModel);
 
-  // function selectModel(event: MouseEvent) {
-  //   if (!event.ctrlKey && !event.shiftKey) return;
-
-  //   const rect = renderer.domElement.getBoundingClientRect();
-  //   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-  //   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
-  //   raycaster.setFromCamera(mouse, camera);
-  //   const intersects = raycaster.intersectObjects(loadedModels, true);
-
-  //   if (intersects.length > 0) {
-  //     selectedModel = intersects[0].object;
-  //     console.log("Modelo seleccionado:", selectedModel);
-  //     isDragging = true;
-  //   }
-  // }
-
-  // function moveModel(event: MouseEvent) {
-  //   if (!isDragging || !selectedModel) return;
-
-  //   const rect = renderer.domElement.getBoundingClientRect();
-  //   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-  //   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
-  //   raycaster.setFromCamera(mouse, camera);
-  //   const intersects = raycaster.intersectObjects(scene.children, true);
-
-  //   if (intersects.length > 0) {
-  //     const point = intersects[0].point;
-  //     selectedModel.position.set(point.x, point.y, point.z);
-  //   }
-  // }
-
   function selectModel(event: MouseEvent) {
     if (event.button !== 0) return; // Detecta solo clic izquierdo
 
@@ -276,14 +249,11 @@ onMounted(() => {
     }
   } 
 
-
-
   function releaseModel() {
     isDragging = false;
   }
 
   renderer.domElement.addEventListener('mousedown', selectModel);
-  // renderer.domElement.addEventListener('mousemove', moveModel);
   renderer.domElement.addEventListener('mouseup', releaseModel);
 
   function animate() {
