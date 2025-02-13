@@ -36,6 +36,14 @@ watch(() => props.modelCheckoutData, value => {
   models_counts.value = modelCheckoutAddressDataLocal.value.modelItems.length
 })
 
+const updateCartData = () => {
+  emit("update:checkout-data", { ...modelCheckoutAddressDataLocal.value });
+
+  // if (modelCheckoutCartDataLocal.value.modelItems.length > 0)
+  //   emit('update:currentStep', 1)
+  // else emit('update:currentStep', 0)
+};
+
 const deliveryOptions = [
   {
     icon: { icon: 'tabler-user' },
@@ -238,9 +246,18 @@ onMounted(() => {
   function removeModel() {
     if (!selectedModel) return;
 
+    // Eliminar de la escena
     scene.remove(selectedModel);
+
+    // Eliminar de la lista de modelos cargados
     loadedModels = loadedModels.filter(model => model !== selectedModel);
 
+    // Eliminar del modelo de datos 'modelItems'
+    modelCheckoutAddressDataLocal.value.modelItems = modelCheckoutAddressDataLocal.value.modelItems.filter(item => {
+      return item.octetStreamContent !== selectedModel.octetStreamContent; // Suponiendo que 'octetStreamContent' es único para cada modelo
+    });
+
+    // Liberar memoria
     if (selectedModel.geometry) selectedModel.geometry.dispose();
     if (selectedModel.material) {
       if (Array.isArray(selectedModel.material)) {
@@ -253,6 +270,7 @@ onMounted(() => {
     console.log("Modelo eliminado:", selectedModel);
     selectedModel = null; // Limpiar modelo seleccionado
   }
+
 
   renderer.domElement.addEventListener('mousedown', selectModel);
   renderer.domElement.addEventListener('mouseup', releaseModel);
