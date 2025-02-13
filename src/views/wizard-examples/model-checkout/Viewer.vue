@@ -137,12 +137,21 @@ onMounted(() => {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
 
-  const hlight = new THREE.AmbientLight(0x404040, 1);
+  // Luz ambiental para iluminación general suave
+  const hlight = new THREE.AmbientLight(0x404040, 1);  // Luz más suave
   scene.add(hlight);
 
-  const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 4);
-  directionalLight.position.set(5, 5, 5);
-  scene.add(directionalLight);
+  // Luz direccional ejes positivos
+  const directionalLight_z_up = new THREE.DirectionalLight(0xFFFFFF, 4);  // Luz más intensa desde arriba
+  directionalLight_z_up.position.set(5, 5, 5);  // Aseguramos que la luz venga de arriba
+  directionalLight_z_up.castShadow = true;
+  scene.add(directionalLight_z_up);
+
+  // Luz direccional ejes negativos
+  const directionalLight_z_down = new THREE.DirectionalLight(0xFFFFFF, 3);  // Luz más intensa desde arriba
+  directionalLight_z_down.position.set(-5, -5, -5);  // Aseguramos que la luz venga de arriba
+  directionalLight_z_down.castShadow = true;
+  scene.add(directionalLight_z_down);
 
   let loadedModels: THREE.Object3D[] = [];
   let selectedModel: THREE.Object3D | null = null;
@@ -259,7 +268,7 @@ onMounted(() => {
         // Cambiar el color del modelo seleccionado
         selectedModel.traverse((child) => {
             if ((child as THREE.Mesh).isMesh) {
-                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xff0000); // Rojo
+                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xffff00); 
             }
         });
 
