@@ -326,7 +326,7 @@ onMounted(() => {
                 <VImg v-if="selectedElement === 'image'" id="image-viewer" :src="swiperImg.imagePath" cover class="swiper-img1" />
               </swiper-slide>
             </swiper-container>
-            <div v-show = "selectedElement === 'model'" class="px-2 pt-2">
+            <div v-show="selectedElement === 'model'" class="px-2 pt-2">
               <div id="model-viewer" class="w-100 rounded"></div>
             </div>
             <swiper-container
@@ -352,10 +352,9 @@ onMounted(() => {
             <VBtn
               @click="selectOption('model')"
             >
-              En 3d
               <VIcon
                 icon="tabler-cube"
-                size="20"
+                size="39"
               />
             </VBtn>
 
