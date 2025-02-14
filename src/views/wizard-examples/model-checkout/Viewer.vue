@@ -19,6 +19,7 @@ interface Emit {
 const props = defineProps<Props>()
 
 const models_counts = ref(0);
+let firstTime = true
 
 const emit = defineEmits<Emit>()
 
@@ -120,6 +121,7 @@ const initModels = () => {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdddddd);
 
+
   const camera = new THREE.PerspectiveCamera(75, 1000 / 600, 0.1, 1000);
   camera.position.set(30, 30, 30);
 
@@ -142,8 +144,8 @@ const initModels = () => {
       console.log("Tamaño 0, reintentando...");
       setTimeout(resizeRenderer, 200); // Reintenta después de 100ms
       return;
+      
     }
-
     renderer.setSize(width, height);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -160,6 +162,11 @@ const initModels = () => {
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
+
+  // Agrega un evento para detectar cambios en el control de la cámara
+  controls.addEventListener('change', () => {
+    
+  });
 
   // Luz ambiental para iluminación general suave
   const hlight = new THREE.AmbientLight(0x404040, 1);  // Luz más suave
@@ -342,6 +349,7 @@ const initModels = () => {
 
 onMounted(() => {
   initModels()
+  firstTime = false
 });
 </script>
 
