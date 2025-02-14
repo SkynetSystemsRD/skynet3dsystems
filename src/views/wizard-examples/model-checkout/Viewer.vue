@@ -32,7 +32,7 @@ watch(() => props.modelCheckoutData, value => {
     console.log('modelo anteriores: ', models_counts.value)
 
     reload()
-    // initModels()
+    initModels()
   }
   else console.log('modelos actuales: ', models_counts.value)
 
