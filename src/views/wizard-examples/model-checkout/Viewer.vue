@@ -127,16 +127,28 @@ const initModels = () => {
   // Redimensiona el renderizador según el tamaño del contenedor
   function resizeRenderer() {
     const container = document.getElementById('model-viewer');
-    if (container) {
-      const width = container.clientWidth;
-      const height = container.clientHeight;
-      if (width !== 0 && height !== 0) {  // Verifica que el tamaño no sea 0
-        renderer.setSize(width, height);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-      }
+    if (!container) {
+      console.log("not container");
+      return;
     }
+
+    let width = container.clientWidth;
+    let height = container.clientHeight;
+
+    if (width === 0 || height === 0) {
+      console.log("Tamaño 0, reintentando...");
+      setTimeout(resizeRenderer, 500); // Reintenta después de 100ms
+      return;
+    }
+
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+
+    console.log("width:", width);
+    console.log("height:", height);
   }
+
 
   nextTick(() => {
     resizeRenderer();
@@ -351,6 +363,11 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
+#model-viewer {
+  block-size: 600px;
+  inline-size: 800%;
+}
+
 .invoice-preview-table {
   --v-table-header-color: var(--v-theme-surface);
 
