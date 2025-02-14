@@ -352,10 +352,13 @@ onMounted(() => {
             <VBtn
               @click="selectOption('model')"
             >
-              <VIcon
-                icon="tabler-cube"
-                size="39"
-              />
+              <div style="display: flex; gap: 10px;">
+                <VIcon
+                  icon="tabler-cube"
+                  size="20"
+                />
+                Ver 3D
+              </div>
             </VBtn>
 
             <VCardText>
