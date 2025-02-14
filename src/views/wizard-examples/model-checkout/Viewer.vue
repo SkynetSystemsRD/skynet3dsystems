@@ -22,6 +22,9 @@ const models_counts = ref(0);
 
 const emit = defineEmits<Emit>()
 
+let models = <{ id: number; uuid: string; parent_uuid: string | undefined}[]>([]);
+let id = 0
+
 const modelCheckoutAddressDataLocal = ref<ModelCheckoutData>(JSON.parse(JSON.stringify(props.modelCheckoutData)))
 
 watch(() => props.modelCheckoutData, value => {
@@ -137,22 +140,18 @@ const initModels = () => {
 
     if (width === 0 || height === 0) {
       console.log("Tamaño 0, reintentando...");
-      setTimeout(resizeRenderer, 500); // Reintenta después de 100ms
+      setTimeout(resizeRenderer, 200); // Reintenta después de 100ms
       return;
     }
 
     renderer.setSize(width, height);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-
-    console.log("width:", width);
-    console.log("height:", height);
   }
-
 
   nextTick(() => {
     resizeRenderer();
-    window.addEventListener('resize', resizeRenderer);
+    window.addEventListener('resize', resizeRenderer);333
   });
 
   setTimeout(() => {
@@ -194,6 +193,8 @@ const initModels = () => {
         loader = new GLTFLoader();
         loader.load(item.octetStreamContent, (gltf) => {
           addModelToScene(gltf.scene);
+          console.log("gltf: ", gltf.scene.uuid)
+          models.push({ id: id++, uuid: gltf.scene.uuid, parent_uuid: gltf.scene.parent.uuid })
         });
         break;
 
@@ -201,6 +202,8 @@ const initModels = () => {
         loader = new OBJLoader();
         loader.load(item.octetStreamContent, (obj) => {
           addModelToScene(obj);
+          console.log('obj: ', obj.uuid)
+          models.push({ id: id++, uuid: obj.uuid, parent_uuid: obj.parent.uuid })
         });
         break;
 
@@ -208,6 +211,8 @@ const initModels = () => {
         loader = new FBXLoader();
         loader.load(item.octetStreamContent, (fbx) => {
           addModelToScene(fbx);
+          console.log('fbx: ', fbx.uuid)
+          models.push({ id: id++, uuid: fbx.uuid, parent_uuid: fbx.parent.uuid })
         });
         break;
 
@@ -217,6 +222,8 @@ const initModels = () => {
           const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
           const mesh = new THREE.Mesh(geometry, material);
           addModelToScene(mesh);
+          console.log('stl: ', mesh.uuid)
+          models.push({ id: id++, uuid: mesh.uuid, parent_uuid: mesh.parent?.uuid})
         });
         break;
 
@@ -245,26 +252,26 @@ const initModels = () => {
     const intersects = raycaster.intersectObjects(loadedModels, true);
 
     if (intersects.length > 0) {
-        // Restaurar el color del modelo previamente seleccionado
-        if (selectedModel) {
-            selectedModel.traverse((child) => {
-                if ((child as THREE.Mesh).isMesh) {
-                    ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0x555555); // Color original
-                }
-            });
-        }
+      // Restaurar el color del modelo previamente seleccionado
+      if (selectedModel) {
+          selectedModel.traverse((child) => {
+              if ((child as THREE.Mesh).isMesh) {
+                  ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0x555555); // Color original
+              }
+          });
+      }
 
-        selectedModel = intersects[0].object;
-        console.log("Modelo seleccionado:", selectedModel);
+      selectedModel = intersects[0].object;
+      console.log("Modelo seleccionado:", selectedModel);
 
-        // Cambiar el color del modelo seleccionado
-        selectedModel.traverse((child) => {
-            if ((child as THREE.Mesh).isMesh) {
-                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xffff00); 
-            }
-        });
+      // Cambiar el color del modelo seleccionado
+      selectedModel.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+              ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xffff00); 
+          }
+      });
 
-        isDragging = true;
+      isDragging = true;
     }
   } 
 
@@ -276,9 +283,32 @@ const initModels = () => {
     if (!selectedModel) return;
 
     const uuid = selectedModel.uuid;
+    const parent_uuid = selectedModel.parent?.uuid;
+
+    // OJO
+    for (let [index, m] of models.entries()) {
+      if (m.uuid === uuid) {
+        console.log('1. if', index);
+        break;  // Breaks the loop when the condition is met
+      }
+      else if (m.uuid === parent_uuid) {
+        console.log('2. if', index);
+        break;  // Breaks the loop when the condition is met
+      }
+      else if (m.parent_uuid === parent_uuid) {
+        console.log('3. if', index);
+        break;  // Breaks the loop when the condition is met
+      }
+    }
+
+    console.log("models: ", models)
+
     scene.remove(selectedModel);
     loadedModels = loadedModels.filter(model => model.uuid !== uuid);
-    modelCheckoutAddressDataLocal.value.modelItems = modelCheckoutAddressDataLocal.value.modelItems.filter(item => item.uuid !== uuid);
+    
+    // modelCheckoutAddressDataLocal.value.modelItems.forEach(model => {
+    //   console.log("model: ", model)
+    // });
 
     selectedModel.traverse((child) => {
       if (child.isMesh) {

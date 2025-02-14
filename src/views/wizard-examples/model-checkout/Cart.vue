@@ -20,10 +20,20 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
 
+const models_counts = ref(0);
+
 const modelCheckoutCartDataLocal = ref({ ...props.modelCheckoutData });
 
 watch(() => props.modelCheckoutData, (newData) => {
   modelCheckoutCartDataLocal.value = { ...newData };
+
+  if (models_counts.value !== modelCheckoutCartDataLocal.value.modelItems.length){
+    console.log('modelos actuales: ', modelCheckoutCartDataLocal.value.modelItems.length)
+    console.log('modelo anteriores: ', models_counts.value)
+  }
+  else console.log('modelos actuales: ', models_counts.value)
+
+  models_counts.value = modelCheckoutCartDataLocal.value.modelItems.length
 });
 
 // remove item from cart
@@ -68,7 +78,7 @@ function handleFileChange(files: File[]) {
       
       // Create a Promise to handle the file reading asynchronously
       const fileContent = new Promise<string | ArrayBuffer | null>((resolve) => {
-        reader.onload = () => {
+        reader.onload = (object) => {
           // `reader.result` contains the content of the loaded file
           resolve(reader.result);  // Resolve the promise with the content
         };
@@ -134,6 +144,7 @@ function handleFileChange(files: File[]) {
                 imageContent: imageData,
                 octetStreamContent: content
               });
+              
             });
             break;
           case 'obj':
@@ -142,7 +153,6 @@ function handleFileChange(files: File[]) {
               obj.scale.set(1.2, 1.2, 1.2);   // Ajusta la escala del modelo
               obj.position.set(0, 0, 0);  // Centra el modelo.
               scene.add(obj);
-              
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
         
@@ -165,7 +175,7 @@ function handleFileChange(files: File[]) {
             loader.load(content, (fbx) => {
               fbx.scale.set(1.2, 1.2, 1.2);   // Ajusta la escala del modelo
               fbx.position.set(0, 0, 0);  // Centra el modelo
-              scene.add(fbx);
+              scene.add(fbx); 
               
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
@@ -191,7 +201,7 @@ function handleFileChange(files: File[]) {
               const mesh = new THREE.Mesh(geometry, material);
               mesh.scale.set(1.2, 1.2, 1.2);   // Ajusta la escala del modelo
               mesh.position.set(0, 0, 0);  // Centra el modelo
-              scene.add(mesh);
+              scene.add(mesh); 
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
         

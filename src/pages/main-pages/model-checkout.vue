@@ -74,7 +74,7 @@ let modelCheckoutData = ref<ModelCheckoutData>({
 function updateModels(data: ModelCheckoutData){
   modelCheckoutData.value = data
 
-  // console.log("modelCheckoutData.value: ", modelCheckoutData.value)
+  console.log("modelCheckoutData.value: ", modelCheckoutData.value)
 }
 const currentStep = ref(0)
 </script>

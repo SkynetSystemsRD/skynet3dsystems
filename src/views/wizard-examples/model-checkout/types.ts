@@ -5,8 +5,9 @@ export interface ModelItem {
   format: string
   isSupported: boolean
   size: number
-  imageContent: string,
+  imageContent: string
   octetStreamContent: string
+  uuid: string
 }
 
 export interface Addresses {
