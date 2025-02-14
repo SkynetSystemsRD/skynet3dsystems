@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import cube_logo from '@images/3d-cube-logo.svg';
 import main3dImage1 from '@images/projects/image-project1.png';
 import main3dImage2 from '@images/projects/image-project2.png';
 import main3dImage3 from '@images/projects/image-project3.png';
@@ -16,6 +15,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 
 import 'video.js/dist/video-js.css';
 import { onMounted, ref } from 'vue';
+import { VBtn } from 'vuetify/components';
 
 register();
  
@@ -58,7 +58,7 @@ interface projectDetails {
 }
 
 const panelStatus = ref(0);
-const selectedElement = ref('svg')
+const selectedElement = ref('image')
 
 const projectDetails = ref<projectDetails>({
   title: "Modelo 3D Cubo XYZ Test",
@@ -108,9 +108,17 @@ const projectDetails = ref<projectDetails>({
     { alt: "4", imagePath: main3dImage4, fileExtention: "png" },
     { alt: "5", imagePath: main3dImage5, fileExtention: "png" },
     { alt: "6", imagePath: main3dImage6, fileExtention: "png" },
-    { alt: "8", imagePath: cube_logo, fileExtention: "svg" },
   ]
 });
+
+const selectOption = (option: string) => {
+  selectedElement.value = option;
+
+  if (selectedElement.value == 'model'){
+    reload()
+    initializeModel()
+  }
+}
 
 function reload() {
   var container = document.getElementById("model-viewer");
@@ -131,52 +139,8 @@ function getFileExtention(filename: string): string {
   return parts.length > 1 ? parts[parts.length - 1] : '';  // Returns the extension or an empty string if no extension
 }
 
-function clickedElemt(element: string){
-  if (element == 'svg'){
-    selectedElement.value = element
-    reload()
-    initializeModel()
-  }
-  else 
-    selectedElement.value = element
-}
-
-function clickedElemt1(){
-  // // Get the Swiper container by its ID
-  // const swiperContainer = document.getElementById('swiperContainer');
-
-  // // Check if the Swiper container exists
-  // if (swiperContainer) {
-  //   // Example: Get the class name of the Swiper container
-  //   const className = swiperContainer.onchange;
-  //   console.log('Swiper Container Class Name:', className);
-
-  //   // Example: Get the style (CSS properties) of the Swiper container
-  //   const containerWidth = swiperContainer.offsetWidth;
-  //   const containerHeight = swiperContainer.offsetHeight;
-  //   console.log('Swiper Container Width:', containerWidth);
-  //   console.log('Swiper Container Height:', containerHeight);
-
-  //   // Example: Get the Swiper-specific data or properties
-  //   if (swiperContainer.swiper) {
-  //       const swiperInstance = swiperContainer.swiper;
-  //       console.log('Swiper Instance:', swiperInstance);
-  //       console.log('Current Active Index:', swiperInstance.activeIndex);
-  //   }
-  // }
-
-  // Get the swiper container by ID
-  const swiperContainer = document.getElementById('swiperContainer');
-
-  // Check if swiperContainer is not null before adding the event listener
-  if (swiperContainer) {
-    console.log('Swiper container changed!');
-  } else {
-    console.log('Swiper container not found.');
-  }
-}
-
 function initializeModel() {
+  console.log('initializeModel')
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdddddd);
 
@@ -191,6 +155,30 @@ function initializeModel() {
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(795, 350);
   document.getElementById('model-viewer')?.appendChild(renderer.domElement);
+
+  // Redimensiona el renderizador según el tamaño del contenedor
+  
+  function resizeRenderer() {
+    const mode_container = document.getElementById('model-viewer');
+    if (mode_container) {
+      const width = mode_container.clientWidth;
+      const height = mode_container.clientHeight;
+      if (width !== 0 && height !== 0) {  // Verifica que el tamaño no sea 0
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      }
+    }
+  }
+
+  nextTick(() => {
+    resizeRenderer();
+    window.addEventListener('resize', resizeRenderer);
+  });
+
+  setTimeout(() => {
+    resizeRenderer();  // Llamar a resizeRenderer después de un pequeño retraso
+  }, 100);
 
   // Controles de órbita
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -322,7 +310,7 @@ onMounted(() => {
           >
             <swiper-container
               id="swiperContainer"
-              v-show="selectedElement === 'png'"
+              v-show="selectedElement === 'image'"
               class="mySwiper w-100 rounded"
               thumbs-swiper=".mySwiper2"
               loop="true"
@@ -330,48 +318,47 @@ onMounted(() => {
               navigation="false" 
               centered-slides="true"
               events-prefix="swiper-"
-              @click="clickedElemt1"
             >
               <swiper-slide
                 v-for="swiperImg in projectDetails?.images"
                 :key="swiperImg.alt"
               >
-                <VImg :src="swiperImg.imagePath" cover class="swiper-img1" />
+                <VImg v-if="selectedElement === 'image'" id="image-viewer" :src="swiperImg.imagePath" cover class="swiper-img1" />
               </swiper-slide>
             </swiper-container>
-            <div v-show="selectedElement === 'svg'" class="px-2 pt-2">
+            <div v-show = "selectedElement === 'model'" class="px-2 pt-2">
               <div id="model-viewer" class="w-100 rounded"></div>
             </div>
             <swiper-container
               class="mySwiper2"
               loop="true"
-              free-mode="true"
+              free-mode="false"
               events-prefix="swiper-"
               slides-per-view="4"
             >
               <swiper-slide
               v-for="(swiperImg) in projectDetails?.images"
               :key="swiperImg.alt"
-              @click="clickedElemt(swiperImg.fileExtention)"
+              @click="selectOption('image')"
               >
                 <VImg
-                  v-if="swiperImg.fileExtention === 'png'"
                   :src="swiperImg.imagePath"
                   cover
                   class="swiper-img2"
                 />
-
-                <!-- SVG Logo -->
-                <svg v-if="swiperImg.fileExtention === 'svg'" class="swiper-svg2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="17.46" height="11.97"
-                  version="1.1" id="Capa_1" viewBox="0 0 58 58" xml:space="preserve">
-                  <g>
-                    <polygon style="fill: #26b99a;" points="29,58 3,45 3,13 29,26  " />
-                    <polygon style="fill: #556080;" points="29,58 55,45 55,13 29,26  " />
-                    <polygon style="fill: #434c6d;" points="3,13 28,0 55,13 29,26  " />
-                  </g>
-                </svg>
               </swiper-slide>
             </swiper-container>
+
+            <VBtn
+              @click="selectOption('model')"
+            >
+              En 3d
+              <VIcon
+                icon="tabler-cube"
+                size="20"
+              />
+            </VBtn>
+
             <VCardText>
               <h5 class="text-h5 mb-4">
                 📌 Acerca del Proyecto

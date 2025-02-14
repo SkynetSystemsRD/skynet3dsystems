@@ -30,6 +30,9 @@ watch(() => props.modelCheckoutData, value => {
   if (models_counts.value !== modelCheckoutAddressDataLocal.value.modelItems.length){
     console.log('modelos actuales: ', modelCheckoutAddressDataLocal.value.modelItems.length)
     console.log('modelo anteriores: ', models_counts.value)
+
+    reload()
+    // initModels()
   }
   else console.log('modelos actuales: ', models_counts.value)
 
@@ -96,7 +99,21 @@ const nextStep = () => {
 
 watch(() => props.currentStep, updateAddressData)
 
-onMounted(() => {
+const reload = () => {
+  var container = document.getElementById("model-viewer");
+
+  if (container) {  // Verifica si el contenedor existe
+    var content = "";
+    container.innerHTML = content;  // Recarga el contenido del contenedor
+    
+    // Esta línea es para ver el resultado en la consola, puedes eliminarla después
+    console.log("Refreshed");
+  } else {
+    console.error("El contenedor no se encuentra en el DOM.");
+  }
+}
+
+const initModels = () => {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdddddd);
 
@@ -246,31 +263,25 @@ onMounted(() => {
   function removeModel() {
     if (!selectedModel) return;
 
-    // Eliminar de la escena
+    const uuid = selectedModel.uuid;
     scene.remove(selectedModel);
+    loadedModels = loadedModels.filter(model => model.uuid !== uuid);
+    modelCheckoutAddressDataLocal.value.modelItems = modelCheckoutAddressDataLocal.value.modelItems.filter(item => item.uuid !== uuid);
 
-    // Eliminar de la lista de modelos cargados
-    loadedModels = loadedModels.filter(model => model !== selectedModel);
-
-    // Eliminar del modelo de datos 'modelItems'
-    modelCheckoutAddressDataLocal.value.modelItems = modelCheckoutAddressDataLocal.value.modelItems.filter(item => {
-      return item.octetStreamContent !== selectedModel.octetStreamContent; // Suponiendo que 'octetStreamContent' es único para cada modelo
+    selectedModel.traverse((child) => {
+      if (child.isMesh) {
+        child.geometry.dispose();
+        if (Array.isArray(child.material)) {
+          child.material.forEach(mat => mat.dispose());
+        } else {
+          child.material.dispose();
+        }
+      }
     });
 
-    // Liberar memoria
-    if (selectedModel.geometry) selectedModel.geometry.dispose();
-    if (selectedModel.material) {
-      if (Array.isArray(selectedModel.material)) {
-        selectedModel.material.forEach(mat => mat.dispose());
-      } else {
-        selectedModel.material.dispose();
-      }
-    }
-
-    console.log("Modelo eliminado:", selectedModel);
-    selectedModel = null; // Limpiar modelo seleccionado
+    console.log("Modelo eliminado:", uuid);
+    selectedModel = null;
   }
-
 
   renderer.domElement.addEventListener('mousedown', selectModel);
   renderer.domElement.addEventListener('mouseup', releaseModel);
@@ -285,6 +296,10 @@ onMounted(() => {
   removeButton?.addEventListener("click", removeModel); // Añadir evento al botón
 
   animate();
+}
+
+onMounted(() => {
+  initModels()
 });
 </script>
 
