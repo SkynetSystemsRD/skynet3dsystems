@@ -20,13 +20,19 @@ const props = defineProps<Props>()
 const panelStatus = ref(1);
 const instructions = [
     {
-      title: "Manipulación del Modelo 3D",
+      title: "👋 Manipulación del Modelo 3D",
       topics: [
         { 
           title: "Rotar la cámara", 
           instruction1: "Mantén presionado el botón izquierdo del ratón y mueve el ratón ",
           instruction2: "y mueve el ratón para rotar el entorno de la escena.",
           icon: "tabler-rotate"
+        },
+        { 
+          title: "Rotacion Manual/Automatica del modelo 3D", 
+          instruction1: "Seleccione el modelo que desea rotar luego presione el boton de rotar y el check",
+          instruction2: "de rotacion automatica, lo mismo para la rotacion manual.",
+          icon: "tabler-rotate-2"
         },
         { 
           title: "Acercar/Lejar el Modelo", 
@@ -44,7 +50,7 @@ const instructions = [
           title: "Elimnar el Modelo", 
           instruction1: "Seleccion con click izquierdo el modelo 3D que desea eliminar",
           instruction2: "y presione el boton rojo con la X",
-          icon: "tabler-mouse"
+          icon: "tabler-x"
         }
       ]
     },
