@@ -186,9 +186,11 @@ const initModels = () => {
 
   let loadedModels: THREE.Object3D[] = [];
   let selectedModel: THREE.Object3D | null = null;
+  let isDragging = false;
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
-  let isDragging = false;
+  const offset = new THREE.Vector3();
+  const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
   function loadModel(item: any) {
     let loader: any;
@@ -248,8 +250,42 @@ const initModels = () => {
 
   modelCheckoutAddressDataLocal.value.modelItems.forEach(loadModel);
 
-  function selectModel(event: MouseEvent) {
-    if (event.button !== 0) return; // Detecta solo clic izquierdo
+  // function selectModel(event: MouseEvent) {
+  //   if (event.button !== 0) return; // Detecta solo clic izquierdo
+
+  //   const rect = renderer.domElement.getBoundingClientRect();
+  //   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  //   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+  //   raycaster.setFromCamera(mouse, camera);
+  //   const intersects = raycaster.intersectObjects(loadedModels, true);
+
+  //   if (intersects.length > 0) {
+  //     // Restaurar el color del modelo previamente seleccionado
+  //     if (selectedModel) {
+  //         selectedModel.traverse((child) => {
+  //             if ((child as THREE.Mesh).isMesh) {
+  //                 ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0x555555); // Color original
+  //             }
+  //         });
+  //     }
+
+  //     selectedModel = intersects[0].object;
+  //     console.log("Modelo seleccionado:", selectedModel);
+
+  //     // Cambiar el color del modelo seleccionado
+  //     selectedModel.traverse((child) => {
+  //         if ((child as THREE.Mesh).isMesh) {
+  //             ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xffff00); 
+  //         }
+  //     });
+
+  //     isDragging = true;
+  //   }
+  // } 
+
+  function selectAndDragModel(event: MouseEvent) {
+    if (event.button !== 0) return; // Solo clic izquierdo
 
     const rect = renderer.domElement.getBoundingClientRect();
     mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -259,28 +295,48 @@ const initModels = () => {
     const intersects = raycaster.intersectObjects(loadedModels, true);
 
     if (intersects.length > 0) {
-      // Restaurar el color del modelo previamente seleccionado
-      if (selectedModel) {
-          selectedModel.traverse((child) => {
-              if ((child as THREE.Mesh).isMesh) {
-                  ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0x555555); // Color original
-              }
-          });
-      }
+        // Restaurar el color del modelo previamente seleccionado
+        if (selectedModel) {
+            selectedModel.traverse((child) => {
+                if ((child as THREE.Mesh).isMesh) {
+                    ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0x555555); // Color original
+                }
+            });
+        }
 
-      selectedModel = intersects[0].object;
-      console.log("Modelo seleccionado:", selectedModel);
+        selectedModel = intersects[0].object;
+        console.log("Modelo seleccionado:", selectedModel);
 
-      // Cambiar el color del modelo seleccionado
-      selectedModel.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-              ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xffff00); 
-          }
-      });
+        // Cambiar el color del modelo seleccionado
+        selectedModel.traverse((child) => {
+            if ((child as THREE.Mesh).isMesh) {
+                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xffff00); 
+            }
+        });
 
-      isDragging = true;
+        // Calcular la posición inicial del modelo
+        const intersection = new THREE.Vector3();
+        raycaster.ray.intersectPlane(plane, intersection);
+        offset.copy(intersection).sub(selectedModel.position);
+
+        isDragging = true;
     }
-  } 
+  }
+
+  function moveModel(event: MouseEvent) {
+    if (!isDragging || !selectedModel) return;
+
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersection = new THREE.Vector3();
+    
+    if (raycaster.ray.intersectPlane(plane, intersection)) {
+        selectedModel.position.copy(intersection.sub(offset));
+    }
+  }
 
   function releaseModel() {
     isDragging = false;
@@ -332,7 +388,9 @@ const initModels = () => {
     selectedModel = null;
   }
 
-  renderer.domElement.addEventListener('mousedown', selectModel);
+  
+  renderer.domElement.addEventListener('mousedown', selectAndDragModel);
+  renderer.domElement.addEventListener('mousemove', moveModel);
   renderer.domElement.addEventListener('mouseup', releaseModel);
 
   function animate() {
