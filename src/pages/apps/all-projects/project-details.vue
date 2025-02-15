@@ -32,9 +32,9 @@ interface ModelItem {
 }
 
 interface xyz {
-  x: number,
-  y: number,
-  z: number
+  x: number | undefined,
+  y: number | undefined,
+  z: number | undefined,
 }
 
 interface image {
@@ -44,12 +44,12 @@ interface image {
 }
 
 interface projectDetails {
-  title: string;
+  title: string | undefined;
   about: string;
   client: string;
   modelCheckoutCartDataLocal: ModelItem[];
-  fileExtention: string;
-  filePath: string,
+  format: string;
+  fileName: string,
   dimentions: xyz[];
   materials: string;
   totalPrints: number;
@@ -68,7 +68,7 @@ const instructions = [
       { 
         title: "Rotar la cámara", 
         instruction1: "Mantén presionado el botón izquierdo del ratón y mueve el ratón ",
-        instruction2: "y mueve el ratón para rotar el entorno de la escena.",
+        instruction2: "y mueva el ratón para rotar el entorno de la escena.",
         icon: "tabler-rotate"
       },
       // { 
@@ -108,7 +108,7 @@ const projectDetails = ref<projectDetails>({
       id: 1,
       format: getFileExtention('/xyzCalibration_cube.gltf'),
       filePath: '/xyzCalibration_cube.gltf',
-      fileName: '/xyzCalibration_cube.gltf',
+      fileName: 'xyzCalibration_cube.gltf',
       size: 235654,
       octetStreamContent: '',
       uuid: '',
@@ -123,7 +123,7 @@ const projectDetails = ref<projectDetails>({
       id: 2,
       format: getFileExtention('/xyzCalibration_cube.gltf'),
       filePath: '/xyzCalibration_cube.gltf',
-      fileName: '/xyzCalibration_cube.gltf',
+      fileName: 'xyzCalibration_cube.gltf',
       size: 235654,
       octetStreamContent: '',
       uuid: '',
@@ -138,7 +138,7 @@ const projectDetails = ref<projectDetails>({
       id: 3,
       format: getFileExtention('/xyzCalibration_cube.gltf'),
       filePath: '/xyzCalibration_cube.gltf',
-      fileName: '/xyzCalibration_cube.gltf',
+      fileName: 'xyzCalibration_cube.gltf',
       size: 235654,
       octetStreamContent: '',
       uuid: '',
@@ -150,8 +150,8 @@ const projectDetails = ref<projectDetails>({
       weight: 250
     }
   ],
-  filePath: '',
-  fileExtention: '',
+  fileName: '',
+  format: '',
   dimentions: [{
       x: 0,
       y: 0,
@@ -215,6 +215,8 @@ const initModels = () => {
   // Redimensiona el renderizador según el tamaño del contenedor
   function resizeRenderer() {
     const container = document.getElementById('model-viewer');
+    const imageViewer = document.getElementById('image-viewer');
+
     if (!container) {
       console.log("not container");
       return;
@@ -232,6 +234,12 @@ const initModels = () => {
     renderer.setSize(width, height);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
+
+    // Ajustar tamaño de la imagen
+    if (imageViewer) {
+      imageViewer.style.width = `${width}px`;
+      imageViewer.style.height = `${height}px`;
+    }
   }
 
   nextTick(() => {
@@ -331,6 +339,9 @@ const initModels = () => {
 
   projectDetails.value.modelCheckoutCartDataLocal.forEach(loadModel);
 
+  const originalColors = new Map<THREE.Object3D, THREE.Color>(); // Guardar colores originales
+
+  
   function selectAndDragModel(event: MouseEvent) {
     if (event.button !== 0) return; // Solo clic izquierdo
 
@@ -342,33 +353,50 @@ const initModels = () => {
     const intersects = raycaster.intersectObjects(loadedModels, true);
 
     if (intersects.length > 0) {
-        // Restaurar el color del modelo previamente seleccionado
-        if (selectedModel) {
-            selectedModel.traverse((child) => {
-                if ((child as THREE.Mesh).isMesh) {
-                    ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0x555555); // Color original
-                }
-            });
-        }
+      // Restaurar el color del modelo previamente seleccionado
+      if (selectedModel) {
+          selectedModel.traverse((child) => {
+              if ((child as THREE.Mesh).isMesh) {
+                  const mesh = child as THREE.Mesh;
+                  const material = mesh.material as THREE.MeshStandardMaterial;
+                  if (originalColors.has(mesh)) {
+                      material.color.copy(originalColors.get(mesh)!); // Restaurar color original
+                  }
+              }
+          });
+      }
 
-        selectedModel = intersects[0].object;
-        console.log("Modelo seleccionado:", selectedModel);
+      selectedModel = intersects[0].object;
+      console.log("Modelo seleccionado:", selectedModel);
 
-        // Cambiar el color del modelo seleccionado
-        selectedModel.traverse((child) => {
-            if ((child as THREE.Mesh).isMesh) {
-                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xffff00); 
-            }
-        });
+      // Guardar el color original antes de cambiarlo
+      selectedModel.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+              const mesh = child as THREE.Mesh;
+              const material = mesh.material as THREE.MeshStandardMaterial;
 
-        // Calcular la posición inicial del modelo
-        const intersection = new THREE.Vector3();
-        raycaster.ray.intersectPlane(plane, intersection);
-        offset.copy(intersection).sub(selectedModel.position);
+              if (!originalColors.has(mesh)) {
+                  originalColors.set(mesh, material.color.clone()); // Guardar el color original
+              }
 
-        isDragging = true;
-        controls.enabled = false; // 🔴 Disable OrbitControls
+              material.color.set(0xffff00); // Cambiar a amarillo
+          }
+      });
+
+      // Calcular la posición inicial del modelo
+      const intersection = new THREE.Vector3();
+      raycaster.ray.intersectPlane(plane, intersection);
+      offset.copy(intersection).sub(selectedModel.position);
+
+      isDragging = true;
+      controls.enabled = false; // 🔴 Disable OrbitControls
     }
+
+    projectDetails.value.dimentions[0].x = selectedModel?.scale.x
+    projectDetails.value.dimentions[0].y = selectedModel?.scale.y
+    projectDetails.value.dimentions[0].z = selectedModel?.scale.z
+
+    projectDetails.value.name = selectedModel?.name
   }
 
   function moveModel(event: MouseEvent) {
@@ -431,7 +459,7 @@ onMounted(() => {
                 color="error"
                 size="small"
               >
-                Formato del Modelo: {{ projectDetails.fileExtention }}
+                Formato del Modelo: {{ projectDetails.format }}
               </VChip>
               <!-- <VIcon
                 size="24"
@@ -492,17 +520,14 @@ onMounted(() => {
               </swiper-slide>
             </swiper-container>
 
-            <VBtn
-              @click="selectOption('model')"
-            >
-              <div style="display: flex; gap: 10px;">
-                <VIcon
-                  icon="tabler-cube"
-                  size="20"
-                />
-                Ver 3D
-              </div>
-            </VBtn>
+            <div style="display: flex; justify-content: end;">
+              <VBtn @click="selectOption('model')">
+                <div style="display: flex; gap: 10px;">
+                  <VIcon icon="tabler-cube" size="20" />
+                  Ver 3D
+                </div>
+              </VBtn>
+            </div>
 
             <VCardText>
               <h5 class="text-h5 mb-4">
