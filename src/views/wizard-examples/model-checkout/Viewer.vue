@@ -320,6 +320,7 @@ const initModels = () => {
         offset.copy(intersection).sub(selectedModel.position);
 
         isDragging = true;
+        controls.enabled = false; // 🔴 Disable OrbitControls
     }
   }
 
@@ -334,12 +335,13 @@ const initModels = () => {
     const intersection = new THREE.Vector3();
     
     if (raycaster.ray.intersectPlane(plane, intersection)) {
-        selectedModel.position.copy(intersection.sub(offset));
+      selectedModel.position.copy(intersection.sub(offset));
     }
   }
 
   function releaseModel() {
     isDragging = false;
+    controls.enabled = true; // ✅ Re-enable OrbitControls
   }
 
   function removeModel() {
