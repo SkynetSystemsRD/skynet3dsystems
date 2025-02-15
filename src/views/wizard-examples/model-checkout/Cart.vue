@@ -232,9 +232,13 @@ function handleFileChange(files: File[]) {
         emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
       });
 
-      power.value = count / files.target.files.length * 100;
+      power.value = (count + 1) / files.target.files.length * 100;
     }
   }
+
+  setTimeout(function() {
+    isAlreadyUploaded.value = false;
+  }, 2000);  // 2000 milliseconds = 2 seconds
 }
 
 watch(() => props.currentStep, updateCartData)
