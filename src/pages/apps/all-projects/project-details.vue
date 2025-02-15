@@ -18,15 +18,17 @@ import { onMounted, ref } from 'vue';
 import { VBtn } from 'vuetify/components';
 
 register();
- 
-interface modelInstructionsMovements {
-  title: string;
-  topics: { 
-    title: string; 
-    instruction1: string; 
-    instruction2: string; 
-    icon: string;  // You can use icon names or paths to icon images
-  }[];
+
+interface ModelItem {
+  id: number
+  fileName: string
+  filePath: string
+  format: string
+  size: number
+  octetStreamContent: string
+  uuid: string
+  dimentions: xyz;
+  weight: number;
 }
 
 interface xyz {
@@ -45,62 +47,122 @@ interface projectDetails {
   title: string;
   about: string;
   client: string;
+  modelCheckoutCartDataLocal: ModelItem[];
   fileExtention: string;
-  filePath: string;
+  filePath: string,
+  dimentions: xyz[];
   materials: string;
   totalPrints: number;
-  dimentions: xyz;
   weight: number;
   time: string;
-  instructions: modelInstructionsMovements[];
   description: string;
   images: image[];
 }
 
 const panelStatus = ref(0);
 const selectedElement = ref('image')
+const instructions = [
+  {
+    title: "👋 Manipulación del Modelo 3D",
+    topics: [
+      { 
+        title: "Rotar la cámara", 
+        instruction1: "Mantén presionado el botón izquierdo del ratón y mueve el ratón ",
+        instruction2: "y mueve el ratón para rotar el entorno de la escena.",
+        icon: "tabler-rotate"
+      },
+      // { 
+      //   title: "Rotacion Manual/Automatica del modelo 3D", 
+      //   instruction1: "Seleccione el modelo que desea rotar luego presione el boton de rotar y el check",
+      //   instruction2: "de rotacion automatica, lo mismo para la rotacion manual.",
+      //   icon: "tabler-rotate-2"
+      // },
+      { 
+        title: "Acercar/Lejar el Modelo", 
+        instruction1: "Usa la rueda del ratón para acercar o alejar el modelo.",
+        instruction2: "",
+        icon: "tabler-zoom"
+      },
+      { 
+        title: "Mover el Modelo", 
+        instruction1: "Seleccion con click izquierdo y mantén presionado el botón izquierdo del ratón y arrastra para ",
+        instruction2: "mover el modelo 3D.",
+        icon: "tabler-mouse"
+      },
+    //   { 
+    //     title: "Elimnar el Modelo", 
+    //     instruction1: "Seleccion con click izquierdo el modelo 3D que desea eliminar",
+    //     instruction2: "y presione el boton rojo con la X",
+    //     icon: "tabler-x"
+    //   }
+    ]
+  }
+]
 
 const projectDetails = ref<projectDetails>({
   title: "Modelo 3D Cubo XYZ Test",
   about: "Este proyecto muestra un Cubo XYZ en formato GLTF, utilizado para calibrar y verificar la orientación de los ejes en entornos 3D. Permite analizar la alineación, escala y rotación del modelo en un visor interactivo.",
   client: "John Doe",
-  fileExtention: getFileExtention('/xyzCalibration_cube.gltf'),
-  filePath: '/xyzCalibration_cube.gltf',
-  materials: "PLA, ABS, PETG, Resina, etc.",
-  totalPrints: 56,
-  dimentions: {
-      x: 42,
-      y: 42,
-      z: 42
+  modelCheckoutCartDataLocal: [
+    { 
+      id: 1,
+      format: getFileExtention('/xyzCalibration_cube.gltf'),
+      filePath: '/xyzCalibration_cube.gltf',
+      fileName: '/xyzCalibration_cube.gltf',
+      size: 235654,
+      octetStreamContent: '',
+      uuid: '',
+      dimentions: {
+        x: 42,
+        y: 42,
+        z: 42
+      }, 
+      weight: 250
     },
-  weight: 250,
-  time: "4h 30m",
-  description: "Este proyecto presenta un Cubo XYZ en formato GLTF, diseñado para la calibración y verificación de los ejes en entornos 3D. Facilita la evaluación de la alineación, escala y rotación del modelo mediante un visor interactivo, asegurando una correcta orientación en el espacio tridimensional.",
-  instructions: [
-    {
-      title: "Manipulación del Modelo 3D",
-      topics: [
-        { 
-          title: "Rotar el Modelo", 
-          instruction1: "Mantén presionado el botón izquierdo del ratón y mueve el ratón ",
-          instruction2: "y mueve el ratón para rotar el modelo.",
-          icon: "tabler-rotate"
-        },
-        { 
-          title: "Acercar/Lejar el Modelo", 
-          instruction1: "Usa la rueda del ratón para acercar o alejar el modelo.",
-          instruction2: "",
-          icon: "tabler-zoom"
-        },
-        { 
-          title: "Mover el Modelo", 
-          instruction1: "Mantén presionado el botón derecho del ratón y arrastra para ",
-          instruction2: "mover el modelo.",
-          icon: "tabler-mouse"
-        }
-      ]
+    { 
+      id: 2,
+      format: getFileExtention('/xyzCalibration_cube.gltf'),
+      filePath: '/xyzCalibration_cube.gltf',
+      fileName: '/xyzCalibration_cube.gltf',
+      size: 235654,
+      octetStreamContent: '',
+      uuid: '',
+      dimentions: {
+        x: 42,
+        y: 42,
+        z: 42
+      }, 
+      weight: 250
+    },
+    { 
+      id: 3,
+      format: getFileExtention('/xyzCalibration_cube.gltf'),
+      filePath: '/xyzCalibration_cube.gltf',
+      fileName: '/xyzCalibration_cube.gltf',
+      size: 235654,
+      octetStreamContent: '',
+      uuid: '',
+      dimentions: {
+        x: 42,
+        y: 42,
+        z: 42
+      }, 
+      weight: 250
+    }
+  ],
+  filePath: '',
+  fileExtention: '',
+  dimentions: [{
+      x: 0,
+      y: 0,
+      z: 0
     },
   ],
+  weight: 0,
+  materials: "PLA, ABS, PETG, Resina, etc.",
+  totalPrints: 56,
+  time: "4h 30m",
+  description: "Este proyecto presenta un Cubo XYZ en formato GLTF, diseñado para la calibración y verificación de los ejes en entornos 3D. Facilita la evaluación de la alineación, escala y rotación del modelo mediante un visor interactivo, asegurando una correcta orientación en el espacio tridimensional.",
   images: [
     { alt: "1", imagePath: main3dImage1, fileExtention: "png" },
     { alt: "2", imagePath: main3dImage2, fileExtention: "png" },
@@ -116,7 +178,7 @@ const selectOption = (option: string) => {
 
   if (selectedElement.value == 'model'){
     reload()
-    initializeModel()
+    initModels()
   }
 }
 
@@ -139,52 +201,55 @@ function getFileExtention(filename: string): string {
   return parts.length > 1 ? parts[parts.length - 1] : '';  // Returns the extension or an empty string if no extension
 }
 
-function initializeModel() {
-  console.log('initializeModel')
+const initModels = () => {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdddddd);
 
-  // Configuración de la cámara
-  const camera = new THREE.PerspectiveCamera(
-    75, 440 / 250, 0.1, 1000
-  );
-  camera.rotation.y = 45 / 180 * Math.PI;
-  camera.position.set(30, 30, 30);  // Ajusta la posición de la cámara para un buen ángulo de visión
-  camera.fov = 75;  // Ajuste del FOV para un zoom moderado
+  const camera = new THREE.PerspectiveCamera(75, 1000 / 600, 0.1, 1000);
+  camera.position.set(30, 30, 30);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(795, 350);
+  // renderer.setSize(1000, 600);
   document.getElementById('model-viewer')?.appendChild(renderer.domElement);
 
   // Redimensiona el renderizador según el tamaño del contenedor
-  
   function resizeRenderer() {
-    const mode_container = document.getElementById('model-viewer');
-    if (mode_container) {
-      const width = mode_container.clientWidth;
-      const height = mode_container.clientHeight;
-      if (width !== 0 && height !== 0) {  // Verifica que el tamaño no sea 0
-        renderer.setSize(width, height);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-      }
+    const container = document.getElementById('model-viewer');
+    if (!container) {
+      console.log("not container");
+      return;
     }
+
+    let width = container.clientWidth;
+    let height = container.clientHeight;
+
+    if (width === 0 || height === 0) {
+      console.log("Tamaño 0, reintentando...");
+      setTimeout(resizeRenderer, 200); // Reintenta después de 100ms
+      return;
+      
+    }
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
   }
 
   nextTick(() => {
     resizeRenderer();
-    window.addEventListener('resize', resizeRenderer);
+    window.addEventListener('resize', resizeRenderer);333
   });
 
   setTimeout(() => {
     resizeRenderer();  // Llamar a resizeRenderer después de un pequeño retraso
   }, 100);
 
-  // Controles de órbita
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
-  controls.dampingFactor = 0.25;
-  controls.screenSpacePanning = false;
+
+  // Agrega un evento para detectar cambios en el control de la cámara
+  controls.addEventListener('change', () => {
+    
+  });
 
   // Luz ambiental para iluminación general suave
   const hlight = new THREE.AmbientLight(0x404040, 1);  // Luz más suave
@@ -202,66 +267,144 @@ function initializeModel() {
   directionalLight_z_down.castShadow = true;
   scene.add(directionalLight_z_down);
 
-  let loader;
+  let loadedModels: THREE.Object3D[] = [];
+  let selectedModel: THREE.Object3D | null = null;
+  let isDragging = false;
+  let isRotating = false;  // Variable para controlar si el modelo seleccionado debe rotar
+  
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  const offset = new THREE.Vector3();
+  const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
-  switch (projectDetails?.value.fileExtention) {
-    case 'glb':
-    case 'gltf':
-      loader = new GLTFLoader();
-      loader.load(projectDetails?.value.filePath, (gltf) => {
-        const model = gltf.scene.children[0];
-        model.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-        model.position.set(0, 0, 0);  // Centra el modelo
-        scene.add(gltf.scene);
-        animate();
-      });
-      break;
+  function loadModel(item: any) {
+    let loader: any;
+    let fileType = item.fileName.split('.').pop()?.toLowerCase();
 
-    case 'obj':
-      loader = new OBJLoader();
-      loader.load(projectDetails?.value.filePath, (obj) => {
-        obj.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-        obj.position.set(0, 0, 0);  // Centra el modelo
-        scene.add(obj);
-        animate();
-      });
-      break;
+    switch (fileType) {
+      case 'glb':
+      case 'gltf':
+        loader = new GLTFLoader();
+        loader.load(item.filePath, (gltf) => {
+          addModelToScene(gltf.scene);
+          console.log("gltf: ", gltf.scene.uuid)
+        });
+        break;
 
-    case 'fbx':
-      loader = new FBXLoader();
-      loader.load(projectDetails?.value.filePath, (fbx) => {
-        fbx.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-        fbx.position.set(0, 0, 0);  // Centra el modelo
-        scene.add(fbx);
-        animate();
-      });
-      break;
+      case 'obj':
+        loader = new OBJLoader();
+        loader.load(item.filePath, (obj) => {
+          addModelToScene(obj);
+          console.log('obj: ', obj.uuid)
+        });
+        break;
 
-    case 'stl':
-      loader = new STLLoader();
-      loader.load(projectDetails?.value.filePath, (geometry) => {
-        const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
-        const mesh = new THREE.Mesh(geometry, material);
-        mesh.scale.set(0.5, 0.5, 0.5);  // Ajusta la escala del modelo
-        mesh.position.set(0, 0, 0);  // Centra el modelo
-        scene.add(mesh);
-        animate();
-      });
-      break;
+      case 'fbx':
+        loader = new FBXLoader();
+        loader.load(item.filePath, (fbx) => {
+          addModelToScene(fbx);
+          console.log('fbx: ', fbx.uuid)
+        });
+        break;
 
-    default:
-      console.error('Unsupported model format');
+      case 'stl':
+        loader = new STLLoader();
+        loader.load(item.filePath, (geometry) => {
+          const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
+          const mesh = new THREE.Mesh(geometry, material);
+          addModelToScene(mesh);
+          console.log('stl: ', mesh.uuid)
+        });
+        break;
+
+      default:
+        console.error('Unsupported model format');
+    }
   }
 
-  // Función de animación
+  function addModelToScene(model: THREE.Object3D) {
+    model.scale.set(0.5, 0.5, 0.5);
+    model.position.set(0, 0, 0);
+    scene.add(model);
+    loadedModels.push(model);
+  }
+
+  projectDetails.value.modelCheckoutCartDataLocal.forEach(loadModel);
+
+  function selectAndDragModel(event: MouseEvent) {
+    if (event.button !== 0) return; // Solo clic izquierdo
+
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(loadedModels, true);
+
+    if (intersects.length > 0) {
+        // Restaurar el color del modelo previamente seleccionado
+        if (selectedModel) {
+            selectedModel.traverse((child) => {
+                if ((child as THREE.Mesh).isMesh) {
+                    ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0x555555); // Color original
+                }
+            });
+        }
+
+        selectedModel = intersects[0].object;
+        console.log("Modelo seleccionado:", selectedModel);
+
+        // Cambiar el color del modelo seleccionado
+        selectedModel.traverse((child) => {
+            if ((child as THREE.Mesh).isMesh) {
+                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xffff00); 
+            }
+        });
+
+        // Calcular la posición inicial del modelo
+        const intersection = new THREE.Vector3();
+        raycaster.ray.intersectPlane(plane, intersection);
+        offset.copy(intersection).sub(selectedModel.position);
+
+        isDragging = true;
+        controls.enabled = false; // 🔴 Disable OrbitControls
+    }
+  }
+
+  function moveModel(event: MouseEvent) {
+    if (!isDragging || !selectedModel) return;
+
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersection = new THREE.Vector3();
+    
+    if (raycaster.ray.intersectPlane(plane, intersection)) {
+      selectedModel.position.copy(intersection.sub(offset));
+    }
+  }
+
+  function releaseModel() {
+    isDragging = false;
+    controls.enabled = true; // ✅ Re-enable OrbitControls
+  }
+
+  renderer.domElement.addEventListener('mousedown', selectAndDragModel);
+  renderer.domElement.addEventListener('mousemove', moveModel);
+  renderer.domElement.addEventListener('mouseup', releaseModel);
+
   function animate() {
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
+
+  animate();
 }
 
 onMounted(() => {
-  initializeModel();
+  initModels();
 });
 </script>
 
@@ -327,7 +470,7 @@ onMounted(() => {
               </swiper-slide>
             </swiper-container>
             <div v-show="selectedElement === 'model'" class="px-2 pt-2">
-              <div id="model-viewer" class="w-100 rounded"></div>
+              <div id="model-viewer" class="w-100 rounded" style=" block-size: 600px;inline-size: 800px;"></div>
             </div>
             <swiper-container
               class="mySwiper2"
@@ -392,7 +535,7 @@ onMounted(() => {
                           size="20"
                         />
                       </template>
-                      <VListItemTitle>Dimensiones: Altura: {{ projectDetails?.dimentions.z }}mm, Ancho: {{ projectDetails?.dimentions.x }}mm, Profundidad: {{ projectDetails?.dimentions.y }}mm</VListItemTitle>
+                      <VListItemTitle>Dimensiones: Altura: {{ projectDetails.dimentions[0].z }}mm, Ancho: {{ projectDetails?.dimentions[0].x }}mm, Profundidad: {{ projectDetails?.dimentions[0].y }}mm</VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
@@ -485,7 +628,7 @@ onMounted(() => {
           class="expansion-panels-width-border"
         >
           <template
-            v-for="(section, index) in projectDetails?.instructions"
+            v-for="(section, index) in instructions"
             :key="index"
           >
             <VExpansionPanel

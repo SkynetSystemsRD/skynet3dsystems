@@ -163,7 +163,6 @@ const initModels = () => {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xdddddd);
 
-
   const camera = new THREE.PerspectiveCamera(75, 1000 / 600, 0.1, 1000);
   camera.position.set(30, 30, 30);
 
@@ -230,6 +229,7 @@ const initModels = () => {
   let selectedModel: THREE.Object3D | null = null;
   let isDragging = false;
   let isRotating = false;  // Variable para controlar si el modelo seleccionado debe rotar
+
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   const offset = new THREE.Vector3();
