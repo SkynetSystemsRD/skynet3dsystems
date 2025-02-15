@@ -17,6 +17,32 @@ interface Emit {
   (e: 'update:checkout-data', value: ModelCheckoutData): void
 }
 const props = defineProps<Props>()
+  const panelStatus = ref(1);
+const instructions = [
+    {
+      title: "Manipulación del Modelo 3D",
+      topics: [
+        { 
+          title: "Rotar el Modelo", 
+          instruction1: "Mantén presionado el botón izquierdo del ratón y mueve el ratón ",
+          instruction2: "y mueve el ratón para rotar el modelo.",
+          icon: "tabler-rotate"
+        },
+        { 
+          title: "Acercar/Lejar el Modelo", 
+          instruction1: "Usa la rueda del ratón para acercar o alejar el modelo.",
+          instruction2: "",
+          icon: "tabler-zoom"
+        },
+        { 
+          title: "Mover el Modelo", 
+          instruction1: "Seleccion con click izquierdo y mantén presionado el botón izquierdo del ratón y arrastra para ",
+          instruction2: "mover el modelo 3D.",
+          icon: "tabler-mouse"
+        }
+      ]
+    },
+  ]
 
 const models_counts = ref(0);
 let firstTime = true
@@ -420,60 +446,66 @@ onMounted(() => {
         cols="12"
         md="12"
       >
-      <!-- PONER INSTRUCCIONES DE COMO USAR EL VISUALIZADOR DE MODELO -->
-      <template
-        v-for="(section, index) in projectDetails?.instructions"
-        :key="index"
-      >
-        <VExpansionPanel
-          elevation="0"
-          :value="index"
-          expand-icon="tabler-chevron-right"
-          collapse-icon="tabler-chevron-down"
-        >
-          <template #title>
-            <div>
-              <h5 class="text-h5 mb-1">
-                {{ section.title }}
-              </h5> 
-            </div>
-          </template>
-          <template #text>
-            <VList class="card-list">
-              <VListItem
-                v-for="(topic, id) in section.topics"
-                :key="id"
-                class="py-4"
-              >
-                <!-- <template #prepend>
-                  <VCheckbox
-                    :model-value="topic.isCompleted"
-                    class="me-1"
-                  />
-                </template> -->
-                <VListItemTitle class="text-high-emphasis font-weight-medium">
-                  {{ id + 1 }} . {{ topic.title }} 
-                  <VIcon
-                    size="24"
-                    :icon="topic.icon"
-                  />
-                </VListItemTitle>
-                <VListItemSubtitle>
-                  <div class="text-body-2">
-                    {{ topic.instruction1 }}
-                  </div>
-                </VListItemSubtitle>
-                <VListItemSubtitle>
-                  <div class="text-body-2">
-                    {{ topic.instruction2 }}
-                  </div>
-                </VListItemSubtitle>
-              </VListItem>
-            </VList>
-          </template>
-        </VExpansionPanel>
-      </template>
         <VCard class="invoice-preview-wrapper pa-6 pa-sm-12">
+          <VExpansionPanels
+            v-model="panelStatus"
+            variant="accordion"
+            class="expansion-panels-width-border"
+          >
+            <template
+              v-for="(section, index) in instructions"
+              :key="index"
+            >
+              <VExpansionPanel
+                elevation="0"
+                :value="index"
+                expand-icon="tabler-chevron-right"
+                collapse-icon="tabler-chevron-down"
+              >
+                <template #title>
+                  <div>
+                    <h5 class="text-h5 mb-1">
+                      {{ section.title }}
+                    </h5> 
+                  </div>
+                </template>
+                <template #text>
+                  <VList class="card-list">
+                    <VListItem
+                      v-for="(topic, id) in section.topics"
+                      :key="id"
+                      class="py-4"
+                    >
+                      <!-- <template #prepend>
+                        <VCheckbox
+                          :model-value="topic.isCompleted"
+                          class="me-1"
+                        />
+                      </template> -->
+                      <VListItemTitle class="text-high-emphasis font-weight-medium">
+                        {{ id + 1 }} . {{ topic.title }} 
+                        <VIcon
+                          size="24"
+                          :icon="topic.icon"
+                        />
+                      </VListItemTitle>
+                      <VListItemSubtitle>
+                        <div class="text-body-2">
+                          {{ topic.instruction1 }}
+                        </div>
+                      </VListItemSubtitle>
+                      <VListItemSubtitle>
+                        <div class="text-body-2">
+                          {{ topic.instruction2 }}
+                        </div>
+                      </VListItemSubtitle>
+                    </VListItem>
+                  </VList>
+                </template>
+              </VExpansionPanel>
+            </template>
+          </VExpansionPanels>
+
           <div class="px-2 pt-2">
             <div id="model-viewer" class="w-100 rounded" style=" block-size: 600px;inline-size: 800px;"></div>
           </div>
@@ -485,15 +517,27 @@ onMounted(() => {
               <v-col>
                 <div style="display: flex; gap: 30px;">
                   <VBtn>
+                    <VTooltip
+                      location="top"
+                      transition="scale-transition"
+                      activator="parent"
+                    >
+                      <span>mover</span>
+                    </VTooltip>
                     <VIcon size="34" icon="tabler-arrows-move" />
-                    Mover 
                   </VBtn>
                   <VBtn
                     id="removeButton"
                     color="error"
                   >
+                    <VTooltip
+                      location="top"
+                      transition="scale-transition"
+                      activator="parent"
+                    >
+                      <span>Boton para Eliminar el Modelo</span>
+                    </VTooltip>
                     <VIcon size="34" icon="tabler-x" />
-                    Eliminar
                   </VBtn>
                 </div>
               </v-col>
