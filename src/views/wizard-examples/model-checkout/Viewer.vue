@@ -420,6 +420,59 @@ onMounted(() => {
         cols="12"
         md="12"
       >
+      <!-- PONER INSTRUCCIONES DE COMO USAR EL VISUALIZADOR DE MODELO -->
+      <template
+        v-for="(section, index) in projectDetails?.instructions"
+        :key="index"
+      >
+        <VExpansionPanel
+          elevation="0"
+          :value="index"
+          expand-icon="tabler-chevron-right"
+          collapse-icon="tabler-chevron-down"
+        >
+          <template #title>
+            <div>
+              <h5 class="text-h5 mb-1">
+                {{ section.title }}
+              </h5> 
+            </div>
+          </template>
+          <template #text>
+            <VList class="card-list">
+              <VListItem
+                v-for="(topic, id) in section.topics"
+                :key="id"
+                class="py-4"
+              >
+                <!-- <template #prepend>
+                  <VCheckbox
+                    :model-value="topic.isCompleted"
+                    class="me-1"
+                  />
+                </template> -->
+                <VListItemTitle class="text-high-emphasis font-weight-medium">
+                  {{ id + 1 }} . {{ topic.title }} 
+                  <VIcon
+                    size="24"
+                    :icon="topic.icon"
+                  />
+                </VListItemTitle>
+                <VListItemSubtitle>
+                  <div class="text-body-2">
+                    {{ topic.instruction1 }}
+                  </div>
+                </VListItemSubtitle>
+                <VListItemSubtitle>
+                  <div class="text-body-2">
+                    {{ topic.instruction2 }}
+                  </div>
+                </VListItemSubtitle>
+              </VListItem>
+            </VList>
+          </template>
+        </VExpansionPanel>
+      </template>
         <VCard class="invoice-preview-wrapper pa-6 pa-sm-12">
           <div class="px-2 pt-2">
             <div id="model-viewer" class="w-100 rounded" style=" block-size: 600px;inline-size: 800px;"></div>
