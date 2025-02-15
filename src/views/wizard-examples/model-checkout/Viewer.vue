@@ -51,7 +51,11 @@ const instructions = [
   ]
 
 const models_counts = ref(0);
-let firstTime = true
+const rotateButtonColor = ref('primary')
+const rotateButtonText = ref('Rotacion Desactivada')
+const isSnackbarVisible = ref(false)
+const InfoMessage = ref('')
+const checkboxString = ref('Rotacion Manual')
 
 const emit = defineEmits<Emit>()
 
@@ -219,6 +223,7 @@ const initModels = () => {
   let loadedModels: THREE.Object3D[] = [];
   let selectedModel: THREE.Object3D | null = null;
   let isDragging = false;
+  let isRotating = false;  // Variable para controlar si el modelo seleccionado debe rotar
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   const offset = new THREE.Vector3();
@@ -282,40 +287,6 @@ const initModels = () => {
 
   modelCheckoutAddressDataLocal.value.modelItems.forEach(loadModel);
 
-  // function selectModel(event: MouseEvent) {
-  //   if (event.button !== 0) return; // Detecta solo clic izquierdo
-
-  //   const rect = renderer.domElement.getBoundingClientRect();
-  //   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-  //   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
-  //   raycaster.setFromCamera(mouse, camera);
-  //   const intersects = raycaster.intersectObjects(loadedModels, true);
-
-  //   if (intersects.length > 0) {
-  //     // Restaurar el color del modelo previamente seleccionado
-  //     if (selectedModel) {
-  //         selectedModel.traverse((child) => {
-  //             if ((child as THREE.Mesh).isMesh) {
-  //                 ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0x555555); // Color original
-  //             }
-  //         });
-  //     }
-
-  //     selectedModel = intersects[0].object;
-  //     console.log("Modelo seleccionado:", selectedModel);
-
-  //     // Cambiar el color del modelo seleccionado
-  //     selectedModel.traverse((child) => {
-  //         if ((child as THREE.Mesh).isMesh) {
-  //             ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xffff00); 
-  //         }
-  //     });
-
-  //     isDragging = true;
-  //   }
-  // } 
-
   function selectAndDragModel(event: MouseEvent) {
     if (event.button !== 0) return; // Solo clic izquierdo
 
@@ -377,7 +348,11 @@ const initModels = () => {
   }
 
   function removeModel() {
-    if (!selectedModel) return;
+    if (!selectedModel) {
+      isSnackbarVisible.value = true
+      InfoMessage.value = '🙂 Debe de seleccionar el modelo 3D a eliminar!'
+      return;
+    }
 
     const uuid = selectedModel.uuid;
     const parent_uuid = selectedModel.parent?.uuid;
@@ -422,12 +397,47 @@ const initModels = () => {
     selectedModel = null;
   }
 
-  
+  function rotatebutton (){
+    if (!selectedModel)  // Si no hay un modelo seleccionado, no hacer nada 
+    {
+      isSnackbarVisible.value = true
+      InfoMessage.value = '😄 Debe de seleccionar el modelo 3D para rotar!'
+      return;
+    }
+
+    // Cambiar el estado de rotación
+    isRotating = !isRotating;
+
+    if (isRotating){
+      rotateButtonColor.value = 'outlined'
+      rotateButtonText.value = 'Rotacion Activada'
+    }
+    else {
+      rotateButtonColor.value = 'primary'
+      rotateButtonText.value = 'Rotacion Desactivada'
+    }
+  }
+
+  function resetModels() {
+    // Restablecer todos los modelos cargados a la posición original, rotación y escala
+    loadedModels.forEach(model => {
+      model.position.set(0, 0, 0); // Restablecer posición
+      model.rotation.set(0, 0, 0); // Restablecer rotación
+      model.scale.set(0.5, 0.5, 0.5); // Restablecer escala a valor original
+    });
+  }
+
+
   renderer.domElement.addEventListener('mousedown', selectAndDragModel);
   renderer.domElement.addEventListener('mousemove', moveModel);
   renderer.domElement.addEventListener('mouseup', releaseModel);
 
   function animate() {
+    if (isRotating && selectedModel && checkboxString.value === 'Rotacion Automatica') {
+      // Rota el modelo alrededor del eje Y
+      selectedModel.rotation.y += 0.01;  // Puedes ajustar el valor para cambiar la velocidad de rotación
+    }
+
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
@@ -436,12 +446,19 @@ const initModels = () => {
   const removeButton = document.getElementById("removeButton");
   removeButton?.addEventListener("click", removeModel); // Añadir evento al botón
 
+  // Aquí el botón de eliminación
+  const rotateButton = document.getElementById("rotateButton");
+  rotateButton?.addEventListener("click", rotatebutton); // Añadir evento al botón
+
+  const resetButton = document.getElementById("resetButton");
+  resetButton?.addEventListener("click", resetModels); // Añadir evento al botón de restaurar
+
+
   animate();
 }
 
 onMounted(() => {
   initModels()
-  firstTime = false
 });
 </script>
 
@@ -522,17 +539,30 @@ onMounted(() => {
             <v-row>
               <v-col>
                 <div style="display: flex; gap: 30px;">
-                  <VBtn>
+                  <VBtn
+                    rounded="pill"
+                    :color="rotateButtonColor"
+                    id="rotateButton"
+                  >
                     <VTooltip
                       location="top"
                       transition="scale-transition"
                       activator="parent"
                     >
-                      <span>mover</span>
+                      <span>Boton para Rotar el Modelo</span>
                     </VTooltip>
                     <VIcon size="34" icon="tabler-arrows-move" />
+                    {{ rotateButtonText }}
                   </VBtn>
+                  <VCheckbox
+                    v-model="checkboxString"
+                    true-value="Rotacion Automatica"
+                    false-value="Rotacion Manual"
+                    color="success"
+                    :label="`${checkboxString.toString()}`"
+                  />
                   <VBtn
+                    rounded="pill"
                     id="removeButton"
                     color="error"
                   >
@@ -544,6 +574,22 @@ onMounted(() => {
                       <span>Boton para Eliminar el Modelo</span>
                     </VTooltip>
                     <VIcon size="34" icon="tabler-x" />
+                    Eliminar
+                  </VBtn>
+                  <VBtn
+                    rounded="pill"
+                    id="resetButton"
+                    color="success"
+                  >
+                    <VTooltip
+                      location="top"
+                      transition="scale-transition"
+                      activator="parent"
+                    >
+                      <span>Boton para Reposicionar todos los Modelos</span>
+                    </VTooltip>
+                    <VIcon size="34" icon="tabler-x" />
+                    Reposicionar
                   </VBtn>
                 </div>
               </v-col>
@@ -561,6 +607,13 @@ onMounted(() => {
       <!-- Invoice with ID  {{ route.params.id }} not found! -->
     </VAlert>
   </section>
+  <!-- Snackbar -->
+  <VSnackbar
+    v-model="isSnackbarVisible"
+    :timeout="5000"
+  >
+    {{ InfoMessage }}
+  </VSnackbar>
 </template>
 
 <style lang="scss">

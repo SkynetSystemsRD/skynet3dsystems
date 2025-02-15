@@ -22,6 +22,10 @@ const emit = defineEmits<Emit>()
 
 const models_counts = ref(0);
 
+const power = ref(0)
+
+const isAlreadyUploaded = ref(false)
+
 const modelCheckoutCartDataLocal = ref({ ...props.modelCheckoutData });
 
 watch(() => props.modelCheckoutData, (newData) => {
@@ -70,6 +74,7 @@ function handleFileChange(files: File[]) {
   const supportedFormats = ['stl', 'fbx', 'gltf', 'obj'];
 
   if (files.target.files.length > 0) {
+    isAlreadyUploaded.value = true;
 
     for (let count = 0; count < files.target.files.length; count++) {
       // Crear un FileReader para leer el archivo
@@ -226,6 +231,8 @@ function handleFileChange(files: File[]) {
         
         emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
       });
+
+      power.value = count / files.target.files.length * 100;
     }
   }
 }
@@ -261,6 +268,15 @@ watch(() => props.currentStep, updateCartData)
       <h5 class="text-h5 my-4">
         Mi Projecto tiene ({{ modelCheckoutCartDataLocal.modelItems.length }} Modelos 3D)
       </h5>
+
+      <VProgressLinear
+        v-show="isAlreadyUploaded"
+        v-model="power"
+        color="primary"
+        height="8"
+      />
+
+
 
       <!-- 👉 Cart items -->
       <div
