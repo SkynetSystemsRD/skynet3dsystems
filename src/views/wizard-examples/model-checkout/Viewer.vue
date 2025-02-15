@@ -17,15 +17,15 @@ interface Emit {
   (e: 'update:checkout-data', value: ModelCheckoutData): void
 }
 const props = defineProps<Props>()
-  const panelStatus = ref(1);
+const panelStatus = ref(1);
 const instructions = [
     {
       title: "Manipulación del Modelo 3D",
       topics: [
         { 
-          title: "Rotar el Modelo", 
+          title: "Rotar la cámara", 
           instruction1: "Mantén presionado el botón izquierdo del ratón y mueve el ratón ",
-          instruction2: "y mueve el ratón para rotar el modelo.",
+          instruction2: "y mueve el ratón para rotar el entorno de la escena.",
           icon: "tabler-rotate"
         },
         { 
@@ -38,6 +38,12 @@ const instructions = [
           title: "Mover el Modelo", 
           instruction1: "Seleccion con click izquierdo y mantén presionado el botón izquierdo del ratón y arrastra para ",
           instruction2: "mover el modelo 3D.",
+          icon: "tabler-mouse"
+        },
+        { 
+          title: "Elimnar el Modelo", 
+          instruction1: "Seleccion con click izquierdo el modelo 3D que desea eliminar",
+          instruction2: "y presione el boton rojo con la X",
           icon: "tabler-mouse"
         }
       ]
