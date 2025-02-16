@@ -44,7 +44,7 @@ const menuItems: MenuItem[] = [
   //   listIcon: 'tabler-layout-grid',
   //   navItems: [
   //     { name: 'Pricing', to: { name: 'main-pages-pricing' } },
-  //     { name: 'Payment', to: { name: 'main-pages-payment' } },
+  //     { name: 'Payment', to: { name: 'main-pages-payment' } },s
   //     { name: 'Checkout', to: { name: 'main-pages-checkout' } },
   //     { name: 'Help Center', to: { name: 'main-pages-help-center' } },
   //   ],
@@ -298,9 +298,8 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
                             class="text-body-1 mb-4 text-no-wrap"
                           >
                             <RouterLink
-                              class="mega-menu-item"
                               :to="listItem.to"
-                              :target="item.listTitle === 'Page' ? '_self' : '_blank'"
+                              class="mega-menu-item"
                               :class="isCurrentRoute(listItem.to) ? 'active-link' : 'text-high-emphasis'"
                             >
                               <div class="d-flex align-center">
