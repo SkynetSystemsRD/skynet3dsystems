@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import academyCourseIllustration2Dark from '@images/pages/app-academy-tutor-1.png';
+import academyCourseIllustration2Dark from '@images/projects/image-project1.png';
 import { computed, ref, watch } from 'vue';
 
 interface Props {
