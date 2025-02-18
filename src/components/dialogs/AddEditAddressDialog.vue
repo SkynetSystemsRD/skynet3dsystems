@@ -24,6 +24,203 @@ interface Emit {
   (e: 'submit', value: BillingAddress): void
 }
 
+const countries = [
+  'Afganistán',
+  'Albania',
+  'Alemania',
+  'Andorra',
+  'Angola',
+  'Antigua y Barbuda',
+  'Arabia Saudita',
+  'Arcos',
+  'Argentina',
+  'Armenia',
+  'Australia',
+  'Austria',
+  'Azerbaiyán',
+  'Bahamas',
+  'Bangladés',
+  'Barbados',
+  'Baréin',
+  'Bélgica',
+  'Belice',
+  'Benín',
+  'Bielorrusia',
+  'Birmania',
+  'Bolivia',
+  'Bosnia y Herzegovina',
+  'Botsuana',
+  'Brasil',
+  'Brunéi',
+  'Bulgaria',
+  'Burkina Faso',
+  'Burundi',
+  'Bután',
+  'Cabo Verde',
+  'Camboya',
+  'Camerún',
+  'Canadá',
+  'Catar',
+  'Chile',
+  'China',
+  'Chipre',
+  'Colombia',
+  'Comoras',
+  'Congo (República del)',
+  'Congo (República Democrática del)',
+  'Corea del Norte',
+  'Corea del Sur',
+  'Costa Rica',
+  'Croacia',
+  'Cuba',
+  'Curazao',
+  'Chipre',
+  'Chequia',
+  'Dinamarca',
+  'Dominica',
+  'Ecuador',
+  'Egipto',
+  'El Salvador',
+  'Emiratos Árabes Unidos',
+  'Ecuador',
+  'Eritrea',
+  'Eslovaquia',
+  'Eslovenia',
+  'España',
+  'Estados Unidos',
+  'Estonia',
+  'Eswatini',
+  'Etiopía',
+  'Fiyi',
+  'Filipinas',
+  'Finlandia',
+  'Francia',
+  'Gabón',
+  'Gambia',
+  'Gana',
+  'Granada',
+  'Grecia',
+  'Guatemala',
+  'Guinea',
+  'Guinea Ecuatorial',
+  'Guinea-Bisáu',
+  'Guyana',
+  'Haití',
+  'Honduras',
+  'Hungría',
+  'India',
+  'Indonesia',
+  'Irak',
+  'Irán',
+  'Irlanda',
+  'Islandia',
+  'Islas Cook',
+  'Islas Feroe',
+  'Islas Marshall',
+  'Islas Salomón',
+  'Israel',
+  'Italia',
+  'Jamaica',
+  'Japón',
+  'Jordania',
+  'Kazajistán',
+  'Kenia',
+  'Kirguistán',
+  'Kiribati',
+  'Kuwait',
+  'Laos',
+  'Lesoto',
+  'Letonia',
+  'Líbano',
+  'Liberia',
+  'Libia',
+  'Liechtenstein',
+  'Lituania',
+  'Luxemburgo',
+  'Madagascar',
+  'Malasia',
+  'Malaui',
+  'Maldivas',
+  'Malí',
+  'Malta',
+  'Marruecos',
+  'Mauricio',
+  'Mauritania',
+  'México',
+  'Micronesia',
+  'Mónaco',
+  'Mongolia',
+  'Montenegro',
+  'Mozambique',
+  'Namibia',
+  'Naurú',
+  'Nepal',
+  'Nicaragua',
+  'Níger',
+  'Nigeria',
+  'Noruega',
+  'Nueva Zelanda',
+  'Omán',
+  'Países Bajos',
+  'Pakistán',
+  'Palaos',
+  'Panamá',
+  'Papúa Nueva Guinea',
+  'Paraguay',
+  'Perú',
+  'Polonia',
+  'Portugal',
+  'Reino Unido',
+  'República Checa',
+  'República Dominicana',
+  'Rumanía',
+  'Rusia',
+  'Ruanda',
+  'Samoa',
+  'San Cristóbal y Nieves',
+  'San Marino',
+  'San Vicente y las Granadinas',
+  'Santa Lucía',
+  'Santo Tomé y Príncipe',
+  'Senegal',
+  'Serbia',
+  'Seychelles',
+  'Sierra Leona',
+  'Singapur',
+  'Siria',
+  'Somalia',
+  'Sri Lanka',
+  'Suazilandia',
+  'Sudáfrica',
+  'Sudán',
+  'Suecia',
+  'Suiza',
+  'Surinam',
+  'Tailandia',
+  'Tanzania',
+  'Tayikistán',
+  'Timor Oriental',
+  'Togo',
+  'Tonga',
+  'Trinidad y Tobago',
+  'Túnez',
+  'Turkmenistán',
+  'Turquía',
+  'Tuvalu',
+  'Uganda',
+  'Ucrania',
+  'Uruguay',
+  'Vanuatu',
+  'Vaticano',
+  'Venezuela',
+  'Vietnam',
+  'Yemen',
+  'Yibuti',
+  'Zambia',
+  'Zimbabue'
+]
+
+
 const props = withDefaults(defineProps<Props>(), {
   billingAddress: () => ({
     firstName: '',
@@ -51,23 +248,24 @@ const resetForm = () => {
 
 const onFormSubmit = () => {
   emit('update:isDialogVisible', false)
+  console.log(billingAddress.value)
   emit('submit', billingAddress.value)
 }
 
-const selectedAddress = ref('Home')
+const selectedAddress = ref('Casa')
 
 const addressTypes = [
   {
     icon: { icon: home, size: '28' },
-    title: 'Home',
+    title: 'Casa',
     desc: 'Delivery Time (9am - 9pm)',
-    value: 'Home',
+    value: 'Casa',
   },
   {
     icon: { icon: office, size: '28' },
-    title: 'Office',
+    title: 'Trabajo',
     desc: 'Delivery Time (9am - 5pm)',
-    value: 'Office',
+    value: 'Trabajo',
   },
 ]
 </script>
@@ -88,7 +286,7 @@ const addressTypes = [
       <VCardText>
         <!-- 👉 Title -->
         <h4 class="text-h4 text-center mb-2">
-          {{ (props.billingAddress.addressLine1 || props.billingAddress.addressLine2) ? 'Edit' : 'Add New' }} Direccion
+          {{ (props.billingAddress.addressLine1 || props.billingAddress.addressLine2) ? 'Editar' : 'Agregar Nueva' }} Direccion
         </h4>
         <p class="text-body-1 text-center mb-6">
           Agrega Una Nueva Direccion
@@ -124,8 +322,8 @@ const addressTypes = [
             >
               <AppTextField
                 v-model="billingAddress.lastName"
-                label="Last Name"
-                placeholder="Doe"
+                label="Apellido"
+                placeholder="Perez"
               />
             </VCol>
 
@@ -133,9 +331,9 @@ const addressTypes = [
             <VCol cols="12">
               <AppSelect
                 v-model="billingAddress.selectedCountry"
-                label="Select Country"
-                placeholder="Select Country"
-                :items="['USA', 'Aus', 'Canada', 'NZ']"
+                label="Seleccione su Pais"
+                placeholder="Seleccione su Pais"
+                :items="countries"
               />
             </VCol>
 
@@ -143,8 +341,8 @@ const addressTypes = [
             <VCol cols="12">
               <AppTextField
                 v-model="billingAddress.addressLine1"
-                label="Address Line 1"
-                placeholder="12, Business Park"
+                label="Direccion #1"
+                placeholder="Av. 27 de Febrero"
               />
             </VCol>
 
@@ -152,8 +350,8 @@ const addressTypes = [
             <VCol cols="12">
               <AppTextField
                 v-model="billingAddress.addressLine2"
-                label="Address Line 2"
-                placeholder="Mall Road"
+                label="Direccion #2"
+                placeholder="Winston Churchill"
               />
             </VCol>
 
@@ -165,7 +363,7 @@ const addressTypes = [
               <AppTextField
                 v-model="billingAddress.landmark"
                 label="Landmark"
-                placeholder="Nr. Hard Rock Cafe"
+                placeholder="Hard Rock Cafe"
               />
             </VCol>
 
@@ -176,8 +374,8 @@ const addressTypes = [
             >
               <AppTextField
                 v-model="billingAddress.city"
-                label="City"
-                placeholder="Los Angeles"
+                label="Cuidad"
+                placeholder="Santo Domingo"
               />
             </VCol>
 
@@ -188,8 +386,8 @@ const addressTypes = [
             >
               <AppTextField
                 v-model="billingAddress.state"
-                label="State"
-                placeholder="California"
+                label="Provincia"
+                placeholder="Distrito Nacional"
               />
             </VCol>
 
@@ -200,14 +398,14 @@ const addressTypes = [
             >
               <AppTextField
                 v-model="billingAddress.zipCode"
-                label="Zip Code"
-                placeholder="99950"
+                label="Codigo Postal"
+                placeholder="10305"
                 type="number"
               />
             </VCol>
 
             <VCol cols="12">
-              <VSwitch label="Use as a billing address?" />
+              <VSwitch label="Utilizar como dirección de facturación?" />
             </VCol>
 
             <!-- 👉 Submit and Cancel button -->
@@ -219,7 +417,7 @@ const addressTypes = [
                 type="submit"
                 class="me-3"
               >
-                submit
+                Guardar
               </VBtn>
 
               <VBtn
@@ -227,7 +425,7 @@ const addressTypes = [
                 color="secondary"
                 @click="resetForm"
               >
-                Cancel
+                Cancelar
               </VBtn>
             </VCol>
           </VRow>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CustomInputContent } from '@/@core/types'
 import type { ModelCheckoutData } from './types'
 
 interface Props {
@@ -69,8 +70,14 @@ const nextStep = () => {
   updateAddressData()
   emit('update:currentStep', props.currentStep ? props.currentStep + 1 : 1)
 }
+
 const changeAddress = (value: string) => {
   modelCheckoutAddressDataLocal.value.deliveryAddress = value.toLowerCase()
+  emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
+}
+
+const deleteAddress = (item: CustomInputContent) => {
+  modelCheckoutAddressDataLocal.value.addresses = modelCheckoutAddressDataLocal.value.addresses.filter(a => a.value !== item.value)
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
 }
 
@@ -120,10 +127,9 @@ watch(() => props.currentStep, updateAddressData)
             <VDivider />
             <div class="pt-2">
               <a
-                href="#"
                 class="me-4"
               >Editar</a>
-              <a href="#">Eliminar</a>
+              <a @click="deleteAddress(item)">Eliminar</a>
             </div>
           </div>
         </template>
