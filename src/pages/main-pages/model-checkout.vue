@@ -72,10 +72,10 @@ let modelCheckoutData = ref<ModelCheckoutData>({
   ],
 })
 
-function updateModels(data: ModelCheckoutData){
+function updateModels(data: ModelCheckoutData, o: string){
   modelCheckoutData.value = data
 
-  console.log("MODELCHECKOUTDATA: ", modelCheckoutData.value)
+  console.log(`MODELCHECKOUTDATA: ${o}: `, modelCheckoutData.value)
 }
 const currentStep = ref(0)
 </script>
@@ -108,7 +108,7 @@ const currentStep = ref(0)
                 <CartContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => updateModels(data)"
+                  @update:checkout-data="(data) => updateModels(data, 'c')"
                 />
               </VWindowItem>
               <VWindowItem>
@@ -121,12 +121,12 @@ const currentStep = ref(0)
                 <PaymentContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => updateModels(data)"
+                  @update:checkout-data="(data) => updateModels(data, 'p')"
                 />
                 <AddressContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => updateModels(data)"
+                  @update:checkout-data="(data) => updateModels(data, 'a')"
                 />
               </VWindowItem>
               <VWindowItem>

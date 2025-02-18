@@ -68,7 +68,7 @@ const nextStep = () => {
 watch(
   () => [prop.currentStep, prop.modelCheckoutData.deliveryAddress],
   ([newStep, newAddress]) => {
-    updateCartData();
+    // updateCartData();
     modelCheckoutPaymentDataLocal.value.deliveryAddress = newAddress;
   }
 );

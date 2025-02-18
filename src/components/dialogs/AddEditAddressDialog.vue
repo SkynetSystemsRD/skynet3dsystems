@@ -226,18 +226,18 @@ const countries = [
 
 const props = withDefaults(defineProps<Props>(), {
   billingAddress: () => ({
-    firstName: '',
-    lastName: '',
-    phone: '',
+    firstName: 'Jose',
+    lastName: 'Lopez',
+    phone: '849 000 1111',
     selectedCountry: 'República Dominicana',
-    addressLine1: '',
+    addressLine1: 'Av. 27 de Febrero',
     addressLine2: '',
-    landmark: '',
+    landmark: 'Hard Rock Cafe',
     contact: '',
     country: null,
-    city: '',
-    state: '',
-    zipCode: null,
+    city: 'Santo Domingo',
+    state: 'Distrito Nacional',
+    zipCode: 10305,
   })
 })
 
@@ -408,7 +408,7 @@ watch(() => props.modelCheckoutData, value => {
             >
               <AppTextField
                 v-model="billingAddress.landmark"
-                label="Landmark"
+                label="Marca"
                 placeholder="Hard Rock Cafe"
               />
             </VCol>

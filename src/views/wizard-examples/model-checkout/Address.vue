@@ -31,13 +31,13 @@ const deliveryOptions = [
   {
     icon: { icono: 'tabler-star' },
     title: 'Expreso',
-    desc: 'Recibe tu producto en menos de 24h.',
+    desc: 'Recibe tu producto en 24h.',
     value: 'express',
   },
   {
     icon: { icono: 'tabler-crown' },
     title: 'Nocturno',
-    desc: 'Recibe tu producto en menos de 1h.',
+    desc: 'Recibe tu producto en 1h.',
     value: 'overnight',
   },
 ];
@@ -88,7 +88,9 @@ const addNewAddress = (data: ModelCheckoutData) => {
     subtitle: data.addresses[0].subtitle,
     value: data.addresses[0].value
   })
-  emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
+
+  console.log('klk mmg: ', modelCheckoutAddressDataLocal.value)
+  updateAddressData()
 }
 
 watch(() => props.currentStep, updateAddressData)
