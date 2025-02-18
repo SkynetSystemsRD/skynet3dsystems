@@ -22,24 +22,24 @@ watch(() => props.modelCheckoutData, value => {
 
 const deliveryOptions = [
   {
-    icon: { icon: 'tabler-user' },
-    title: 'Standard',
-    desc: 'Get your product in 1 Week.',
+    icon: { icono: 'tabler-user' },
+    title: 'Estándar',
+    desc: 'Recibe tu producto en 1 semana.',
     value: 'free',
   },
   {
-    icon: { icon: 'tabler-star' },
-    title: 'Express',
-    desc: 'Get your product in 4 days.',
+    icon: { icono: 'tabler-star' },
+    title: 'Expreso',
+    desc: 'Recibe tu producto en 4 días.',
     value: 'express',
   },
   {
-    icon: { icon: 'tabler-crown' },
-    title: 'Overnight',
-    desc: 'Get your product in 1 day.',
+    icon: { icono: 'tabler-crown' },
+    title: 'Nocturno',
+    desc: 'Recibe tu producto en 1 día.',
     value: 'overnight',
   },
-]
+];
 
 const resolveAddressBadgeColor: any = {
   home: 'primary',
@@ -47,9 +47,9 @@ const resolveAddressBadgeColor: any = {
 }
 
 const resolveDeliveryBadgeData: any = {
-  free: { color: 'success', price: 0, text: 'Free' },
-  express: { color: 'secondary', price: 10, text: '$10' },
-  overnight: { color: 'secondary', price: 15, text: '$15' },
+  free: { color: 'success', price: 0, text: 'Gratis' },
+  express: { color: 'secondary', price: 10, text: 'RD$10' },
+  overnight: { color: 'secondary', price: 15, text: 'RD$15' },
 }
 
 const totalPriceWithDeliveryCharges = computed(() => {
@@ -69,6 +69,10 @@ const nextStep = () => {
   updateAddressData()
   emit('update:currentStep', props.currentStep ? props.currentStep + 1 : 1)
 }
+const changeAddress = (value: string) => {
+  modelCheckoutAddressDataLocal.value.deliveryAddress = value.toLowerCase()
+  emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
+}
 
 watch(() => props.currentStep, updateAddressData)
 </script>
@@ -81,7 +85,7 @@ watch(() => props.currentStep, updateAddressData)
     >
       <!-- 👉 Address options -->
       <h6 class="text-h6 mb-4">
-        Select your preferable address
+        Seleccione su direccion de preferencia
       </h6>
 
       <!-- 👉 Address custom input -->
@@ -91,7 +95,7 @@ watch(() => props.currentStep, updateAddressData)
         :grid-column="{ cols: '12', sm: '6' }"
       >
         <template #default="{ item }">
-          <div class="w-100">
+          <div class="w-100" @click="changeAddress(item.value)">
             <div class="d-flex justify-space-between mb-3">
               <h6 class="text-base font-weight-medium">
                 {{ item.title }}
@@ -111,15 +115,15 @@ watch(() => props.currentStep, updateAddressData)
               {{ item.desc }}
             </p>
             <p class="text-sm mb-3">
-              Mobile: {{ item.subtitle }}
+              Celular: {{ item.subtitle }}
             </p>
             <VDivider />
             <div class="pt-2">
               <a
                 href="#"
                 class="me-4"
-              >Edit</a>
-              <a href="#">Remove</a>
+              >Editar</a>
+              <a href="#">Eliminar</a>
             </div>
           </div>
         </template>
@@ -131,12 +135,12 @@ watch(() => props.currentStep, updateAddressData)
         class="mt-4 mb-6"
         @click="isEditAddressDialogVisible = !isEditAddressDialogVisible"
       >
-        Add New Address
+        Agregar Nueva Direccion
       </VBtn>
 
       <!-- 👉 Delivery options -->
       <h6 class="text-h6 mb-4">
-        Choose Delivery Speed
+        Elige la prioridad del envio
       </h6>
 
       <!-- 👉 Delivery options custom input -->
@@ -184,7 +188,7 @@ watch(() => props.currentStep, updateAddressData)
         <!-- 👉 Delivery estimate date -->
         <VCardText>
           <h6 class="text-h6 mb-4">
-            Estimated Delivery Date
+            Tiempo estimado de Envio
           </h6>
 
           <VList class="card-list">
@@ -213,32 +217,32 @@ watch(() => props.currentStep, updateAddressData)
         <!-- 👉 Price details -->
         <VCardText>
           <h6 class="text-h6 mb-4">
-            Price Details
+            Detalles del Precio
           </h6>
 
           <div class="d-flex align-center justify-space-between mb-2">
-            <span class="text-high-emphasis">Order Total</span>
-            <span>${{ modelCheckoutAddressDataLocal.orderAmount }}</span>
+            <span class="text-high-emphasis">Total de la Orden</span>
+            <span>RD${{ modelCheckoutAddressDataLocal.orderAmount }}</span>
           </div>
 
           <div class="d-flex align-center justify-space-between">
-            <span class="text-high-emphasis">Delivery Charges</span>
+            <span class="text-high-emphasis">Cargos de Envio</span>
             <div class="text-end">
               <div
                 v-if="modelCheckoutAddressDataLocal.deliverySpeed === 'free'"
                 class="d-flex align-center"
               >
                 <div class="text-decoration-line-through text-disabled me-2">
-                  $5.00
+                  RD$5.00
                 </div>
                 <VChip
                   size="small"
                   color="success"
                 >
-                  FREE
+                  Gratis
                 </VChip>
               </div>
-              <span v-else>${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed ].price }}.00</span>
+              <span v-else>RD${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed ].price }}.00</span>
             </div>
           </div>
         </VCardText>
@@ -248,7 +252,7 @@ watch(() => props.currentStep, updateAddressData)
         <VCardText class="d-flex align-center justify-space-between text-high-emphasis">
           <span class="text-base font-weight-medium">Total</span>
           <span class="text-base font-weight-medium">
-            ${{ totalPriceWithDeliveryCharges }}
+            RD${{ totalPriceWithDeliveryCharges }}
 
           </span>
         </VCardText>
@@ -259,7 +263,7 @@ watch(() => props.currentStep, updateAddressData)
         class="mt-4"
         @click="nextStep"
       >
-        Place Order
+        Realizar pedido
       </VBtn>
     </VCol>
   </VRow>

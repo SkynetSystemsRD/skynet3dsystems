@@ -25,6 +25,7 @@ const store = useConfigStore()
 
 store.skin = 'default'
 
+// from api data
 const modelCheckoutSteps = [
   {
     title: 'Sube tus Modelos 3D',
@@ -52,21 +53,21 @@ let modelCheckoutData = ref<ModelCheckoutData>({
   modelItems: [],
   promoCode: '',
   orderAmount: 1198,
-  deliveryAddress: 'home',
+  deliveryAddress: 'casa',
   deliverySpeed: 'free',
   deliveryCharges: 0,
   addresses: [
     {
-      title: 'John Doe (Default)',
-      desc: '4135 Parkway Street, Los Angeles, CA, 90017',
+      title: 'Juan Perez (Predeterminado)',
+      desc: 'Avenida Winston Churchill, Santo Domingo, DN, República Dominicana',
       subtitle: '1234567890',
-      value: 'home',
+      value: 'Casa',
     },
     {
-      title: 'ACME Inc.',
-      desc: '87 Hoffman Avenue, New York, NY, 10016',
+      title: 'Skynet 3D Systems',
+      desc: 'Avenida 27 de Febrero, Santo Domingo, DN, República Dominicana',
       subtitle: '1234567890',
-      value: 'office',
+      value: 'Trabajo',
     },
   ],
 })
@@ -120,10 +121,12 @@ const currentStep = ref(0)
                 <PaymentContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
+                  @update:checkout-data="(data) => updateModels(data)"
                 />
                 <AddressContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
+                  @update:checkout-data="(data) => updateModels(data)"
                 />
               </VWindowItem>
               <VWindowItem>

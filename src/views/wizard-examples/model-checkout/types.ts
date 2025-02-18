@@ -3,11 +3,17 @@ export interface ModelItem {
   fileName: string
   filePath: string
   format: string
-  isSupported: boolean
   size: number
-  imageContent: string
   octetStreamContent: string
   uuid: string
+  dimentions: xyz;
+  weight: number;
+}
+
+interface xyz {
+  x: number | undefined,
+  y: number | undefined,
+  z: number | undefined,
 }
 
 export interface Addresses {

@@ -4,8 +4,6 @@ import CartContent from '@/views/wizard-examples/model-checkout/Cart.vue'
 import ConfirmationContent from '@/views/wizard-examples/model-checkout/Confirmation.vue'
 import PaymentContent from '@/views/wizard-examples/model-checkout/Payment.vue'
 import type { ModelCheckoutData } from '@/views/wizard-examples/model-checkout/types'
-import googleHome from '@images/pages/google-home.png'
-import iphone11 from '@images/pages/iphone-11.png'
 import customAddress from '@images/svg/address.svg'
 import customCart from '@images/svg/cart.svg'
 import customPayment from '@images/svg/payment.svg'
@@ -30,31 +28,39 @@ const modelCheckoutSteps = [
   },
 ]
 
+
+// from api data
 const modelCheckoutData = ref<ModelCheckoutData>({
-  cartItems: [
+  modelItems: [
     {
       id: 1,
-      name: 'Google - Google Home - White',
-      seller: 'Google',
-      inStock: true,
-      rating: 4,
-      price: 299,
-      discountPrice: 359,
-      image: googleHome,
-      quantity: 1,
-      estimatedDelivery: '18th Nov 2021',
+      format: 'gltf',
+      filePath: '/xyzCalibration_cube.gltf',
+      fileName: 'xyzCalibration_cube.gltf',
+      size: 235654,
+      octetStreamContent: '',
+      uuid: '',
+      dimentions: {
+        x: 42,
+        y: 42,
+        z: 42
+      }, 
+      weight: 250
     },
     {
-      id: 2,
-      name: 'Apple iPhone 11 (64GB, Black)',
-      seller: 'Apple',
-      inStock: true,
-      rating: 4,
-      price: 899,
-      discountPrice: 999,
-      image: iphone11,
-      quantity: 1,
-      estimatedDelivery: '20th Nov 2021',
+      id: 1,
+      format: 'gltf',
+      filePath: '/xyzCalibration_cube.gltf',
+      fileName: 'xyzCalibration_cube.gltf',
+      size: 235654,
+      octetStreamContent: '',
+      uuid: '',
+      dimentions: {
+        x: 42,
+        y: 42,
+        z: 42
+      }, 
+      weight: 250
     },
   ],
   promoCode: '',

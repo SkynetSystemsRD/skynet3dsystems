@@ -15,6 +15,28 @@ const modelCheckoutPaymentDataLocal = ref(prop.modelCheckoutData)
 
 const selectedPaymentMethod = ref('card')
 
+const currentTab = ref('banreservas');
+const accounts = {
+  banreservas: {
+    bank: 'Banreservas',
+    accountNumber: '123456789',
+    accountType: 'Cuenta de Ahorro',
+    holder: 'Nombre Completo'
+  },
+  popular: {
+    bank: 'Banco Popular',
+    accountNumber: '987654321',
+    accountType: 'Cuenta de Ahorro',
+    holder: 'Nombre Completo'
+  },
+  bhd: {
+    bank: 'Banco BHD',
+    accountNumber: '112233445',
+    accountType: 'Cuenta de Ahorro',
+    holder: 'Nombre Completo'
+  }
+};
+
 const cardFormData = ref({
   cardNumber: null,
   cardName: '',
@@ -43,7 +65,14 @@ const nextStep = () => {
   emit('update:currentStep', prop.currentStep ? prop.currentStep + 1 : 1)
 }
 
-watch(() => prop.currentStep, updateCartData)
+watch(
+  () => [prop.currentStep, prop.modelCheckoutData.deliveryAddress],
+  ([newStep, newAddress]) => {
+    updateCartData();
+    modelCheckoutPaymentDataLocal.value.deliveryAddress = newAddress;
+  }
+);
+
 </script>
 
 <template>
@@ -78,14 +107,14 @@ watch(() => prop.currentStep, updateCartData)
         class="v-tabs-pill"
         density="comfortable"
       >
-        <VTab value="card">
-          Card
-        </VTab>
         <VTab value="cash-on-delivery">
-          Cash on Delivery
+          En Efectivo
         </VTab>
         <VTab value="gift-card">
-          Gift Card
+          Transferencia Bancaria
+        </VTab>
+        <VTab value="card">
+          Tarjeta de Debido/Credito
         </VTab>
       </VTabs>
 
@@ -104,7 +133,7 @@ watch(() => prop.currentStep, updateCartData)
                 <AppTextField
                   v-model="cardFormData.cardNumber"
                   type="number"
-                  label="Card Number"
+                  label="Numero de Tarjeta"
                   placeholder="1356 3215 6548 7898"
                 />
               </VCol>
@@ -115,8 +144,8 @@ watch(() => prop.currentStep, updateCartData)
               >
                 <AppTextField
                   v-model="cardFormData.cardName"
-                  label="Name"
-                  placeholder="John Doe"
+                  label="Nombre"
+                  placeholder="Juan Perez"
                 />
               </VCol>
 
@@ -126,7 +155,7 @@ watch(() => prop.currentStep, updateCartData)
               >
                 <AppTextField
                   v-model="cardFormData.cardExpiry"
-                  label="Expiry"
+                  label="Expiracion"
                   placeholder="MM/YY"
                 />
               </VCol>
@@ -143,7 +172,7 @@ watch(() => prop.currentStep, updateCartData)
                 >
                   <template #append-inner>
                     <VTooltip
-                      text="Card Verification Value"
+                      text="Valor de Verificacion de la Tarjeta"
                       location="bottom"
                     >
                       <template #activator="{ props: tooltipProps }">
@@ -164,7 +193,7 @@ watch(() => prop.currentStep, updateCartData)
               >
                 <VSwitch
                   v-model="cardFormData.isCardSave"
-                  label="Save Card for future billing?"
+                  label="¿Guardar tarjeta para facturación futura?"
                 />
 
                 <div class="mt-4">
@@ -172,13 +201,13 @@ watch(() => prop.currentStep, updateCartData)
                     class="me-4"
                     @click="nextStep"
                   >
-                    Save Changes
+                    Guardar Cambios
                   </VBtn>
                   <VBtn
                     variant="tonal"
                     color="secondary"
                   >
-                    Reset
+                    Borrar Todo
                   </VBtn>
                 </div>
               </VCol>
@@ -188,41 +217,45 @@ watch(() => prop.currentStep, updateCartData)
 
         <VWindowItem value="cash-on-delivery">
           <p class="text-base text-high-emphasis my-6">
-            Cash on Delivery is a type of payment method where the recipient make payment for the order at the time of delivery rather than in advance.
+            Realiza tu pago en efectivo al momento de la entrega y recibe tu pedido de forma rápida y segura.
           </p>
 
           <VBtn @click="nextStep">
-            Pay on delivery
+            Pagar en la Entregar
           </VBtn>
         </VWindowItem>
 
         <VWindowItem value="gift-card">
           <h6 class="text-base font-weight-medium mt-6">
-            Enter Gift Card Details
+            Detalles de Numero de Cuenta
           </h6>
+
+          <br>
+
           <VForm class="ms-n3">
             <VRow class="ma-0">
-              <VCol cols="12">
-                <AppTextField
-                  v-model="giftCardFormData.giftCardNumber"
-                  label="Gift Card Number"
-                  placeholder="1234 5678 9012 3456"
-                />
-              </VCol>
+              <VCard class="w-100">
+                <VTabs v-model="currentTab" grow>
+                  <VTab value="banreservas">Banreservas</VTab>
+                  <VTab value="popular">Popular</VTab>
+                  <VTab value="bhd">BHD</VTab>
+                </VTabs>
 
-              <VCol cols="12">
-                <AppTextField
-                  v-model="giftCardFormData.giftCardPin"
-                  label="Gift Card Pin"
-                  placeholder="1234"
-                />
-              </VCol>
-
-              <VCol cols="12">
-                <VBtn @click="nextStep">
-                  Redeem Gift Card
-                </VBtn>
-              </VCol>
+                <VCardText>
+                  <VWindow v-model="currentTab">
+                    <VWindowItem
+                      v-for="(data, key) in accounts"
+                      :key="key"
+                      :value="key"
+                    >
+                      <h3>{{ data.bank }}</h3>
+                      <p><strong>Nombre:</strong> {{ data.holder }}</p>
+                      <p><strong>Número de Cuenta:</strong> {{ data.accountNumber }}</p>
+                      <p><strong>Tipo de Cuenta:</strong> {{ data.accountType }}</p>
+                    </VWindowItem>
+                  </VWindow>
+                </VCardText>
+              </VCard>
             </VRow>
           </VForm>
         </VWindowItem>
@@ -237,48 +270,48 @@ watch(() => prop.currentStep, updateCartData)
         flat
         variant="outlined"
       >
-        <VCardText>
+        <!-- <VCardText>
           <h6 class="text-h6 mb-4">
-            Price Details
+            Detalles del Precio
           </h6>
 
           <div class="d-flex justify-space-between text-base mb-2">
-            <span class="text-high-emphasis">Order Total</span>
-            <span>${{ modelCheckoutPaymentDataLocal.orderAmount }}.00</span>
+            <span class="text-high-emphasis">Total de la Orden</span>
+            <span>RD${{ modelCheckoutPaymentDataLocal.orderAmount }}.00</span>
           </div>
 
           <div class="d-flex justify-space-between text-base">
-            <span class="text-high-emphasis">Delivery Charges</span>
+            <span class="text-high-emphasis">Cargos de Envio</span>
             <div
               v-if="modelCheckoutPaymentDataLocal.deliverySpeed === 'free'"
               class="d-flex align-center"
             >
               <div class="text-decoration-line-through text-disabled me-2">
-                $5.00
+                RD$5.00
               </div>
               <VChip
                 size="small"
                 color="success"
               >
-                FREE
+                Gratis
               </VChip>
             </div>
             <div v-else>
-              <span>${{ modelCheckoutPaymentDataLocal.deliveryCharges }}</span>
+              <span>RD${{ modelCheckoutPaymentDataLocal.deliveryCharges }}</span>
             </div>
           </div>
         </VCardText>
 
-        <VDivider />
+        <VDivider /> -->
 
         <VCardText>
           <div class="d-flex justify-space-between text-base mb-2">
             <span class="text-high-emphasis font-weight-medium">Total</span>
-            <span class="font-weight-medium">${{ modelCheckoutPaymentDataLocal.orderAmount + modelCheckoutPaymentDataLocal.deliveryCharges }}.00</span>
+            <span class="font-weight-medium">RD${{ modelCheckoutPaymentDataLocal.orderAmount + modelCheckoutPaymentDataLocal.deliveryCharges }}.00</span>
           </div>
 
           <div class="d-flex justify-space-between text-base mb-4">
-            <span class="text-high-emphasis font-weight-medium">Deliver to:</span>
+            <span class="text-high-emphasis font-weight-medium">Enviar a:</span>
             <VChip
               color="primary"
               class="text-capitalize"
@@ -300,12 +333,12 @@ watch(() => prop.currentStep, updateCartData)
               {{ item.desc }}
             </p>
             <p class="text-base mb-4">
-              Mobile : {{ item.subtitle }}
+              Celular : {{ item.subtitle }}
             </p>
           </template>
 
           <h6 class="text-h6">
-            <a href="#">Change address</a>
+            <a href="#">Cambiar Direccion</a>
           </h6>
         </VCardText>
       </VCard>
