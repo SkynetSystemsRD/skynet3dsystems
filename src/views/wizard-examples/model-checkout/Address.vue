@@ -24,19 +24,19 @@ const deliveryOptions = [
   {
     icon: { icono: 'tabler-user' },
     title: 'Estándar',
-    desc: 'Recibe tu producto en 1 semana.',
+    desc: 'Recibe tu producto en 1 días.',
     value: 'free',
   },
   {
     icon: { icono: 'tabler-star' },
     title: 'Expreso',
-    desc: 'Recibe tu producto en 4 días.',
+    desc: 'Recibe tu producto en menos de 24h.',
     value: 'express',
   },
   {
     icon: { icono: 'tabler-crown' },
     title: 'Nocturno',
-    desc: 'Recibe tu producto en 1 día.',
+    desc: 'Recibe tu producto en menos de 1h.',
     value: 'overnight',
   },
 ];

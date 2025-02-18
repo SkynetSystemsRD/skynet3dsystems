@@ -88,10 +88,10 @@ const addressTypes = [
       <VCardText>
         <!-- 👉 Title -->
         <h4 class="text-h4 text-center mb-2">
-          {{ (props.billingAddress.addressLine1 || props.billingAddress.addressLine2) ? 'Edit' : 'Add New' }} Address
+          {{ (props.billingAddress.addressLine1 || props.billingAddress.addressLine2) ? 'Edit' : 'Add New' }} Direccion
         </h4>
         <p class="text-body-1 text-center mb-6">
-          Add new address for express delivery
+          Agrega Una Nueva Direccion
         </p>
 
         <div class="d-flex mb-6">
@@ -112,8 +112,8 @@ const addressTypes = [
             >
               <AppTextField
                 v-model="billingAddress.firstName"
-                label="First Name"
-                placeholder="John"
+                label="Primer Nombre"
+                placeholder="Juan"
               />
             </VCol>
 
