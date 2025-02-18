@@ -81,6 +81,16 @@ const deleteAddress = (item: CustomInputContent) => {
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
 }
 
+const addNewAddress = (data: ModelCheckoutData) => {
+  modelCheckoutAddressDataLocal.value.addresses.push({
+    title: data.addresses[0].title,
+    desc: data.addresses[0].desc,
+    subtitle: data.addresses[0].subtitle,
+    value: data.addresses[0].value
+  })
+  emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
+}
+
 watch(() => props.currentStep, updateAddressData)
 </script>
 
@@ -273,7 +283,7 @@ watch(() => props.currentStep, updateAddressData)
       </VBtn>
     </VCol>
   </VRow>
-  <AddEditAddressDialog v-model:is-dialog-visible="isEditAddressDialogVisible" />
+  <AddEditAddressDialog v-model:is-dialog-visible="isEditAddressDialogVisible" @update:checkout-data="(data) => addNewAddress(data)"/>
 </template>
 
 <style lang="scss" scoped>

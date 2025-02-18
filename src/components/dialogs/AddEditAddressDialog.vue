@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { ModelCheckoutData } from '@/@core/types'
 import home from '@images/svg/home.svg'
 import office from '@images/svg/office.svg'
 
 interface BillingAddress {
   firstName: string | undefined
   lastName: string | undefined
+  phone: string 
   selectedCountry: string | null
   addressLine1: string
   addressLine2: string
@@ -18,10 +20,12 @@ interface BillingAddress {
 interface Props {
   billingAddress?: BillingAddress
   isDialogVisible: boolean
+  modelCheckoutData: ModelCheckoutData
 }
 interface Emit {
   (e: 'update:isDialogVisible', value: boolean): void
   (e: 'submit', value: BillingAddress): void
+  (e: 'update:checkout-data', value: ModelCheckoutData): void  // Añadido para permitir este evento
 }
 
 const countries = [
@@ -220,12 +224,12 @@ const countries = [
   'Zimbabue'
 ]
 
-
 const props = withDefaults(defineProps<Props>(), {
   billingAddress: () => ({
     firstName: '',
     lastName: '',
-    selectedCountry: null,
+    phone: '',
+    selectedCountry: 'República Dominicana',
     addressLine1: '',
     addressLine2: '',
     landmark: '',
@@ -234,10 +238,17 @@ const props = withDefaults(defineProps<Props>(), {
     city: '',
     state: '',
     zipCode: null,
-  }),
+  })
 })
 
 const emit = defineEmits<Emit>()
+
+// Referencia local para el checkout data
+const modelCheckoutCartDataLocal = ref<ModelCheckoutData>({
+  ...props.modelCheckoutData, // Asegúrate de que el objeto contiene los datos correctos
+  addresses: [] // Inicializa 'addresses' como un arreglo vacío
+})
+
 
 const billingAddress = ref<BillingAddress>(structuredClone(toRaw(props.billingAddress)))
 
@@ -247,10 +258,32 @@ const resetForm = () => {
 }
 
 const onFormSubmit = () => {
-  emit('update:isDialogVisible', false)
-  console.log(billingAddress.value)
-  emit('submit', billingAddress.value)
+  if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
+    modelCheckoutCartDataLocal.value.addresses.push({
+      title: `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
+      desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.country}`,
+      subtitle: billingAddress.value.phone,
+      value: selectedAddress.value
+    })
+    emit('update:checkout-data', modelCheckoutCartDataLocal.value)
+    emit('update:isDialogVisible', false)
+  } else {
+    console.error("modelCheckoutCartDataLocal or addresses is not defined correctly");
+  }
 }
+
+
+// const onFormSubmit = () => {
+//   emit('update:isDialogVisible', false)
+//   console.log(billingAddress.value)
+//   // modelCheckoutAddressDataLocal.value.addresses.push({
+//   //   title: `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
+//   //   desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.country}`,
+//   //   subtitle: 
+//   // })
+//   // emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
+//   emit('submit', billingAddress.value)
+// }
 
 const selectedAddress = ref('Casa')
 
@@ -268,6 +301,10 @@ const addressTypes = [
     value: 'Trabajo',
   },
 ]
+
+watch(() => props.modelCheckoutData, value => {
+  modelCheckoutCartDataLocal.value = JSON.parse(JSON.stringify(value))
+})
 </script>
 
 <template>
@@ -324,6 +361,15 @@ const addressTypes = [
                 v-model="billingAddress.lastName"
                 label="Apellido"
                 placeholder="Perez"
+              />
+            </VCol>
+
+            <!-- 👉 Select Number -->
+            <VCol cols="12">
+              <AppTextField
+                v-model="billingAddress.phone"
+                label="Numero Celular"
+                placeholder="849 000 1111"
               />
             </VCol>
 
