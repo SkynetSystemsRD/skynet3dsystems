@@ -82,15 +82,20 @@ const deleteAddress = (item: CustomInputContent) => {
 }
 
 const addNewAddress = (data: ModelCheckoutData) => {
-  modelCheckoutAddressDataLocal.value.addresses.push({
-    title: data.addresses[0].title,
-    desc: data.addresses[0].desc,
-    subtitle: data.addresses[0].subtitle,
-    value: data.addresses[0].value
-  })
+  const newAddress = data.addresses[0];
 
-  console.log('klk mmg: ', modelCheckoutAddressDataLocal.value)
-  updateAddressData()
+  // Verifica si ya existe una dirección con el mismo "value"
+  const exists = modelCheckoutAddressDataLocal.value.addresses.some(
+    (addr) => addr.value === newAddress.value
+  );
+
+  if (!exists) {
+    modelCheckoutAddressDataLocal.value.addresses.push({ ...newAddress });
+    
+    emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
+  } else {
+    console.log('Dirección ya existe, no se agregó.');
+  }
 }
 
 watch(() => props.currentStep, updateAddressData)
