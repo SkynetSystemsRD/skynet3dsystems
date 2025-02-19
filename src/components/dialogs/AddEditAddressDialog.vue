@@ -264,13 +264,20 @@ const onFormSubmit = () => {
       desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.country}`,
       subtitle: billingAddress.value.phone,
       value: selectedAddress.value
-    })
-    emit('update:checkout-data', modelCheckoutCartDataLocal.value)
-    emit('update:isDialogVisible', false)
+    });
+
+    // Eliminar el primer elemento después de agregar el nuevo
+    if (modelCheckoutCartDataLocal.value.addresses.length > 1) {
+      modelCheckoutCartDataLocal.value.addresses.shift();
+    }
+
+    emit('update:checkout-data', modelCheckoutCartDataLocal.value);
+    emit('update:isDialogVisible', false);
   } else {
     console.error("modelCheckoutCartDataLocal or addresses is not defined correctly");
   }
-}
+};
+
 
 
 // const onFormSubmit = () => {

@@ -83,7 +83,7 @@ const deleteAddress = (item: CustomInputContent) => {
 
 const addNewAddress = (data: ModelCheckoutData) => {
   const newAddress = data.addresses[0];
-
+  
   // Verifica si ya existe una dirección con el mismo "value"
   const exists = modelCheckoutAddressDataLocal.value.addresses.some(
     (addr) => addr.value === newAddress.value
