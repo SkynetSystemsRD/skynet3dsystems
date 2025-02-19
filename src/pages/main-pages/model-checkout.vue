@@ -76,6 +76,7 @@ function updateModels(data: ModelCheckoutData, component: string){
   switch (component){
     case 'address':
       modelCheckoutData.value.addresses = data.addresses;
+      modelCheckoutData.value.deliveryAddress = data.deliveryAddress;
       break
     case 'cart':
       modelCheckoutData.value = data
