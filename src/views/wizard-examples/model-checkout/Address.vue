@@ -92,7 +92,7 @@ const addNewAddress = (data: ModelCheckoutData) => {
   if (!exists) {
     modelCheckoutAddressDataLocal.value.addresses.push({ ...newAddress });
     
-    emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
+    emit('update:checkout-data', modelCheckoutAddressDataLocal.value.addresses);
   } else {
     console.log('Dirección ya existe, no se agregó.');
   }

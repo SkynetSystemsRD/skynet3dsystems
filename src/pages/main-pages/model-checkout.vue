@@ -57,25 +57,35 @@ let modelCheckoutData = ref<ModelCheckoutData>({
   deliverySpeed: 'free',
   deliveryCharges: 0,
   addresses: [
-    {
-      title: 'Juan Perez (Predeterminado)',
-      desc: 'Avenida Winston Churchill, Santo Domingo, DN, República Dominicana',
-      subtitle: '1234567890',
-      value: 'Casa',
-    },
-    {
-      title: 'Skynet 3D Systems',
-      desc: 'Avenida 27 de Febrero, Santo Domingo, DN, República Dominicana',
-      subtitle: '1234567890',
-      value: 'Trabajo',
-    },
+    // {
+    //   title: 'Juan Perez (Predeterminado)',
+    //   desc: 'Avenida Winston Churchill, Santo Domingo, DN, República Dominicana',
+    //   subtitle: '1234567890',
+    //   value: 'Casa',
+    // },
+    // {
+    //   title: 'Skynet 3D Systems',
+    //   desc: 'Avenida 27 de Febrero, Santo Domingo, DN, República Dominicana',
+    //   subtitle: '1234567890',
+    //   value: 'Trabajo',
+    // },
   ],
 })
 
-function updateModels(data: ModelCheckoutData, o: string){
-  modelCheckoutData.value = data
-
-  console.log(`MODELCHECKOUTDATA: ${o}: `, modelCheckoutData.value)
+function updateModels(data: ModelCheckoutData, component: string){
+  switch (component){
+    case 'address':
+      modelCheckoutData.value.addresses = data.addresses;
+      break
+    case 'cart':
+      modelCheckoutData.value = data
+      break;
+    default: 
+      modelCheckoutData.value = data
+      break;
+  }
+  
+  console.log(`MODELCHECKOUTDATA: ${component}: `, modelCheckoutData.value)
 }
 const currentStep = ref(0)
 </script>
@@ -108,7 +118,7 @@ const currentStep = ref(0)
                 <CartContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => updateModels(data, 'c')"
+                  @update:checkout-data="(data) => updateModels(data, 'cart')"
                 />
               </VWindowItem>
               <VWindowItem>
@@ -121,12 +131,12 @@ const currentStep = ref(0)
                 <PaymentContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => updateModels(data, 'p')"
+                  @update:checkout-data="(data) => updateModels(data, 'payment')"
                 />
                 <AddressContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => updateModels(data, 'a')"
+                  @update:checkout-data="(data) => updateModels(data, 'address')"
                 />
               </VWindowItem>
               <VWindowItem>
