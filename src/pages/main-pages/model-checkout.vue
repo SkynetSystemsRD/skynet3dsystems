@@ -88,6 +88,7 @@ function updateModels(data: ModelCheckoutData, component: string){
   
   console.log(`MODELCHECKOUTDATA: ${component}: `, modelCheckoutData.value)
 }
+
 const currentStep = ref(0)
 </script>
 
