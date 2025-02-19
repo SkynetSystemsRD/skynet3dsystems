@@ -164,7 +164,7 @@ const initModels = () => {
   scene.background = new THREE.Color(0xdddddd);
 
   const camera = new THREE.PerspectiveCamera(75, 1000 / 600, 0.1, 1000);
-  camera.position.set(30, 30, 30);
+  camera.position.set(200, 200, 200);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   // renderer.setSize(1000, 600);
