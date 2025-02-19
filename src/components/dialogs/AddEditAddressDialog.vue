@@ -278,20 +278,6 @@ const onFormSubmit = () => {
   }
 };
 
-
-
-// const onFormSubmit = () => {
-//   emit('update:isDialogVisible', false)
-//   console.log(billingAddress.value)
-//   // modelCheckoutAddressDataLocal.value.addresses.push({
-//   //   title: `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
-//   //   desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.country}`,
-//   //   subtitle: 
-//   // })
-//   // emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
-//   emit('submit', billingAddress.value)
-// }
-
 const selectedAddress = ref('Casa')
 
 const addressTypes = [

@@ -21,6 +21,22 @@ watch(() => props.modelCheckoutData, value => {
   modelCheckoutAddressDataLocal.value = JSON.parse(JSON.stringify(value))
 })
 
+const selectedAddress = ref({
+  firstName: 'Josessss',
+    lastName: 'Lopez',
+    phone: '849 000 1111',
+    selectedCountry: 'República Dominicana',
+    addressLine1: 'Av. 27 de Febrero',
+    addressLine2: '',
+    landmark: 'Hard Rock Cafe',
+    contact: '',
+    country: null,
+    city: 'Santo Domingo',
+    state: 'Distrito Nacional',
+    zipCode: 10305,
+});
+
+
 const deliveryOptions = [
   {
     icon: { icono: 'tabler-user' },
@@ -74,6 +90,25 @@ const nextStep = () => {
 const changeAddress = (value: string) => {
   modelCheckoutAddressDataLocal.value.deliveryAddress = value.toLowerCase()
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
+}
+
+const editAddress = (item: CustomInputContent) => {
+  selectedAddress.value = {
+    firstName: 'mmg',
+    lastName: 'null',
+    phone: 'null',
+    selectedCountry: 'null',
+    addressLine1: 'null',
+    addressLine2: 'null',
+    landmark: 'null',
+    contact: 'null',
+    country: 'null',
+    city: 'null',
+    state: 'null',
+    zipCode: 'null',
+}
+
+  isEditAddressDialogVisible.value = !isEditAddressDialogVisible.value
 }
 
 const deleteAddress = (item: CustomInputContent) => {
@@ -145,6 +180,7 @@ watch(() => props.currentStep, updateAddressData)
             <div class="pt-2">
               <a
                 class="me-4"
+                @click="editAddress(item)"
               >Editar</a>
               <a @click="deleteAddress(item)">Eliminar</a>
             </div>
@@ -290,7 +326,7 @@ watch(() => props.currentStep, updateAddressData)
       </VBtn>
     </VCol>
   </VRow>
-  <AddEditAddressDialog v-model:is-dialog-visible="isEditAddressDialogVisible" @update:checkout-data="(data) => addNewAddress(data)"/>
+  <AddEditAddressDialog :billingAddress="selectedAddress" v-model:is-dialog-visible="isEditAddressDialogVisible" @update:checkout-data="(data) => addNewAddress(data)"/>
 </template>
 
 <style lang="scss" scoped>
