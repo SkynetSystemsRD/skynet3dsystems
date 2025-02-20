@@ -244,15 +244,19 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const toggleSwitch = ref(false)
+const form = ref(null);
 
 const emit = defineEmits<Emit>()
+
+// Reglas de validación
+const requiredRule = value => !!value || 'Este campo es obligatorio';
+const phoneRule = value => /^\d{10,11}$/.test(value) || 'Número no válido';
 
 // Referencia local para el checkout data
 const modelCheckoutCartDataLocal = ref<ModelCheckoutData>({
   ...props.modelCheckoutData, // Asegúrate de que el objeto contiene los datos correctos
   addresses: [] // Inicializa 'addresses' como un arreglo vacío
 })
-
 
 const billingAddress = ref<BillingAddress>(structuredClone(toRaw(props.billingAddress)))
 
@@ -261,24 +265,27 @@ const resetForm = () => {
   billingAddress.value = structuredClone(toRaw(props.billingAddress))
 }
 
-const onFormSubmit = () => {
-  if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
-    modelCheckoutCartDataLocal.value.addresses.push({
-      title: toggleSwitch.value ? `${billingAddress.value.firstName} ${billingAddress.value.lastName} (Predeterminado)`  : `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
-      desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.selectedCountry}`,
-      subtitle: billingAddress.value.phone,
-      value: selectedAddress.value
-    });
+const onFormSubmit = async () => {
+  const { valid } = await form.value.validate();
+  if (valid) {
+    if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
+      modelCheckoutCartDataLocal.value.addresses.push({
+        title: toggleSwitch.value ? `${billingAddress.value.firstName} ${billingAddress.value.lastName} (Predeterminado)`  : `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
+        desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.selectedCountry}`,
+        subtitle: billingAddress.value.phone,
+        value: selectedAddress.value
+      });
 
-    // Eliminar el primer elemento después de agregar el nuevo
-    if (modelCheckoutCartDataLocal.value.addresses.length > 1) {
-      modelCheckoutCartDataLocal.value.addresses.shift();
+      // Eliminar el primer elemento después de agregar el nuevo
+      if (modelCheckoutCartDataLocal.value.addresses.length > 1) {
+        modelCheckoutCartDataLocal.value.addresses.shift();
+      }
+
+      emit('update:checkout-data', modelCheckoutCartDataLocal.value);
+      emit('update:isDialogVisible', false);
+    } else {
+      console.error("modelCheckoutCartDataLocal or addresses is not defined correctly");
     }
-
-    emit('update:checkout-data', modelCheckoutCartDataLocal.value);
-    emit('update:isDialogVisible', false);
-  } else {
-    console.error("modelCheckoutCartDataLocal or addresses is not defined correctly");
   }
 };
 
@@ -312,24 +319,21 @@ watch(() => props.billingAddress, (newbillingAddress) => {
 
 <template>
   <VDialog
-    :width="$vuetify.display.smAndDown ? 'auto' : 900 "
+    :width="$vuetify.display.smAndDown ? 'auto' : 900"
     :model-value="props.isDialogVisible"
     @update:model-value="val => $emit('update:isDialogVisible', val)"
   >
     <!-- 👉 Dialog close btn -->
     <DialogCloseBtn @click="$emit('update:isDialogVisible', false)" />
 
-    <VCard
-      v-if="props.billingAddress"
-      class="pa-sm-10 pa-2"
-    >
+    <VCard v-if="props.billingAddress" class="pa-sm-10 pa-2">
       <VCardText>
         <!-- 👉 Title -->
         <h4 class="text-h4 text-center mb-2">
-          {{ (props.billingAddress.addressLine1 || props.billingAddress.addressLine2) ? 'Editar' : 'Agregar Nueva' }} Direccion
+          {{ (props.billingAddress.addressLine1 || props.billingAddress.addressLine2) ? 'Editar' : 'Agregar Nueva' }} Dirección
         </h4>
         <p class="text-body-1 text-center mb-6">
-          Agrega Una Nueva Direccion
+          Agrega Una Nueva Dirección
         </p>
 
         <div class="d-flex mb-6">
@@ -341,38 +345,35 @@ watch(() => props.billingAddress, (newbillingAddress) => {
         </div>
 
         <!-- 👉 Form -->
-        <VForm @submit.prevent="onFormSubmit">
+        <VForm ref="form" @submit.prevent="onFormSubmit">
           <VRow>
             <!-- 👉 First Name -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12" md="6">
               <AppTextField
                 v-model="billingAddress.firstName"
                 label="Primer Nombre"
                 placeholder="Juan"
+                :rules="[requiredRule]"
               />
             </VCol>
 
             <!-- 👉 Last Name -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12" md="6">
               <AppTextField
                 v-model="billingAddress.lastName"
                 label="Apellido"
-                placeholder="Perez"
+                placeholder="Pérez"
+                :rules="[requiredRule]"
               />
             </VCol>
 
-            <!-- 👉 Select Number -->
+            <!-- 👉 Phone Number -->
             <VCol cols="12">
               <AppTextField
                 v-model="billingAddress.phone"
-                label="Numero Celular"
+                label="Número Celular"
                 placeholder="849 000 1111"
+                :rules="[requiredRule, phoneRule]"
               />
             </VCol>
 
@@ -380,9 +381,10 @@ watch(() => props.billingAddress, (newbillingAddress) => {
             <VCol cols="12">
               <AppSelect
                 v-model="billingAddress.selectedCountry"
-                label="Seleccione su Pais"
-                placeholder="Seleccione su Pais"
+                label="Seleccione su País"
+                placeholder="Seleccione su País"
                 :items="countries"
+                :rules="[requiredRule]"
               />
             </VCol>
 
@@ -390,8 +392,9 @@ watch(() => props.billingAddress, (newbillingAddress) => {
             <VCol cols="12">
               <AppTextField
                 v-model="billingAddress.addressLine1"
-                label="Direccion #1"
+                label="Dirección #1"
                 placeholder="Av. 27 de Febrero"
+                :rules="[requiredRule]"
               />
             </VCol>
 
@@ -399,81 +402,62 @@ watch(() => props.billingAddress, (newbillingAddress) => {
             <VCol cols="12">
               <AppTextField
                 v-model="billingAddress.addressLine2"
-                label="Direccion #2"
+                label="Dirección #2"
                 placeholder="Winston Churchill"
               />
             </VCol>
 
             <!-- 👉 Landmark -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12" md="6">
               <AppTextField
                 v-model="billingAddress.landmark"
-                label="Marca"
+                label="Referencia"
                 placeholder="Hard Rock Cafe"
               />
             </VCol>
 
             <!-- 👉 City -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12" md="6">
               <AppTextField
                 v-model="billingAddress.city"
-                label="Cuidad"
+                label="Ciudad"
                 placeholder="Santo Domingo"
+                :rules="[requiredRule]"
               />
             </VCol>
 
             <!-- 👉 State -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12" md="6">
               <AppTextField
                 v-model="billingAddress.state"
                 label="Provincia"
                 placeholder="Distrito Nacional"
+                :rules="[requiredRule]"
               />
             </VCol>
 
             <!-- 👉 Zip Code -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12" md="6">
               <AppTextField
                 v-model="billingAddress.zipCode"
-                label="Codigo Postal"
+                label="Código Postal"
                 placeholder="10305"
                 type="number"
+                :rules="[requiredRule]"
               />
             </VCol>
 
             <VCol cols="12">
-              <VSwitch v-model="toggleSwitch" label="Utilizar como dirección de facturación?" />
+              <VSwitch v-model="toggleSwitch" label="¿Utilizar como dirección de facturación?" />
             </VCol>
 
             <!-- 👉 Submit and Cancel button -->
-            <VCol
-              cols="12"
-              class="text-center"
-            >
-              <VBtn
-                type="submit"
-                class="me-3"
-              >
+            <VCol cols="12" class="text-center">
+              <VBtn type="submit" class="me-3">
                 Guardar
               </VBtn>
 
-              <VBtn
-                variant="tonal"
-                color="secondary"
-                @click="resetForm"
-              >
+              <VBtn variant="tonal" color="secondary" @click="resetForm">
                 Cancelar
               </VBtn>
             </VCol>

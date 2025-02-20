@@ -151,7 +151,6 @@ const addNewAddress = (data: ModelCheckoutData) => {
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
 };
 
-
 const buttonAddNewAddress = () => {
   selectedAddress.value = {
     firstName: '',
