@@ -22,18 +22,18 @@ watch(() => props.modelCheckoutData, value => {
 })
 
 const selectedAddress = ref({
-  firstName: 'Josessss',
-    lastName: 'Lopez',
-    phone: '849 000 1111',
-    selectedCountry: 'República Dominicana',
-    addressLine1: 'Av. 27 de Febrero',
-    addressLine2: '',
-    landmark: 'Hard Rock Cafe',
-    contact: '',
-    country: null,
-    city: 'Santo Domingo',
-    state: 'Distrito Nacional',
-    zipCode: 10305,
+  firstName: '',
+  lastName: '',
+  phone: '',
+  selectedCountry: '',
+  addressLine1: '',
+  addressLine2: '',
+  landmark: '',
+  contact: '',
+  country: null,
+  city: '',
+  state: '',
+  zipCode: null,
 });
 
 
@@ -93,20 +93,25 @@ const changeAddress = (value: string) => {
 }
 
 const editAddress = (item: CustomInputContent) => {
+  const [firstName, lastName] = item.title.split(' ')
+  const [addressLine1, city, state, country] = item.desc?.split(',')
+
   selectedAddress.value = {
-    firstName: 'mmg',
-    lastName: 'null',
-    phone: 'null',
-    selectedCountry: 'null',
-    addressLine1: 'null',
+    firstName: firstName,
+    lastName: lastName,
+    phone: item.subtitle ?? "",
+    selectedCountry: country,
+    addressLine1: addressLine1,
     addressLine2: 'null',
     landmark: 'null',
-    contact: 'null',
-    country: 'null',
-    city: 'null',
-    state: 'null',
-    zipCode: 'null',
-}
+    contact: item.subtitle ?? "",
+    country: country,
+    city: city,
+    state: state,
+    zipCode: null,
+  }
+
+  console.log("selectedAddress: ", selectedAddress.value)
 
   isEditAddressDialogVisible.value = !isEditAddressDialogVisible.value
 }
@@ -131,6 +136,25 @@ const addNewAddress = (data: ModelCheckoutData) => {
   } else {
     console.log('Dirección ya existe, no se agregó.');
   }
+}
+
+const buttonAddNewAddress = () => {
+  selectedAddress.value = {
+    firstName: '',
+    lastName: '',
+    phone: '',
+    selectedCountry: '',
+    addressLine1: '',
+    addressLine2: '',
+    landmark: '',
+    contact: '',
+    country: null,
+    city: '',
+    state: '',
+    zipCode: null,
+  }
+
+  isEditAddressDialogVisible.value = !isEditAddressDialogVisible.value
 }
 
 watch(() => props.currentStep, updateAddressData)
@@ -192,7 +216,7 @@ watch(() => props.currentStep, updateAddressData)
       <VBtn
         variant="tonal"
         class="mt-4 mb-6"
-        @click="isEditAddressDialogVisible = !isEditAddressDialogVisible"
+        @click="buttonAddNewAddress"
       >
         Agregar Nueva Direccion
       </VBtn>
@@ -326,7 +350,12 @@ watch(() => props.currentStep, updateAddressData)
       </VBtn>
     </VCol>
   </VRow>
-  <AddEditAddressDialog :billingAddress="selectedAddress" v-model:is-dialog-visible="isEditAddressDialogVisible" @update:checkout-data="(data) => addNewAddress(data)"/>
+  <AddEditAddressDialog 
+    :billingAddress="selectedAddress" 
+    v-model:is-dialog-visible="isEditAddressDialogVisible" 
+    :modelCheckoutData="modelCheckoutData"
+    @update:checkout-data="(data) => addNewAddress(data)"
+  />
 </template>
 
 <style lang="scss" scoped>

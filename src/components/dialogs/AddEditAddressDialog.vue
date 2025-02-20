@@ -234,7 +234,7 @@ const props = withDefaults(defineProps<Props>(), {
     addressLine2: '',
     landmark: 'Hard Rock Cafe',
     contact: '',
-    country: null,
+    country: 'República Dominicana',
     city: 'Santo Domingo',
     state: 'Distrito Nacional',
     zipCode: 10305,
@@ -261,7 +261,7 @@ const onFormSubmit = () => {
   if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
     modelCheckoutCartDataLocal.value.addresses.push({
       title: `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
-      desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.country}`,
+      desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.selectedCountry}`,
       subtitle: billingAddress.value.phone,
       value: selectedAddress.value
     });
@@ -298,6 +298,11 @@ const addressTypes = [
 watch(() => props.modelCheckoutData, value => {
   modelCheckoutCartDataLocal.value = JSON.parse(JSON.stringify(value))
 })
+
+watch(() => props.billingAddress, (newbillingAddress) => {
+  console.log("billingAddress ha cambiado:", newbillingAddress);
+  billingAddress.value = { ...newbillingAddress };
+}, { deep: true });
 </script>
 
 <template>
