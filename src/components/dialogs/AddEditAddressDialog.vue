@@ -16,6 +16,7 @@ interface BillingAddress {
   city: string
   state: string
   zipCode: number | null
+  addressType: string
 }
 interface Props {
   billingAddress?: BillingAddress
@@ -238,8 +239,11 @@ const props = withDefaults(defineProps<Props>(), {
     city: 'Santo Domingo',
     state: 'Distrito Nacional',
     zipCode: 10305,
+    addressType: 'Casa'
   })
 })
+
+const toggleSwitch = ref(false)
 
 const emit = defineEmits<Emit>()
 
@@ -260,7 +264,7 @@ const resetForm = () => {
 const onFormSubmit = () => {
   if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
     modelCheckoutCartDataLocal.value.addresses.push({
-      title: `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
+      title: toggleSwitch.value ? `${billingAddress.value.firstName} ${billingAddress.value.lastName} (Predeterminado)`  : `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
       desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.selectedCountry}`,
       subtitle: billingAddress.value.phone,
       value: selectedAddress.value
@@ -302,6 +306,7 @@ watch(() => props.modelCheckoutData, value => {
 watch(() => props.billingAddress, (newbillingAddress) => {
   console.log("billingAddress ha cambiado:", newbillingAddress);
   billingAddress.value = { ...newbillingAddress };
+  selectedAddress.value = billingAddress.value.addressType
 }, { deep: true });
 </script>
 
@@ -449,7 +454,7 @@ watch(() => props.billingAddress, (newbillingAddress) => {
             </VCol>
 
             <VCol cols="12">
-              <VSwitch label="Utilizar como dirección de facturación?" />
+              <VSwitch v-model="toggleSwitch" label="Utilizar como dirección de facturación?" />
             </VCol>
 
             <!-- 👉 Submit and Cancel button -->

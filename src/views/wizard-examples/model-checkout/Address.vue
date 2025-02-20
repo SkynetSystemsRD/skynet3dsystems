@@ -34,6 +34,7 @@ const selectedAddress = ref({
   city: '',
   state: '',
   zipCode: null,
+  addressType: ''
 });
 
 
@@ -102,13 +103,14 @@ const editAddress = (item: CustomInputContent) => {
     phone: item.subtitle ?? "",
     selectedCountry: country,
     addressLine1: addressLine1,
-    addressLine2: 'null',
-    landmark: 'null',
+    addressLine2: null,
+    landmark: null,
     contact: item.subtitle ?? "",
     country: country,
     city: city,
     state: state,
     zipCode: null,
+    addressType: item.value
   }
 
   console.log("selectedAddress: ", selectedAddress.value)
@@ -123,20 +125,32 @@ const deleteAddress = (item: CustomInputContent) => {
 
 const addNewAddress = (data: ModelCheckoutData) => {
   const newAddress = data.addresses[0];
-  
-  // Verifica si ya existe una dirección con el mismo "value"
-  const exists = modelCheckoutAddressDataLocal.value.addresses.some(
+
+  // Busca la dirección existente
+  const existingAddressIndex = modelCheckoutAddressDataLocal.value.addresses.findIndex(
     (addr) => addr.value === newAddress.value
   );
 
-  if (!exists) {
+  if (existingAddressIndex === -1) {
+    // Si no existe, agregar la nueva dirección
     modelCheckoutAddressDataLocal.value.addresses.push({ ...newAddress });
-    
-    emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
   } else {
-    console.log('Dirección ya existe, no se agregó.');
+    // Si ya existe, verifica si ha cambiado
+    const existingAddress = modelCheckoutAddressDataLocal.value.addresses[existingAddressIndex];
+
+    if (JSON.stringify(existingAddress) !== JSON.stringify(newAddress)) {
+      // Actualiza la dirección si hay cambios
+      modelCheckoutAddressDataLocal.value.addresses[existingAddressIndex] = { ...newAddress };
+    } else {
+      console.log('La dirección ya existe y no tiene cambios.');
+      return;
+    }
   }
-}
+
+  // Emitir evento de actualización
+  emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
+};
+
 
 const buttonAddNewAddress = () => {
   selectedAddress.value = {
@@ -152,6 +166,7 @@ const buttonAddNewAddress = () => {
     city: '',
     state: '',
     zipCode: null,
+    addressType: ''
   }
 
   isEditAddressDialogVisible.value = !isEditAddressDialogVisible.value
