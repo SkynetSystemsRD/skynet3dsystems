@@ -34,7 +34,7 @@ const selectedAddress = ref({
   city: '',
   state: '',
   zipCode: null,
-  addressType: ''
+  addressType: 'Casa'
 });
 
 
@@ -88,8 +88,8 @@ const nextStep = () => {
   emit('update:currentStep', props.currentStep ? props.currentStep + 1 : 1)
 }
 
-const changeAddress = (value: string) => {
-  modelCheckoutAddressDataLocal.value.deliveryAddress = value.toLowerCase()
+const changeAddress = (item: CustomInputContent) => {
+  modelCheckoutAddressDataLocal.value.deliveryAddress = item.value.toLowerCase()
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
 }
 
@@ -166,7 +166,7 @@ const buttonAddNewAddress = () => {
     city: '',
     state: '',
     zipCode: null,
-    addressType: ''
+    addressType: 'Casa'
   }
 
   isEditAddressDialogVisible.value = !isEditAddressDialogVisible.value
@@ -193,7 +193,7 @@ watch(() => props.currentStep, updateAddressData)
         :grid-column="{ cols: '12', sm: '6' }"
       >
         <template #default="{ item }">
-          <div class="w-100" @click="changeAddress(item.value)">
+          <div class="w-100" @click="changeAddress(item)">
             <div class="d-flex justify-space-between mb-3">
               <h6 class="text-base font-weight-medium">
                 {{ item.title }}
