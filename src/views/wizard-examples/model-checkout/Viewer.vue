@@ -22,9 +22,15 @@ const instructions = [
     {
       title: "👋 Manipulación del Modelo 3D",
       topics: [
+      { 
+          title: "Mover la entorno", 
+          instruction1: "Mantén presionado el botón derecho del ratón",
+          instruction2: "y mueve el ratón para mover el entorno de la escena.",
+          icon: "tabler-direction"
+        },
         { 
           title: "Rotar la cámara", 
-          instruction1: "Mantén presionado el botón izquierdo del ratón y mueve el ratón ",
+          instruction1: "Mantén presionado el botón izquierdo del ratón",
           instruction2: "y mueve el ratón para rotar el entorno de la escena.",
           icon: "tabler-rotate"
         },
@@ -164,7 +170,7 @@ const initModels = () => {
   scene.background = new THREE.Color(0xdddddd);
 
   const camera = new THREE.PerspectiveCamera(75, 1000 / 600, 0.1, 1000);
-  camera.position.set(200, 200, 200);
+  camera.position.set(300, 300, 200);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   // renderer.setSize(1000, 600);
