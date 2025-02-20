@@ -225,6 +225,50 @@ const initModels = () => {
   directionalLight_z_down.castShadow = true;
   scene.add(directionalLight_z_down);
 
+  // Agregar la plataforma de referencia (220x220 mm)
+  const platformGeometry = new THREE.PlaneGeometry(220, 220);
+  const platformMaterial = new THREE.MeshStandardMaterial({ color: 0x888888, side: THREE.DoubleSide });
+  const platform = new THREE.Mesh(platformGeometry, platformMaterial);
+  platform.rotation.x = -Math.PI / 2; // Ponerlo en el suelo
+  platform.position.y = 0;
+  scene.add(platform);
+
+  // Crear material para las líneas y el marco superior
+  const lineMaterial = new THREE.LineBasicMaterial({ color: 0x58A6DA });
+
+  // Coordenadas de las cuatro esquinas de la base
+  const corners = [
+      new THREE.Vector3(-110, 0, -110), // Esquina trasera izquierda
+      new THREE.Vector3(110, 0, -110),  // Esquina trasera derecha
+      new THREE.Vector3(110, 0, 110),   // Esquina frontal derecha
+      new THREE.Vector3(-110, 0, 110)   // Esquina frontal izquierda
+  ];
+
+  // Crear líneas verticales de 270 mm de alto
+  const height = 270;
+  const verticalLines: THREE.Line[] = [];
+
+  corners.forEach(corner => {
+      const points = [corner, new THREE.Vector3(corner.x, height, corner.z)];
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const line = new THREE.Line(geometry, lineMaterial);
+      scene.add(line);
+      verticalLines.push(line);
+  });
+
+  // Crear el marco superior conectando las cuatro líneas verticales
+  const topFramePoints = [
+      verticalLines[0].geometry.attributes.position.array.slice(3, 6), // Top de la primera línea
+      verticalLines[1].geometry.attributes.position.array.slice(3, 6), // Top de la segunda línea
+      verticalLines[2].geometry.attributes.position.array.slice(3, 6), // Top de la tercera línea
+      verticalLines[3].geometry.attributes.position.array.slice(3, 6), // Top de la cuarta línea
+      verticalLines[0].geometry.attributes.position.array.slice(3, 6)  // Volver al inicio para cerrar
+  ].map(arr => new THREE.Vector3(arr[0], arr[1], arr[2]));
+
+  const topFrameGeometry = new THREE.BufferGeometry().setFromPoints(topFramePoints);
+  const topFrame = new THREE.LineLoop(topFrameGeometry, lineMaterial);
+  scene.add(topFrame);
+
   let loadedModels: THREE.Object3D[] = [];
   let selectedModel: THREE.Object3D | null = null;
   let isDragging = false;
@@ -284,10 +328,30 @@ const initModels = () => {
     }
   }
 
+  // function addModelToScene(model: THREE.Object3D) {
+  //   model.scale.set(0.5, 0.5, 0.5);
+  //   model.position.set(0, 0, 0);
+  //   scene.add(model);
+  //   loadedModels.push(model);
+  // }
+
   function addModelToScene(model: THREE.Object3D) {
     model.scale.set(0.5, 0.5, 0.5);
+    
+    // Asegurar que el modelo esté en la posición y=0 antes de calcular su altura
     model.position.set(0, 0, 0);
     scene.add(model);
+
+    // Recalcular el tamaño del modelo después de agregarlo a la escena
+    const box = new THREE.Box3().setFromObject(model);
+    box.expandByScalar(0.1); // Expande un poco la caja para evitar errores
+
+    const height = box.max.y - box.min.y;
+    const modelBottom = box.min.y; // Altura del punto más bajo del modelo
+
+    // Ajustar posición para que el modelo quede sobre la plataforma
+    model.position.y = model.position.y - modelBottom + (height / 2);
+
     loadedModels.push(model);
   }
 
@@ -426,11 +490,11 @@ const initModels = () => {
 
   function resetModels() {
     // Restablecer todos los modelos cargados a la posición original, rotación y escala
-    loadedModels.forEach(model => {
-      model.position.set(0, 0, 0); // Restablecer posición
-      model.rotation.set(0, 0, 0); // Restablecer rotación
-      model.scale.set(0.5, 0.5, 0.5); // Restablecer escala a valor original
-    });
+    // loadedModels.forEach(model => {
+    //   model.position.set(0, 0, modelZ); // Restablecer posición
+    //   model.rotation.set(0, 0, 0); // Restablecer rotación
+    //   // model.scale.set(0.5, 0.5, 0.5); // Restablecer escala a valor original
+    // });
   }
 
   function calculatePrintCost(model: THREE.Object3D, infill: number, scale: number, costPerGram: number) {
@@ -616,7 +680,7 @@ onMounted(() => {
                     Reposicionar
                   </VBtn>
                   <!-- TE QUEDASTE AQUI, ESTO ES PARA MODIFICAR LA ESCALA! -->
-                  <AppTextField
+                  <!-- <AppTextField
                     v-model="cardFormData.cardCvv"
                     label="CVV"
                     placeholder="123"
@@ -636,7 +700,7 @@ onMounted(() => {
                         </template>
                       </VTooltip>
                     </template>
-                  </AppTextField>
+                  </AppTextField> -->
                 </div>
               </v-col>
             </v-row>
