@@ -433,6 +433,24 @@ const initModels = () => {
     });
   }
 
+  function calculatePrintCost(model: THREE.Object3D, infill: number, scale: number, costPerGram: number) {
+    const box = new THREE.Box3().setFromObject(model);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    
+    // Volumen estimado en cm³ (Aproximado usando la caja delimitadora)
+    const volumeCm3 = (size.x * scale) * (size.y * scale) * (size.z * scale) / 1000; 
+
+    // Ajustar por infill (Ej: 20% infill usa solo 20% del material sólido)
+    const effectiveVolume = volumeCm3 * (infill / 100);
+
+    // Peso estimado en gramos (Asumiendo densidad de 1.24 g/cm³ para PLA)
+    const density = 1.24; // g/cm³ (Varía según material)
+    const weightGrams = effectiveVolume * density;
+
+    // Precio total
+    return weightGrams * costPerGram;
+  }
 
   renderer.domElement.addEventListener('mousedown', selectAndDragModel);
   renderer.domElement.addEventListener('mousemove', moveModel);
@@ -597,6 +615,28 @@ onMounted(() => {
                     <VIcon size="34" icon="tabler-x" />
                     Reposicionar
                   </VBtn>
+                  <!-- TE QUEDASTE AQUI, ESTO ES PARA MODIFICAR LA ESCALA! -->
+                  <AppTextField
+                    v-model="cardFormData.cardCvv"
+                    label="CVV"
+                    placeholder="123"
+                    type="number"
+                  >
+                    <template #append-inner>
+                      <VTooltip
+                        text="Valor de Verificacion de la Tarjeta"
+                        location="bottom"
+                      >
+                        <template #activator="{ props: tooltipProps }">
+                          <VIcon
+                            v-bind="tooltipProps"
+                            size="20"
+                            icon="tabler-help"
+                          />
+                        </template>
+                      </VTooltip>
+                    </template>
+                  </AppTextField>
                 </div>
               </v-col>
             </v-row>
