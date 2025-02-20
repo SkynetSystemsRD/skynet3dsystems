@@ -406,9 +406,29 @@ const initModels = () => {
 
     raycaster.setFromCamera(mouse, camera);
     const intersection = new THREE.Vector3();
-    
+
     if (raycaster.ray.intersectPlane(plane, intersection)) {
       selectedModel.position.copy(intersection.sub(offset));
+
+      // Obtener límites de la plataforma
+      const minX = -110, maxX = 110;
+      const minZ = -110, maxZ = 110;
+
+      // Verificar si el modelo está fuera de los límites
+      const isOutside =
+        selectedModel.position.x < minX ||
+        selectedModel.position.x > maxX ||
+        selectedModel.position.z < minZ ||
+        selectedModel.position.z > maxZ;
+
+      // Cambiar el color si está fuera de la plataforma
+      selectedModel.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(
+            isOutside ? 0xff0000 : 0x555555
+          );
+        }
+      });
     }
   }
 
