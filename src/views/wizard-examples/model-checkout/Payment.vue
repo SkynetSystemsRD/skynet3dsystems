@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import banreservas from '@images/logos/banreservas.png';
+import bhd from '@images/logos/bhd.png';
+import popular from '@images/logos/popular.png';
 import type { ModelCheckoutData } from './types';
 
 const prop = defineProps<{
@@ -21,19 +24,22 @@ const accounts = {
     bank: 'Banreservas',
     accountNumber: '123456789',
     accountType: 'Cuenta de Ahorro',
-    holder: 'Nombre Completo'
+    holder: 'Nombre Completo',
+    bankLogo: banreservas
   },
   popular: {
     bank: 'Banco Popular',
     accountNumber: '987654321',
-    accountType: 'Cuenta de Ahorro',
-    holder: 'Nombre Completo'
+    accountType: 'Cuenta de Ahorro', 
+    holder: 'Nombre Completo',
+    bankLogo: popular
   },
   bhd: {
     bank: 'Banco BHD',
     accountNumber: '112233445',
     accountType: 'Cuenta de Ahorro',
-    holder: 'Nombre Completo'
+    holder: 'Nombre Completo',
+    bankLogo: bhd
   }
 };
 
@@ -244,15 +250,23 @@ watch(
                 <VCardText>
                   <VWindow v-model="currentTab">
                     <VWindowItem
-                      v-for="(data, key) in accounts"
-                      :key="key"
-                      :value="key"
-                    >
-                      <h3>{{ data.bank }}</h3>
-                      <p><strong>Nombre:</strong> {{ data.holder }}</p>
-                      <p><strong>Número de Cuenta:</strong> {{ data.accountNumber }}</p>
-                      <p><strong>Tipo de Cuenta:</strong> {{ data.accountType }}</p>
-                    </VWindowItem>
+                    v-for="(data, key) in accounts"
+                    :key="key"
+                    :value="key"
+                  >
+                    <VImg
+                      :src="data.bankLogo"
+                      alt="Bank Logo"
+                      max-height="300"
+                      max-width="200"
+                      contain
+                      class="ml-2"
+                    />
+                    <br>
+                    <p><strong>Nombre:</strong> {{ data.holder }}</p>
+                    <p><strong>Número de Cuenta:</strong> {{ data.accountNumber }}</p>
+                    <p><strong>Tipo de Cuenta:</strong> {{ data.accountType }}</p>
+                  </VWindowItem>
                   </VWindow>
                 </VCardText>
               </VCard>
