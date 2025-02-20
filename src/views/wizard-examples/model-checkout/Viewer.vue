@@ -68,6 +68,7 @@ const rotateButtonText = ref('Rotacion Desactivada')
 const isSnackbarVisible = ref(false)
 const InfoMessage = ref('')
 const checkboxString = ref('Rotacion Manual')
+const inFill = ref(10)
 
 const emit = defineEmits<Emit>()
 
@@ -297,6 +298,7 @@ const initModels = () => {
           addModelToScene(gltf.scene);
           console.log("gltf: ", gltf.scene.uuid)
           models.push({ id: id++, uuid: gltf.scene.uuid, parent_uuid: gltf.scene.parent.uuid })
+          console.log('price: ', calculatePrintCost(gltf.scene, inFill.value, 1, 1500));
         });
         break;
 
@@ -306,6 +308,7 @@ const initModels = () => {
           addModelToScene(obj);
           console.log('obj: ', obj.uuid)
           models.push({ id: id++, uuid: obj.uuid, parent_uuid: obj.parent.uuid })
+          console.log('price: ', calculatePrintCost(obj, inFill.value, 1, 1500));
         });
         break;
 
@@ -315,6 +318,7 @@ const initModels = () => {
           addModelToScene(fbx);
           console.log('fbx: ', fbx.uuid)
           models.push({ id: id++, uuid: fbx.uuid, parent_uuid: fbx.parent.uuid })
+          console.log('price: ', calculatePrintCost(fbx, inFill.value, 1, 1500));
         });
         break;
 
@@ -326,6 +330,7 @@ const initModels = () => {
           addModelToScene(mesh);
           console.log('stl: ', mesh.uuid)
           models.push({ id: id++, uuid: mesh.uuid, parent_uuid: mesh.parent?.uuid})
+          console.log('price: ', calculatePrintCost(mesh, inFill.value, 1, 1500));
         });
         break;
 
@@ -417,21 +422,21 @@ const initModels = () => {
       selectedModel.position.copy(intersection.sub(offset));
 
       // Obtener límites de la plataforma
-      const minX = -110, maxX = 110;
-      const minZ = -110, maxZ = 110;
+      // const minX = -110, maxX = 110;
+      // const minZ = -110, maxZ = 110;
 
-      // Verificar si el modelo está fuera de los límites
-      const isOutside =
-        selectedModel.position.x < minX ||
-        selectedModel.position.x > maxX ||
-        selectedModel.position.z < minZ ||
-        selectedModel.position.z > maxZ;
+      // // Verificar si el modelo está fuera de los límites
+      // const isOutside =
+      //   selectedModel.position.x < minX ||
+      //   selectedModel.position.x > maxX ||
+      //   selectedModel.position.z < minZ ||
+      //   selectedModel.position.z > maxZ;
 
       // Cambiar el color si está fuera de la plataforma
       selectedModel.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
           ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(
-            isOutside ? 0xff0000 : 0x555555
+            /*isOutside ? 0xff0000 : */0x555555
           );
         }
       });
@@ -705,16 +710,16 @@ onMounted(() => {
                     <VIcon size="34" icon="tabler-x" />
                     Reposicionar
                   </VBtn>
-                  <!-- TE QUEDASTE AQUI, ESTO ES PARA MODIFICAR LA ESCALA! -->
-                  <!-- <AppTextField
-                    v-model="cardFormData.cardCvv"
-                    label="CVV"
-                    placeholder="123"
+                  
+                  <AppTextField
+                    v-model="inFill"
+                    label="Relleno"
+                    placeholder="50"
                     type="number"
                   >
                     <template #append-inner>
                       <VTooltip
-                        text="Valor de Verificacion de la Tarjeta"
+                        text="El rellenado en impresión 3D es el soporte interno del objeto para dar estabilidad y reducir material. Sera aplicado a todos estos modelos"
                         location="bottom"
                       >
                         <template #activator="{ props: tooltipProps }">
@@ -726,7 +731,7 @@ onMounted(() => {
                         </template>
                       </VTooltip>
                     </template>
-                  </AppTextField> -->
+                  </AppTextField>
                 </div>
               </v-col>
             </v-row>
