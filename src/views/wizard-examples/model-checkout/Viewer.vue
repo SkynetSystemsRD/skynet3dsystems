@@ -545,15 +545,15 @@ const initModels = () => {
     // Volumen estimado en cm³ (Aproximado usando la caja delimitadora)
     const volumeCm3 = (size.x * scale) * (size.y * scale) * (size.z * scale) / 1000; 
 
-    // Ajustar por infill (Ej: 20% infill usa solo 20% del material sólido)
+    // Ajustar por infill
     const effectiveVolume = volumeCm3 * (infill / 100);
 
-    // Peso estimado en gramos (Asumiendo densidad de N g/cm³ para PLA)
-    const density = filament.value[0].density; // g/cm³ (Varía según material)
+    // Peso estimado en gramos
+    const density = filament.value[0].density; // g/cm³
     const weightGrams = effectiveVolume * density;
 
-    // Precio total
-    return weightGrams * costPerGram;
+    // Precio total con 2 decimales
+    return Math.round(weightGrams * costPerGram);
   }
 
   renderer.domElement.addEventListener('mousedown', selectAndDragModel);
