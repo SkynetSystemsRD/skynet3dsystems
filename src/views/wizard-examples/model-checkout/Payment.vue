@@ -15,6 +15,12 @@ const emit = defineEmits<{
 }>()
 
 const modelCheckoutPaymentDataLocal = ref(prop.modelCheckoutData)
+const paymentForm = ref(null);
+
+const required = v => !!v || 'Campo requerido';
+const cardNumberRule = v => /^\d{16}$/.test(v) || 'Debe tener 16 dígitos';
+const expiryRule = v => /^(0[1-9]|1[0-2])\/\d{2}$/.test(v) || 'Formato MM/YY';
+const cvvRule = v => /^\d{3,4}$/.test(v) || 'Debe tener 3 o 4 dígitos';
 
 const selectedPaymentMethod = ref('card')
 
@@ -61,6 +67,26 @@ const selectedDeliveryAddress = computed(() => {
     return address.value === modelCheckoutPaymentDataLocal.value.deliveryAddress
   })
 })
+
+const validateForm = async () => {
+  const { valid } = await paymentForm.value.validate();
+  if (valid) {
+    console.log('Formulario válido', cardFormData.value);
+  } else {
+    console.log('Errores en el formulario');
+  }
+};
+
+const resetForm = () => {
+  cardFormData.value = {
+    cardNumber: '',
+    cardName: '',
+    cardExpiry: '',
+    cardCvv: '',
+    isCardSave: false,
+  };
+  paymentForm.value.resetValidation();
+};
 
 const updateCartData = () => {
   emit('update:checkout-data', modelCheckoutPaymentDataLocal.value)
@@ -133,92 +159,67 @@ watch(
           value="card"
           class="ms-n3"
         >
-          <VForm class="mt-3">
-            <VRow class="ma-0 pa-n2">
-              <VCol cols="12">
-                <AppTextField
-                  v-model="cardFormData.cardNumber"
-                  type="number"
-                  label="Numero de Tarjeta"
-                  placeholder="1356 3215 6548 7898"
-                />
-              </VCol>
+        <VForm ref="paymentForm" @submit.prevent="validateForm">
+          <VRow class="ma-0 pa-n2">
+            <VCol cols="12">
+              <AppTextField
+                v-model="cardFormData.cardNumber"
+                type="number"
+                label="Número de Tarjeta"
+                placeholder="1356 3215 6548 7898"
+                :rules="[required, cardNumberRule]"
+              />
+            </VCol>
 
-              <VCol
-                cols="12"
-                md="4"
+            <VCol cols="12" md="4">
+              <AppTextField
+                v-model="cardFormData.cardName"
+                label="Nombre"
+                placeholder="Juan Perez"
+                :rules="[required]"
+              />
+            </VCol>
+
+            <VCol cols="6" md="4">
+              <AppTextField
+                v-model="cardFormData.cardExpiry"
+                label="Expiración"
+                placeholder="MM/YY"
+                :rules="[required, expiryRule]"
+              />
+            </VCol>
+
+            <VCol cols="6" md="4">
+              <AppTextField
+                v-model="cardFormData.cardCvv"
+                label="CVV"
+                placeholder="123"
+                type="number"
+                :rules="[required, cvvRule]"
               >
-                <AppTextField
-                  v-model="cardFormData.cardName"
-                  label="Nombre"
-                  placeholder="Juan Perez"
-                />
-              </VCol>
+                <template #append-inner>
+                  <VTooltip text="Valor de Verificación de la Tarjeta" location="bottom">
+                    <template #activator="{ props: tooltipProps }">
+                      <VIcon v-bind="tooltipProps" size="20" icon="tabler-help" />
+                    </template>
+                  </VTooltip>
+                </template>
+              </AppTextField>
+            </VCol>
 
-              <VCol
-                cols="6"
-                md="4"
-              >
-                <AppTextField
-                  v-model="cardFormData.cardExpiry"
-                  label="Expiracion"
-                  placeholder="MM/YY"
-                />
-              </VCol>
+            <VCol cols="12" class="pt-1">
+              <VSwitch
+                v-model="cardFormData.isCardSave"
+                label="¿Guardar tarjeta para facturación futura?"
+              />
 
-              <VCol
-                cols="6"
-                md="4"
-              >
-                <AppTextField
-                  v-model="cardFormData.cardCvv"
-                  label="CVV"
-                  placeholder="123"
-                  type="number"
-                >
-                  <template #append-inner>
-                    <VTooltip
-                      text="Valor de Verificacion de la Tarjeta"
-                      location="bottom"
-                    >
-                      <template #activator="{ props: tooltipProps }">
-                        <VIcon
-                          v-bind="tooltipProps"
-                          size="20"
-                          icon="tabler-help"
-                        />
-                      </template>
-                    </VTooltip>
-                  </template>
-                </AppTextField>
-              </VCol>
-
-              <VCol
-                cols="12"
-                class="pt-1"
-              >
-                <VSwitch
-                  v-model="cardFormData.isCardSave"
-                  label="¿Guardar tarjeta para facturación futura?"
-                />
-
-                <div class="mt-4">
-                  <VBtn
-                    class="me-4"
-                    @click="nextStep"
-                  >
-                    Guardar Cambios
-                  </VBtn>
-                  <VBtn
-                    variant="tonal"
-                    color="secondary"
-                  >
-                    Borrar Todo
-                  </VBtn>
-                </div>
-              </VCol>
-            </VRow>
-          </VForm>
+              <div class="mt-4">
+                <VBtn class="me-4" @click="validateForm">Guardar Cambios</VBtn>
+                <VBtn variant="tonal" color="secondary" @click="resetForm">Borrar Todo</VBtn>
+              </div>
+            </VCol>
+          </VRow>
+        </VForm>
         </VWindowItem>
 
         <VWindowItem value="cash-on-delivery">
