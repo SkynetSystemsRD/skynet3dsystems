@@ -8,6 +8,7 @@ export interface ModelItem {
   uuid: string
   dimentions: xyz;
   weight: number;
+  price: number;
 }
 
 interface xyz {

@@ -52,7 +52,7 @@ const modelCheckoutSteps = [
 let modelCheckoutData = ref<ModelCheckoutData>({
   modelItems: [],
   promoCode: '',
-  orderAmount: 1198,
+  orderAmount: 0,
   deliveryAddress: 'casa',
   deliverySpeed: 'free',
   deliveryCharges: 0,
@@ -72,22 +72,16 @@ let modelCheckoutData = ref<ModelCheckoutData>({
   ],
 })
 
-function updateModels(data: ModelCheckoutData, component: string){
-  switch (component){
-    case 'address':
-      modelCheckoutData.value.addresses = data.addresses;
-      modelCheckoutData.value.deliveryAddress = data.deliveryAddress;
-      break
-    case 'cart':
-      modelCheckoutData.value = data
-      break;
-    default: 
-      modelCheckoutData.value = data
-      break;
-  }
-  
-  console.log(`MODELCHECKOUTDATA: ${component}: `, modelCheckoutData.value)
-}
+// function updateModels(data: ModelCheckoutData, component: string){
+//   if (component === 'cart' && modelCheckoutData.value !== data) {
+//     modelCheckoutData.value = data;
+//   } else if (component === 'address') {
+//     modelCheckoutData.value.addresses = data.addresses;
+//     modelCheckoutData.value.deliveryAddress = data.deliveryAddress;
+//   }
+//   // Solo actualiza si hay cambios
+//   console.log(`MODELCHECKOUTDATA: ${component}: `, modelCheckoutData.value);
+// }
 
 const currentStep = ref(0)
 </script>
@@ -120,25 +114,42 @@ const currentStep = ref(0)
                 <CartContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => updateModels(data, 'cart')"
+                  @update:checkout-data="(data) => { 
+                    modelCheckoutData = Object.assign({}, data); // Alternativa para mantener reactividad
+                    console.log('CART: ', modelCheckoutData);
+                  }"
                 />
               </VWindowItem>
               <VWindowItem>
                 <ViewerContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
+                  @update:checkout-data="(data) => { 
+                    if (modelCheckoutData !== data) { 
+                      modelCheckoutData = data; 
+                      console.log('VIEWER: ', modelCheckoutData)
+                    }
+                  }"
                 />
               </VWindowItem>
               <VWindowItem>
                 <PaymentContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => updateModels(data, 'payment')"
+                  @update:checkout-data="(data) => { 
+                    modelCheckoutData === data; 
+                    console.log('PAYMENT: ', modelCheckoutData) 
+                  }"
                 />
                 <AddressContent
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => updateModels(data, 'address')"
+                  @update:checkout-data="(data) => { 
+                    modelCheckoutData.addresses = data.addresses; 
+                    modelCheckoutData.deliveryAddress = data.deliveryAddress; 
+                    modelCheckoutData.orderAmount = data.orderAmount; 
+                    console.log('ADDRESS: ', modelCheckoutData) 
+                  }"
                 />
               </VWindowItem>
               <VWindowItem>

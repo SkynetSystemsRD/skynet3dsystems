@@ -6,7 +6,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { nextTick, onMounted } from 'vue';
-import type { ModelCheckoutData } from './types';
+import type { ModelCheckoutData, ModelItem } from './types';
 
 interface Props {
   currentStep?: number
@@ -69,6 +69,17 @@ const isSnackbarVisible = ref(false)
 const InfoMessage = ref('')
 const checkboxString = ref('Rotacion Manual')
 const inFill = ref(10)
+const filament = ref([
+  {
+    name: 'PTEG',
+    density: 1.38,
+    diameter: 1.75,
+    filamentCost: 25000,
+    filamentWeight: 1200,
+    filamentLenght: 362,
+    costPerMeter: 69.15
+  }
+])
 
 const emit = defineEmits<Emit>()
 
@@ -78,19 +89,21 @@ let id = 0
 const modelCheckoutAddressDataLocal = ref<ModelCheckoutData>(JSON.parse(JSON.stringify(props.modelCheckoutData)))
 
 watch(() => props.modelCheckoutData, value => {
-  modelCheckoutAddressDataLocal.value = JSON.parse(JSON.stringify(value))
+  Object.assign(modelCheckoutAddressDataLocal.value, value);
 
-  if (models_counts.value !== modelCheckoutAddressDataLocal.value.modelItems.length){
-    console.log('modelos actuales: ', modelCheckoutAddressDataLocal.value.modelItems.length)
-    console.log('modelo anteriores: ', models_counts.value)
-
-    reload()
-    initModels()
+  if (models_counts.value !== modelCheckoutAddressDataLocal.value.modelItems.length) {
+    reload();
+    initModels();
   }
-  else console.log('modelos actuales: ', models_counts.value)
 
-  models_counts.value = modelCheckoutAddressDataLocal.value.modelItems.length
-})
+  if (JSON.stringify(modelCheckoutAddressDataLocal.value) !== JSON.stringify(value)) {
+    console.log('ha cambiado : ', modelCheckoutAddressDataLocal.value)
+    emit("update:checkout-data", { ...modelCheckoutAddressDataLocal.value });
+  }
+
+  models_counts.value = modelCheckoutAddressDataLocal.value.modelItems.length;
+});
+
 
 const updateCartData = () => {
   emit("update:checkout-data", { ...modelCheckoutAddressDataLocal.value });
@@ -142,6 +155,7 @@ const totalPriceWithDeliveryCharges = computed(() => {
 
 const updateAddressData = () => {
   modelCheckoutAddressDataLocal.value.deliveryCharges = resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.value.deliverySpeed].price
+  console.log('aja: ', modelCheckoutAddressDataLocal.value)
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
 }
 
@@ -150,7 +164,7 @@ const nextStep = () => {
   emit('update:currentStep', props.currentStep ? props.currentStep + 1 : 1)
 }
 
-watch(() => props.currentStep, updateAddressData)
+// watch(() => props.currentStep, updateAddressData)
 
 const reload = () => {
   var container = document.getElementById("model-viewer");
@@ -286,7 +300,7 @@ const initModels = () => {
   const offset = new THREE.Vector3();
   const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
-  function loadModel(item: any) {
+  function loadModel(item: ModelItem) {
     let loader: any;
     let fileType = item.fileName.split('.').pop()?.toLowerCase();
 
@@ -296,9 +310,11 @@ const initModels = () => {
         loader = new GLTFLoader();
         loader.load(item.octetStreamContent, (gltf) => {
           addModelToScene(gltf.scene);
-          console.log("gltf: ", gltf.scene.uuid)
-          models.push({ id: id++, uuid: gltf.scene.uuid, parent_uuid: gltf.scene.parent.uuid })
-          console.log('price: ', calculatePrintCost(gltf.scene, inFill.value, 1, 1500));
+          console.log("gltf: ", gltf.scene.uuid);
+          models.push({ id: id++, uuid: gltf.scene.uuid, parent_uuid: gltf.scene.parent.uuid });
+
+          item.price = calculatePrintCost(gltf.scene, inFill.value, 1.7, 69.15);
+          updateOrderAmount(); // Función para recalcular el total
         });
         break;
 
@@ -306,9 +322,11 @@ const initModels = () => {
         loader = new OBJLoader();
         loader.load(item.octetStreamContent, (obj) => {
           addModelToScene(obj);
-          console.log('obj: ', obj.uuid)
-          models.push({ id: id++, uuid: obj.uuid, parent_uuid: obj.parent.uuid })
-          console.log('price: ', calculatePrintCost(obj, inFill.value, 1, 1500));
+          console.log('obj: ', obj.uuid);
+          models.push({ id: id++, uuid: obj.uuid, parent_uuid: obj.parent.uuid });
+
+          item.price = calculatePrintCost(obj, inFill.value, 1.7, 69.15);
+          updateOrderAmount();
         });
         break;
 
@@ -316,9 +334,11 @@ const initModels = () => {
         loader = new FBXLoader();
         loader.load(item.octetStreamContent, (fbx) => {
           addModelToScene(fbx);
-          console.log('fbx: ', fbx.uuid)
-          models.push({ id: id++, uuid: fbx.uuid, parent_uuid: fbx.parent.uuid })
-          console.log('price: ', calculatePrintCost(fbx, inFill.value, 1, 1500));
+          console.log('fbx: ', fbx.uuid);
+          models.push({ id: id++, uuid: fbx.uuid, parent_uuid: fbx.parent.uuid });
+
+          item.price = calculatePrintCost(fbx, inFill.value, 1.7, 69.15);
+          updateOrderAmount();
         });
         break;
 
@@ -328,9 +348,11 @@ const initModels = () => {
           const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
           const mesh = new THREE.Mesh(geometry, material);
           addModelToScene(mesh);
-          console.log('stl: ', mesh.uuid)
-          models.push({ id: id++, uuid: mesh.uuid, parent_uuid: mesh.parent?.uuid})
-          console.log('price: ', calculatePrintCost(mesh, inFill.value, 1, 1500));
+          console.log('stl: ', mesh.uuid);
+          models.push({ id: id++, uuid: mesh.uuid, parent_uuid: mesh.parent?.uuid });
+
+          item.price = calculatePrintCost(mesh, inFill.value, 1.7, 69.15);
+          updateOrderAmount();
         });
         break;
 
@@ -339,12 +361,22 @@ const initModels = () => {
     }
   }
 
-  // function addModelToScene(model: THREE.Object3D) {
-  //   model.scale.set(0.5, 0.5, 0.5);
-  //   model.position.set(0, 0, 0);
-  //   scene.add(model);
-  //   loadedModels.push(model);
-  // }
+  // Función para recalcular el total
+  function updateOrderAmount() {
+    modelCheckoutAddressDataLocal.value.orderAmount = modelCheckoutAddressDataLocal.value.modelItems
+      .reduce((total, model) => total + (model.price || 0), 0);
+    
+    console.log('Total Order Amount:', modelCheckoutAddressDataLocal.value.orderAmount);
+    // Emitir el cambio para actualizar en los demás componentes
+    emit("update:checkout-data", { ...modelCheckoutAddressDataLocal.value });
+  }
+
+  // Inicializar el total en 0 antes de empezar
+  modelCheckoutAddressDataLocal.value.orderAmount = 0;
+
+  // Cargar todos los modelos
+  modelCheckoutAddressDataLocal.value.modelItems.forEach(loadModel);
+
 
   function addModelToScene(model: THREE.Object3D) {
     model.scale.set(0.5, 0.5, 0.5);
@@ -365,8 +397,6 @@ const initModels = () => {
 
     loadedModels.push(model);
   }
-
-  modelCheckoutAddressDataLocal.value.modelItems.forEach(loadModel);
 
   function selectAndDragModel(event: MouseEvent) {
     if (event.button !== 0) return; // Solo clic izquierdo
@@ -455,27 +485,6 @@ const initModels = () => {
       return;
     }
 
-    const uuid = selectedModel.uuid;
-    const parent_uuid = selectedModel.parent?.uuid;
-
-    // OJO
-    for (let [index, m] of models.entries()) {
-      if (m.uuid === uuid) {
-        console.log('1. if', index);
-        break;  // Breaks the loop when the condition is met
-      }
-      else if (m.uuid === parent_uuid) {
-        console.log('2. if', index);
-        break;  // Breaks the loop when the condition is met
-      }
-      else if (m.parent_uuid === parent_uuid) {
-        console.log('3. if', index);
-        break;  // Breaks the loop when the condition is met
-      }
-    }
-
-    console.log("models: ", models)
-
     scene.remove(selectedModel);
     loadedModels = loadedModels.filter(model => model.uuid !== uuid);
     
@@ -539,8 +548,8 @@ const initModels = () => {
     // Ajustar por infill (Ej: 20% infill usa solo 20% del material sólido)
     const effectiveVolume = volumeCm3 * (infill / 100);
 
-    // Peso estimado en gramos (Asumiendo densidad de 1.24 g/cm³ para PLA)
-    const density = 1.24; // g/cm³ (Varía según material)
+    // Peso estimado en gramos (Asumiendo densidad de N g/cm³ para PLA)
+    const density = filament.value[0].density; // g/cm³ (Varía según material)
     const weightGrams = effectiveVolume * density;
 
     // Precio total
@@ -571,7 +580,6 @@ const initModels = () => {
 
   const resetButton = document.getElementById("resetButton");
   resetButton?.addEventListener("click", resetModels); // Añadir evento al botón de restaurar
-
 
   animate();
 }

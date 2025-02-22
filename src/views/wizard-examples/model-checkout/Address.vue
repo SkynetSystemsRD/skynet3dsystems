@@ -19,6 +19,7 @@ const isEditAddressDialogVisible = ref(false)
 
 watch(() => props.modelCheckoutData, value => {
   modelCheckoutAddressDataLocal.value = JSON.parse(JSON.stringify(value))
+  console.log('valor: ', modelCheckoutAddressDataLocal.value.orderAmount)
 })
 
 const selectedAddress = ref({
@@ -36,7 +37,6 @@ const selectedAddress = ref({
   zipCode: null,
   addressType: 'Casa'
 });
-
 
 const deliveryOptions = [
   {
@@ -171,7 +171,7 @@ const buttonAddNewAddress = () => {
   isEditAddressDialogVisible.value = !isEditAddressDialogVisible.value
 }
 
-watch(() => props.currentStep, updateAddressData)
+// watch(() => props.currentStep, updateAddressData)
 </script>
 
 <template>

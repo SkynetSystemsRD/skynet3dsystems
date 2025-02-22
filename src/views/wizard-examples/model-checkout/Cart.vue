@@ -147,7 +147,8 @@ function handleFileChange(files: File[]) {
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
                 imageContent: imageData,
-                octetStreamContent: content
+                octetStreamContent: content,
+                price: 0
               });
               
             });
@@ -171,7 +172,8 @@ function handleFileChange(files: File[]) {
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
                 imageContent: imageData,
-                octetStreamContent: content
+                octetStreamContent: content,
+                price: 0
               });
             });
             break;
@@ -195,7 +197,8 @@ function handleFileChange(files: File[]) {
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
                 imageContent: imageData,
-                octetStreamContent: content
+                octetStreamContent: content,
+                price: 0
               });
             });
             break;
@@ -220,7 +223,8 @@ function handleFileChange(files: File[]) {
                 isSupported: supportedFormats.includes(file.name.split('.').pop() || ''),
                 size: file.size,
                 imageContent: imageData,
-                octetStreamContent: content
+                octetStreamContent: content,
+                price: 0
               });
             });
             break;
@@ -240,8 +244,6 @@ function handleFileChange(files: File[]) {
     isAlreadyUploaded.value = false;
   }, 1000);  // 2000 milliseconds = 2 seconds
 }
-
-watch(() => props.currentStep, updateCartData)
 </script>
 
 <template>

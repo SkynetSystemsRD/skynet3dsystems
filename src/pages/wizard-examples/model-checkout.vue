@@ -32,36 +32,36 @@ const modelCheckoutSteps = [
 // from api data
 const modelCheckoutData = ref<ModelCheckoutData>({
   modelItems: [
-    {
-      id: 1,
-      format: 'gltf',
-      filePath: '/xyzCalibration_cube.gltf',
-      fileName: 'xyzCalibration_cube.gltf',
-      size: 235654,
-      octetStreamContent: '',
-      uuid: '',
-      dimentions: {
-        x: 42,
-        y: 42,
-        z: 42
-      }, 
-      weight: 250
-    },
-    {
-      id: 1,
-      format: 'gltf',
-      filePath: '/xyzCalibration_cube.gltf',
-      fileName: 'xyzCalibration_cube.gltf',
-      size: 235654,
-      octetStreamContent: '',
-      uuid: '',
-      dimentions: {
-        x: 42,
-        y: 42,
-        z: 42
-      }, 
-      weight: 250
-    },
+    // {
+    //   id: 1,
+    //   format: 'gltf',
+    //   filePath: '/xyzCalibration_cube.gltf',
+    //   fileName: 'xyzCalibration_cube.gltf',
+    //   size: 235654,
+    //   octetStreamContent: '',
+    //   uuid: '',
+    //   dimentions: {
+    //     x: 42,
+    //     y: 42,
+    //     z: 42
+    //   }, 
+    //   weight: 250
+    // },
+    // {
+    //   id: 1,
+    //   format: 'gltf',
+    //   filePath: '/xyzCalibration_cube.gltf',
+    //   fileName: 'xyzCalibration_cube.gltf',
+    //   size: 235654,
+    //   octetStreamContent: '',
+    //   uuid: '',
+    //   dimentions: {
+    //     x: 42,
+    //     y: 42,
+    //     z: 42
+    //   }, 
+    //   weight: 250
+    // },
   ],
   promoCode: '',
   orderAmount: 1198,
@@ -88,52 +88,79 @@ const currentStep = ref(0)
 </script>
 
 <template>
-  <VCard>
-    <VCardText>
-      <!-- 👉 Stepper -->
-      <AppStepper
-        v-model:current-step="currentStep"
-        class="checkout-stepper"
-        :items="modelCheckoutSteps"
-        :direction="$vuetify.display.mdAndUp ? 'horizontal' : 'vertical'"
-        align="center"
-      />
-    </VCardText>
-
-    <VDivider />
-
-    <VCardText>
-      <!-- 👉 stepper content -->
-      <VWindow
-        v-model="currentStep"
-        class="disable-tab-transition"
-        :touch="false"
-      >
-        <VWindowItem>
-          <CartContent
-            v-model:current-step="currentStep"
-            v-model:checkout-data="modelCheckoutData"
-          />
-        </VWindowItem>
-
-        <VWindowItem>
-          <AddressContent
-            v-model:current-step="currentStep"
-            v-model:checkout-data="modelCheckoutData"
-          />
-        </VWindowItem>
-
-        <VWindowItem>
-          <PaymentContent
-            v-model:current-step="currentStep"
-            v-model:checkout-data="modelCheckoutData"
-          />
-        </VWindowItem>
-
-        <VWindowItem>
-          <ConfirmationContent v-model:checkout-data="modelCheckoutData" />
-        </VWindowItem>
-      </VWindow>
-    </VCardText>
-  </VCard>
+  <div class="model-checkout-page">
+    <Navbar />
+    <VContainer>
+      <div class="model-checkout-card">
+        <VCard>
+          <VCardText>
+            <!-- 👉 Stepper -->
+            <AppStepper
+              v-model:current-step="currentStep"
+              class="model-checkout-stepper"
+              :items="modelCheckoutSteps"
+              :direction="$vuetify.display.mdAndUp ? 'horizontal' : 'vertical'"
+              align="center"
+            />
+          </VCardText>
+          <VDivider />
+          <VCardText>
+            <!-- 👉 stepper content -->
+            <VWindow
+              v-model="currentStep"
+              class="disable-tab-transition"
+              :touch="false"
+            >
+              <VWindowItem>
+                <CartContent
+                  :current-step="currentStep"
+                  :model-checkout-data="modelCheckoutData"
+                />
+              </VWindowItem>
+              <VWindowItem>
+                <ViewerContent
+                  :current-step="currentStep"
+                  :model-checkout-data="modelCheckoutData"
+                />
+              </VWindowItem>
+              <VWindowItem>
+                <PaymentContent
+                  :current-step="currentStep"
+                  :model-checkout-data="modelCheckoutData"
+                />
+                <AddressContent
+                  :current-step="currentStep"
+                  :model-checkout-data="modelCheckoutData"
+                />
+              </VWindowItem>
+              <VWindowItem>
+                <ConfirmationContent v-model:model-checkout-data="modelCheckoutData" />
+              </VWindowItem>
+            </VWindow>
+          </VCardText>
+        </VCard>
+      </div>
+    </VContainer>
+    <Footer />
+  </div>
 </template>
+
+<style lang="scss">
+.model-checkout-card {
+  margin-block: 10.5rem 5.25rem;
+}
+
+@media (max-width: 960px) and (min-width: 600px) {
+  .model-checkout-page {
+    .v-container {
+      padding-inline: 2rem !important;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .model-checkout-card {
+    margin-block-start: 6rem;
+  }
+}
+</style>
