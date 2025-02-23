@@ -19,7 +19,7 @@ const isEditAddressDialogVisible = ref(false)
 
 watch(() => props.modelCheckoutData, value => {
   modelCheckoutAddressDataLocal.value = JSON.parse(JSON.stringify(value))
-  console.log('valor: ', modelCheckoutAddressDataLocal.value.orderAmount)
+  // console.log('valor: ', modelCheckoutAddressDataLocal.value.orderAmount)
 })
 
 const selectedAddress = ref({
@@ -113,7 +113,7 @@ const editAddress = (item: CustomInputContent) => {
     addressType: item.value
   }
 
-  console.log("selectedAddress: ", selectedAddress.value)
+  // console.log("selectedAddress: ", selectedAddress.value)
 
   isEditAddressDialogVisible.value = !isEditAddressDialogVisible.value
 }
@@ -142,7 +142,7 @@ const addNewAddress = (data: ModelCheckoutData) => {
       // Actualiza la dirección si hay cambios
       modelCheckoutAddressDataLocal.value.addresses[existingAddressIndex] = { ...newAddress };
     } else {
-      console.log('La dirección ya existe y no tiene cambios.');
+      // console.log('La dirección ya existe y no tiene cambios.');
       return;
     }
   }

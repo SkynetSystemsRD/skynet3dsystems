@@ -115,7 +115,7 @@ const currentStep = ref(0)
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
                   @update:checkout-data="(data) => { 
-                    modelCheckoutData = Object.assign({}, data); // Alternativa para mantener reactividad
+                    modelCheckoutData = data 
                     console.log('CART: ', modelCheckoutData);
                   }"
                 />
@@ -137,13 +137,13 @@ const currentStep = ref(0)
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
                   @update:checkout-data="(data) => { 
-                    modelCheckoutData === data; 
+                    modelCheckoutData = data 
                     console.log('PAYMENT: ', modelCheckoutData) 
                   }"
                 />
                 <AddressContent
                   v-model:current-step="currentStep"
-                  v-model:model-checkout-data="modelCheckoutData"
+                  v-model:model-checkout-data="modelCheckoutData"s
                   @update:checkout-data="(data) => { 
                     modelCheckoutData.addresses = data.addresses; 
                     modelCheckoutData.deliveryAddress = data.deliveryAddress; 

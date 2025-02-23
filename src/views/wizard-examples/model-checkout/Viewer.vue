@@ -86,20 +86,38 @@ const emit = defineEmits<Emit>()
 let models = <{ id: number; uuid: string; parent_uuid: string | undefined}[]>([]);
 let id = 0
 
-const modelCheckoutAddressDataLocal = ref<ModelCheckoutData>(JSON.parse(JSON.stringify(props.modelCheckoutData)))
+const modelCheckoutAddressDataLocal = ref<ModelCheckoutData>(props.modelCheckoutData)
 
-watch(() => props.modelCheckoutData, value => {
-  Object.assign(modelCheckoutAddressDataLocal.value, value);
+watch(() => props.modelCheckoutData, (value) => {
+  // modelCheckoutAddressDataLocal.value = { ...value }
 
-  if (models_counts.value !== modelCheckoutAddressDataLocal.value.modelItems.length) {
+  console.log('Son el mismo objeto?', value.modelItems === modelCheckoutAddressDataLocal.value.modelItems);
+
+
+  // console.log('value: ', value)
+  // console.log('value: ', value.modelItems.length)
+  // console.log('modelCheckoutAddressDataLocal: ', modelCheckoutAddressDataLocal.value.modelItems.length)
+  // console.log('models_counts: ', models_counts.value)
+
+  if (value.modelItems.length !== modelCheckoutAddressDataLocal.value.modelItems.length){
+    console.log('diferente!')
+  }
+
+  // console.log('value: ', value.modelItems)
+  // console.log('A: ', modelCheckoutAddressDataLocal.value.modelItems.length)
+  // console.log('B: ', models_counts.value)
+  // console.log('C: ', modelCheckoutAddressDataLocal.value)
+
+  if (modelCheckoutAddressDataLocal.value.modelItems.length !== models_counts.value) {
     reload();
     initModels();
-  }
-
-  if (JSON.stringify(modelCheckoutAddressDataLocal.value) !== JSON.stringify(value)) {
-    console.log('ha cambiado : ', modelCheckoutAddressDataLocal.value)
     emit("update:checkout-data", { ...modelCheckoutAddressDataLocal.value });
   }
+
+  // if (modelCheckoutAddressDataLocal.value !== value) {
+  //   console.log('ha cambiado : ', modelCheckoutAddressDataLocal.value)
+  //   emit("update:checkout-data", { ...modelCheckoutAddressDataLocal.value });
+  // }
 
   models_counts.value = modelCheckoutAddressDataLocal.value.modelItems.length;
 });
@@ -155,7 +173,7 @@ const totalPriceWithDeliveryCharges = computed(() => {
 
 const updateAddressData = () => {
   modelCheckoutAddressDataLocal.value.deliveryCharges = resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.value.deliverySpeed].price
-  console.log('aja: ', modelCheckoutAddressDataLocal.value)
+  // console.log('aja: ', modelCheckoutAddressDataLocal.value)
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
 }
 
@@ -310,7 +328,7 @@ const initModels = () => {
         loader = new GLTFLoader();
         loader.load(item.octetStreamContent, (gltf) => {
           addModelToScene(gltf.scene);
-          console.log("gltf: ", gltf.scene.uuid);
+          // console.log("gltf: ", gltf.scene.uuid);
           models.push({ id: id++, uuid: gltf.scene.uuid, parent_uuid: gltf.scene.parent.uuid });
 
           item.price = calculatePrintCost(gltf.scene, inFill.value, 1.7, 69.15);
@@ -322,7 +340,7 @@ const initModels = () => {
         loader = new OBJLoader();
         loader.load(item.octetStreamContent, (obj) => {
           addModelToScene(obj);
-          console.log('obj: ', obj.uuid);
+          // console.log('obj: ', obj.uuid);
           models.push({ id: id++, uuid: obj.uuid, parent_uuid: obj.parent.uuid });
 
           item.price = calculatePrintCost(obj, inFill.value, 1.7, 69.15);
@@ -334,7 +352,7 @@ const initModels = () => {
         loader = new FBXLoader();
         loader.load(item.octetStreamContent, (fbx) => {
           addModelToScene(fbx);
-          console.log('fbx: ', fbx.uuid);
+          // console.log('fbx: ', fbx.uuid);
           models.push({ id: id++, uuid: fbx.uuid, parent_uuid: fbx.parent.uuid });
 
           item.price = calculatePrintCost(fbx, inFill.value, 1.7, 69.15);
@@ -348,7 +366,7 @@ const initModels = () => {
           const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
           const mesh = new THREE.Mesh(geometry, material);
           addModelToScene(mesh);
-          console.log('stl: ', mesh.uuid);
+          // console.log('stl: ', mesh.uuid);
           models.push({ id: id++, uuid: mesh.uuid, parent_uuid: mesh.parent?.uuid });
 
           item.price = calculatePrintCost(mesh, inFill.value, 1.7, 69.15);

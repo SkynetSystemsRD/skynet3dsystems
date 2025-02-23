@@ -1,88 +1,87 @@
 <script setup lang="ts">
+import Footer from '@/views/main-pages/main-page-footer.vue'
+import Navbar from '@/views/main-pages/main-page-navbar.vue'
 import AddressContent from '@/views/wizard-examples/model-checkout/Address.vue'
 import CartContent from '@/views/wizard-examples/model-checkout/Cart.vue'
 import ConfirmationContent from '@/views/wizard-examples/model-checkout/Confirmation.vue'
 import PaymentContent from '@/views/wizard-examples/model-checkout/Payment.vue'
 import type { ModelCheckoutData } from '@/views/wizard-examples/model-checkout/types'
-import customAddress from '@images/svg/address.svg'
-import customCart from '@images/svg/cart.svg'
+import ViewerContent from '@/views/wizard-examples/model-checkout/Viewer.vue'
+import uploadModel from '@images/svg/3d-printer6.svg'
+import viewModel from '@images/svg/3d-printer9.svg'
 import customPayment from '@images/svg/payment.svg'
 import customTrending from '@images/svg/trending.svg'
 
+import { useConfigStore } from '@core/stores/config'
+
+definePage({
+  meta: {
+    layout: 'blank',
+    public: true,
+  },
+})
+
+const store = useConfigStore()
+
+store.skin = 'default'
+
+// from api data
 const modelCheckoutSteps = [
   {
-    title: 'Cart',
-    icon: customCart,
+    title: 'Sube tus Modelos 3D',
+    icon: uploadModel,
+    enabled: true
   },
   {
-    title: 'Address',
-    icon: customAddress,
+    title: 'Verifica tus Modelos 3D',
+    icon: viewModel,
+    enabled: false
   },
   {
-    title: 'Payment',
+    title: 'Formas de Pago',
     icon: customPayment,
+    enabled: false
   },
   {
-    title: 'Confirmation',
+    title: 'Confirmación',
     icon: customTrending,
+    enabled: false
   },
 ]
 
-
-// from api data
-const modelCheckoutData = ref<ModelCheckoutData>({
-  modelItems: [
-    // {
-    //   id: 1,
-    //   format: 'gltf',
-    //   filePath: '/xyzCalibration_cube.gltf',
-    //   fileName: 'xyzCalibration_cube.gltf',
-    //   size: 235654,
-    //   octetStreamContent: '',
-    //   uuid: '',
-    //   dimentions: {
-    //     x: 42,
-    //     y: 42,
-    //     z: 42
-    //   }, 
-    //   weight: 250
-    // },
-    // {
-    //   id: 1,
-    //   format: 'gltf',
-    //   filePath: '/xyzCalibration_cube.gltf',
-    //   fileName: 'xyzCalibration_cube.gltf',
-    //   size: 235654,
-    //   octetStreamContent: '',
-    //   uuid: '',
-    //   dimentions: {
-    //     x: 42,
-    //     y: 42,
-    //     z: 42
-    //   }, 
-    //   weight: 250
-    // },
-  ],
+let modelCheckoutData = ref<ModelCheckoutData>({
+  modelItems: [],
   promoCode: '',
-  orderAmount: 1198,
-  deliveryAddress: 'home',
+  orderAmount: 0,
+  deliveryAddress: 'casa',
   deliverySpeed: 'free',
   deliveryCharges: 0,
   addresses: [
-    {
-      title: 'John Doe (Default)',
-      desc: '4135 Parkway Street, Los Angeles, CA, 90017',
-      subtitle: '1234567890',
-      value: 'home',
-    },
-    {
-      title: 'ACME Inc.',
-      desc: '87 Hoffman Avenue, New York, NY, 10016',
-      subtitle: '1234567890',
-      value: 'office',
-    },
+    // {
+    //   title: 'Juan Perez (Predeterminado)',
+    //   desc: 'Avenida Winston Churchill, Santo Domingo, DN, República Dominicana',
+    //   subtitle: '1234567890',
+    //   value: 'Casa',
+    // },
+    // {
+    //   title: 'Skynet 3D Systems',
+    //   desc: 'Avenida 27 de Febrero, Santo Domingo, DN, República Dominicana',
+    //   subtitle: '1234567890',
+    //   value: 'Trabajo',
+    // },
   ],
 })
+
+// function updateModels(data: ModelCheckoutData, component: string){
+//   if (component === 'cart' && modelCheckoutData.value !== data) {
+//     modelCheckoutData.value = data;
+//   } else if (component === 'address') {
+//     modelCheckoutData.value.addresses = data.addresses;
+//     modelCheckoutData.value.deliveryAddress = data.deliveryAddress;
+//   }
+//   // Solo actualiza si hay cambios
+//   console.log(`MODELCHECKOUTDATA: ${component}: `, modelCheckoutData.value);
+// }
 
 const currentStep = ref(0)
 </script>
@@ -113,24 +112,44 @@ const currentStep = ref(0)
             >
               <VWindowItem>
                 <CartContent
-                  :current-step="currentStep"
-                  :model-checkout-data="modelCheckoutData"
+                  v-model:current-step="currentStep"
+                  v-model:model-checkout-data="modelCheckoutData"
+                  @update:checkout-data="(data) => { 
+                    modelCheckoutData = data 
+                    console.log('CART: ', modelCheckoutData);
+                  }"
                 />
               </VWindowItem>
               <VWindowItem>
                 <ViewerContent
-                  :current-step="currentStep"
-                  :model-checkout-data="modelCheckoutData"
+                  v-model:current-step="currentStep"
+                  v-model:model-checkout-data="modelCheckoutData"
+                  @update:checkout-data="(data) => { 
+                    if (modelCheckoutData !== data) { 
+                      modelCheckoutData = data; 
+                      console.log('VIEWER: ', modelCheckoutData)
+                    }
+                  }"
                 />
               </VWindowItem>
               <VWindowItem>
                 <PaymentContent
-                  :current-step="currentStep"
-                  :model-checkout-data="modelCheckoutData"
+                  v-model:current-step="currentStep"
+                  v-model:model-checkout-data="modelCheckoutData"
+                  @update:checkout-data="(data) => { 
+                    modelCheckoutData = data 
+                    console.log('PAYMENT: ', modelCheckoutData) 
+                  }"
                 />
                 <AddressContent
-                  :current-step="currentStep"
-                  :model-checkout-data="modelCheckoutData"
+                  v-model:current-step="currentStep"
+                  v-model:model-checkout-data="modelCheckoutData"s
+                  @update:checkout-data="(data) => { 
+                    modelCheckoutData.addresses = data.addresses; 
+                    modelCheckoutData.deliveryAddress = data.deliveryAddress; 
+                    modelCheckoutData.orderAmount = data.orderAmount; 
+                    console.log('ADDRESS: ', modelCheckoutData) 
+                  }"
                 />
               </VWindowItem>
               <VWindowItem>

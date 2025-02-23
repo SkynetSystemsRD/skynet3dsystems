@@ -31,11 +31,11 @@ const modelCheckoutCartDataLocal = ref({ ...props.modelCheckoutData });
 watch(() => props.modelCheckoutData, (newData) => {
   modelCheckoutCartDataLocal.value = { ...newData };
 
-  if (models_counts.value !== modelCheckoutCartDataLocal.value.modelItems.length){
-    console.log('modelos actuales: ', modelCheckoutCartDataLocal.value.modelItems.length)
-    console.log('modelo anteriores: ', models_counts.value)
-  }
-  else console.log('modelos actuales: ', models_counts.value)
+  // if (models_counts.value !== modelCheckoutCartDataLocal.value.modelItems.length){
+  //   console.log('modelos actuales: ', modelCheckoutCartDataLocal.value.modelItems.length)
+  //   console.log('modelo anteriores: ', models_counts.value)
+  // }
+  // else console.log('modelos actuales: ', models_counts.value)
 
   models_counts.value = modelCheckoutCartDataLocal.value.modelItems.length
 });
@@ -43,6 +43,7 @@ watch(() => props.modelCheckoutData, (newData) => {
 // remove item from cart
 const removeItem = (item: ModelItem) => {
   modelCheckoutCartDataLocal.value.modelItems = modelCheckoutCartDataLocal.value.modelItems.filter(i => i.id !== item.id);
+  // console.log('REMOVED ITEM: ', modelCheckoutCartDataLocal.value.modelItems)
   updateCartData(); // Emitir actualización después de eliminar un ítem
 };
 
@@ -69,7 +70,7 @@ const nextStep = () => {
 }
 
 function handleFileChange(files: File[]) {
-  console.log(files.target.files.length); // Log the file objects to inspect
+  // console.log(files.target.files.length); // Log the file objects to inspect
   let last_id = modelCheckoutCartDataLocal.value.modelItems.length + 1;
   const supportedFormats = ['stl', 'fbx', 'gltf', 'obj'];
 
@@ -138,7 +139,7 @@ function handleFileChange(files: File[]) {
               imageData = renderer.domElement.toDataURL("image/png");
         
               // Download or display the image
-              console.log('file format: gltf')
+              // console.log('file format: gltf')
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
@@ -163,7 +164,7 @@ function handleFileChange(files: File[]) {
               imageData = renderer.domElement.toDataURL("image/png");
         
               // Download or display the image
-              console.log('file format: obj')
+              // console.log('file format: obj')
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
@@ -188,7 +189,7 @@ function handleFileChange(files: File[]) {
               imageData = renderer.domElement.toDataURL("image/png");
         
               // Download or display the image
-              console.log('file format: fbx')
+              // console.log('file format: fbx')
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
@@ -214,7 +215,7 @@ function handleFileChange(files: File[]) {
               imageData = renderer.domElement.toDataURL("image/png");
         
               // Download or display the image
-              console.log('file format: stl')
+              // console.log('file format: stl')
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
