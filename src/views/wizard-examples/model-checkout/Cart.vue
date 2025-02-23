@@ -31,11 +31,11 @@ const modelCheckoutCartDataLocal = ref({ ...props.modelCheckoutData });
 watch(() => props.modelCheckoutData, (newData) => {
   modelCheckoutCartDataLocal.value = { ...newData };
 
-  // if (models_counts.value !== modelCheckoutCartDataLocal.value.modelItems.length){
-  //   console.log('modelos actuales: ', modelCheckoutCartDataLocal.value.modelItems.length)
-  //   console.log('modelo anteriores: ', models_counts.value)
-  // }
-  // else console.log('modelos actuales: ', models_counts.value)
+  if (models_counts.value !== modelCheckoutCartDataLocal.value.modelItems.length){
+    console.log('modelos actuales: ', modelCheckoutCartDataLocal.value.modelItems.length)
+    console.log('modelo anteriores: ', models_counts.value)
+  }
+  else console.log('modelos actuales: ', models_counts.value)
 
   models_counts.value = modelCheckoutCartDataLocal.value.modelItems.length
 });
