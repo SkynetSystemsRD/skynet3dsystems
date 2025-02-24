@@ -25,21 +25,23 @@ const resolveDeliveryMethod = computed(() => {
   else
     return { method: 'Standard Delivery', desc: 'Normally in 1 Week' }
 })
+// Thank You! 😇
+const messageInfo = ref('Ahora Confirma tu pedido 👍')
 </script>
 
 <template>
   <section class="text-base">
     <div class="text-center">
       <h4 class="text-h4 mb-4">
-        Thank You! 😇
+        {{ messageInfo }}
       </h4>
       <p>
-        Your order <span class="text-body-1 font-weight-medium text-high-emphasis">#1536548131</span> has been placed!
+        Tu numero de orden es <span class="text-body-1 font-weight-medium text-high-emphasis">#1536548131</span>, verificala tus modelos antes de confirmarla
       </p>
       <p class="mb-0">
-        We sent an email to <span class="text-body-1 font-weight-medium text-high-emphasis">john.doe@example.com</span> with your order confirmation and receipt.
+        Te enviaremos un correo a <span class="text-body-1 font-weight-medium text-high-emphasis">john.doe@example.com</span> con la confirmacion de la orden y la factura
       </p>
-      <p>If the email hasn't arrived within two minutes, please check your spam folder to see if the email was routed there.</p>
+      <p>Si el correo electrónico no ha llegado dentro de dos minutos, revise su carpeta de correo no deseado para ver si el correo electrónico fue enviado allí.</p>
       <div class="d-flex align-center gap-2 justify-center">
         <VIcon
           size="20"
@@ -214,30 +216,30 @@ const resolveDeliveryMethod = computed(() => {
         <div class="border rounded">
           <div class="border-b pa-6">
             <h6 class="text-base font-weight-medium mb-4">
-              Price Details
+              Detalles de Precio
             </h6>
 
             <div class="d-flex align-center justify-space-between text-base mb-4">
-              <span class="text-high-emphasis">Order Total</span>
+              <span class="text-high-emphasis">Total de la Orden</span>
               <span>${{ props.modelCheckoutData.orderAmount }}.00</span>
             </div>
 
             <div class="d-flex justify-space-between text-base">
               <div class="text-high-emphasis">
-                Charges
+                Cargos
               </div>
               <div
                 v-if="props.modelCheckoutData.deliverySpeed === 'free'"
                 class="d-flex align-center"
               >
                 <div class="text-decoration-line-through text-disabled me-2">
-                  $5.00
+                  $200.00
                 </div>
                 <VChip
                   size="small"
                   color="success"
                 >
-                  FREE
+                  Gratis
                 </VChip>
               </div>
               <div v-else>
@@ -250,6 +252,12 @@ const resolveDeliveryMethod = computed(() => {
             <span>${{ props.modelCheckoutData.orderAmount + props.modelCheckoutData.deliveryCharges }}.00</span>
           </div>
         </div>
+
+        <br>
+
+        <VBtn>
+          Confirmar Pedido
+        </VBtn>
       </VCol>
     </VRow>
   </section>

@@ -98,10 +98,11 @@ const nextStep = () => {
 }
 
 watch(
-  () => [prop.currentStep, prop.modelCheckoutData.deliveryAddress],
+  () => [prop.currentStep, prop.modelCheckoutData],
   ([newStep, newAddress]) => {
     // updateCartData();
-    modelCheckoutPaymentDataLocal.value.deliveryAddress = newAddress;
+    modelCheckoutPaymentDataLocal.value = newAddress;
+    console.log('pay: ', modelCheckoutPaymentDataLocal.value )
   }
 );
 
@@ -320,10 +321,10 @@ watch(
         <VDivider /> -->
 
         <VCardText>
-          <div class="d-flex justify-space-between text-base mb-2">
+          <!-- <div class="d-flex justify-space-between text-base mb-2">
             <span class="text-high-emphasis font-weight-medium">Total</span>
             <span class="font-weight-medium">RD${{ modelCheckoutPaymentDataLocal.orderAmount + modelCheckoutPaymentDataLocal.deliveryCharges }}.00</span>
-          </div>
+          </div> -->
 
           <div class="d-flex justify-space-between text-base mb-4">
             <span class="text-high-emphasis font-weight-medium">Enviar a:</span>
@@ -352,9 +353,9 @@ watch(
             </p>
           </template>
 
-          <h6 class="text-h6">
+          <!-- <h6 class="text-h6">
             <a href="#">Cambiar Direccion</a>
-          </h6>
+          </h6> -->
         </VCardText>
       </VCard>
     </VCol>

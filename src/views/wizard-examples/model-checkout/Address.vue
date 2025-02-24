@@ -42,13 +42,13 @@ const deliveryOptions = [
   {
     icon: { icono: 'tabler-user' },
     title: 'Estándar',
-    desc: 'Recibe tu producto en 1 días.',
+    desc: 'Recibe tu producto en 24h.',
     value: 'free',
   },
   {
     icon: { icono: 'tabler-star' },
     title: 'Expreso',
-    desc: 'Recibe tu producto en 24h.',
+    desc: 'Recibe tu producto en 48h.',
     value: 'express',
   },
   {
@@ -66,8 +66,8 @@ const resolveAddressBadgeColor: any = {
 
 const resolveDeliveryBadgeData: any = {
   free: { color: 'success', price: 0, text: 'Gratis' },
-  express: { color: 'secondary', price: 10, text: 'RD$10' },
-  overnight: { color: 'secondary', price: 15, text: 'RD$15' },
+  express: { color: 'secondary', price: 250, text: 'RD$200' },
+  overnight: { color: 'secondary', price: 350, text: 'RD$350' },
 }
 
 const totalPriceWithDeliveryCharges = computed(() => {
@@ -303,7 +303,7 @@ const buttonAddNewAddress = () => {
               </template>
 
               <div class="text-body-1">
-                {{ product.fileName }}
+                {{ product.fileName.split('.')[0] }}
               </div>
             </VListItem>
           </VList>
@@ -330,7 +330,7 @@ const buttonAddNewAddress = () => {
                 class="d-flex align-center"
               >
                 <div class="text-decoration-line-through text-disabled me-2">
-                  RD$5.00
+                  RD$200.00
                 </div>
                 <VChip
                   size="small"
@@ -339,7 +339,7 @@ const buttonAddNewAddress = () => {
                   Gratis
                 </VChip>
               </div>
-              <span v-else>RD${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed ].price }}.00</span>
+              <span v-else>RD${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed].price }}.00</span>
             </div>
           </div>
         </VCardText>
