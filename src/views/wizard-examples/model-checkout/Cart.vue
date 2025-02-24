@@ -22,9 +22,7 @@ const emit = defineEmits<Emit>()
 
 const models_counts = ref(0);
 
-const power = ref(0)
-
-const isAlreadyUploaded = ref(false)
+const loading = ref(false)
 
 const modelCheckoutCartDataLocal = ref({ ...props.modelCheckoutData });
 
@@ -70,13 +68,12 @@ const nextStep = () => {
 }
 
 function handleFileChange(files: File[]) {
+  loading.value = true
   // console.log(files.target.files.length); // Log the file objects to inspect
   let last_id = modelCheckoutCartDataLocal.value.modelItems.length + 1;
   const supportedFormats = ['stl', 'fbx', 'gltf', 'obj'];
 
   if (files.target.files.length > 0) {
-    isAlreadyUploaded.value = true;
-
     for (let count = 0; count < files.target.files.length; count++) {
       // Crear un FileReader para leer el archivo
       const reader = new FileReader();
@@ -236,14 +233,11 @@ function handleFileChange(files: File[]) {
         
         emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
       });
-
-      power.value = (count + 1) / files.target.files.length * 100;
     }
   }
-
-  setTimeout(function() {
-    isAlreadyUploaded.value = false;
-  }, 1000);  // 2000 milliseconds = 2 seconds
+  setTimeout(() => {
+    loading.value = false
+  }, 1000)
 }
 </script>
 
@@ -275,15 +269,6 @@ function handleFileChange(files: File[]) {
       <h5 class="text-h5 my-4">
         Mi Projecto tiene ({{ modelCheckoutCartDataLocal.modelItems.length }} Modelos 3D)
       </h5>
-
-      <VProgressLinear
-        v-show="isAlreadyUploaded"
-        v-model="power"
-        color="primary"
-        height="8"
-      />
-
-
 
       <!-- 👉 Cart items -->
       <div
@@ -386,6 +371,7 @@ function handleFileChange(files: File[]) {
 
       <!-- 👉 Add more from wishlist -->
       <VFileInput
+        :loading="loading"
         multiple
         prepend-icon="tabler-upload"
         label="Sube más modelos 3D 🚀"
