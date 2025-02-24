@@ -48,7 +48,7 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
           icon="tabler-clock"
           class="text-high-emphasis"
         />
-        <span>Fecha del Pedido 25/05/2020 13:35pm</span>
+        <span>Fecha del Pedido 25/05/2020 12:35pm</span>
       </div>
     </div>
 
@@ -174,7 +174,7 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
               >
                 <div>
                   <h6 class="text-h6 mb-2">
-                    {{ item.fileName }}
+                    {{ item.fileName.split('.')[0] }}
                   </h6>
                   <div class="text-body-1 mb-2">
                     Vendido por:
