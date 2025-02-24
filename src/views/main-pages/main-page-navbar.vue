@@ -7,6 +7,7 @@ import { useDisplay } from 'vuetify'
 
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+import { onMounted, ref } from 'vue'
 
 const props = defineProps({
   activeId: String,
@@ -98,6 +99,31 @@ const isCurrentRoute = (to: RouteLocationRaw) => {
 }
 
 const isPageActive = computed(() => menuItems.some(item => item.navItems.some(listItem => isCurrentRoute(listItem.to))))
+
+const rotatingClass = ref('rotating-logo');
+let rotationTimeout: ReturnType<typeof setTimeout>;
+
+onMounted(() => {
+  setRotationSequence();
+});
+
+const setRotationSequence = () => {
+  // Rota hacia adelante por 7 segundos
+  rotationTimeout = setTimeout(() => {
+    rotatingClass.value = 'rotating-logo reverse-rotation'; // Cambia a rotación inversa
+    console.log('rotating-logo reverse-rotation')
+    setReverseRotationSequence();
+  }, 10000);
+};
+
+const setReverseRotationSequence = () => {
+  // Rota hacia atrás por 2 segundos
+  setTimeout(() => {
+    rotatingClass.value = 'rotating-logo'; // Vuelve a la rotación original
+    console.log('rotating-logo')
+    setRotationSequence();
+  }, 10000);
+};
 </script>
 
 <template>
@@ -229,7 +255,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
               :class="$vuetify.display.mdAndUp ? 'd-none' : 'd-block'"
             >
               <div class="app-logo">
-                <VNodeRenderer :nodes="themeConfig.app.logo" />
+                <VNodeRenderer :nodes="themeConfig.app.logo" :class="rotatingClass" />
                 <h1 class="app-logo-title">
                   {{ themeConfig.app.title }}
                 </h1>
@@ -519,4 +545,37 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
   inset-block-start: 0.5rem;
   inset-inline-end: 1rem;
 }
+
+@keyframes rotateForward {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateBackward {
+  0% {
+    transform: rotate(360deg);
+  }
+
+  50% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.rotating-logo {
+  animation: rotateForward 7s ease-in-out infinite alternate;
+}
+
 </style>
