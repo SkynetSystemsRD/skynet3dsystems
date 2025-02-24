@@ -19,11 +19,11 @@ const selectedDeliveryAddress = computed(() => {
 
 const resolveDeliveryMethod = computed(() => {
   if (props.modelCheckoutData.deliverySpeed === 'overnight')
-    return { method: 'Overnight Delivery', desc: 'In 1 business day.' }
+    return { method: 'Envio Nocturno', desc: 'En 1h' }
   else if (props.modelCheckoutData.deliverySpeed === 'express')
-    return { method: 'Express Delivery', desc: 'Normally in 3-4 business days' }
+    return { method: 'Envio Expreso, desc: Normalmente en 12h' }
   else
-    return { method: 'Standard Delivery', desc: 'Normally in 1 Week' }
+    return { method: 'Envio Estándar', desc: 'Normalmente en 24h' }
 })
 // Thank You! 😇
 const messageInfo = ref('Ahora Confirma tu pedido 👍')
@@ -48,7 +48,7 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
           icon="tabler-clock"
           class="text-high-emphasis"
         />
-        <span>Time placed: 25/05/2020 13:35pm</span>
+        <span>Fecha del Pedido 25/05/2020 13:35pm</span>
       </div>
     </div>
 
@@ -65,7 +65,7 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
             size="20"
           />
           <span class="text-base font-weight-medium">
-            Shipping
+            Envio
           </span>
         </div>
 
@@ -98,7 +98,7 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
             size="20"
           />
           <span class="text-base font-weight-medium">
-            Billing Address
+            Dirección de Envio
           </span>
         </div>
 
@@ -130,12 +130,12 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
             size="20"
           />
           <span class="text-base font-weight-medium">
-            Shipping Method
+            Metodo de Envio
           </span>
         </div>
 
         <p class="font-weight-medium">
-          Preferred Method:
+          Metodo Preferido:
         </p>
         <p class="mb-0">
           {{ resolveDeliveryMethod.method }}
@@ -164,7 +164,7 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
               <div>
                 <VImg
                   width="80"
-                  :src="item.image"
+                  :src="item.imageContent"
                 />
               </div>
 
@@ -177,7 +177,7 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
                     {{ item.fileName }}
                   </h6>
                   <div class="text-body-1 mb-2">
-                    Sold by:
+                    Vendido por:
                     <span class="d-inline-block text-primary">  {{ item.format }}</span>
                   </div>
                   <VChip
@@ -199,8 +199,8 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
                     ${{ item.price }}
                   </div>
                   <div>/</div> -->
-                  <div class="text-decoration-line-through text-disabled">
-                    ${{ item.size }}
+                  <div>
+                    RD${{ item.price }}
                   </div>
                 </div>
               </div>

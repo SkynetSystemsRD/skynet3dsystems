@@ -54,8 +54,8 @@ const instructions = [
         },
         { 
           title: "Elimnar el Modelo", 
-          instruction1: "Seleccion con click izquierdo el modelo 3D que desea eliminar",
-          instruction2: "y presione el boton rojo con la X",
+          instruction1: "Vaya a la pestaña subir modelos 3D y elimine el modelo deseado",
+          // instruction2: "y presione el boton rojo con la X",
           icon: "tabler-x"
         }
       ]
@@ -686,7 +686,7 @@ onMounted(() => {
                     color="success"
                     :label="`${checkboxString.toString()}`"
                   />
-                  <VBtn
+                  <!-- <VBtn
                     rounded="pill"
                     id="removeButton"
                     color="error"
@@ -700,7 +700,7 @@ onMounted(() => {
                     </VTooltip>
                     <VIcon size="34" icon="tabler-x" />
                     Eliminar
-                  </VBtn>
+                  </VBtn> -->
                   <VBtn
                     rounded="pill"
                     id="resetButton"
@@ -717,23 +717,14 @@ onMounted(() => {
                     Reposicionar
                   </VBtn>
                   
-                  <AppTextField
-                    v-model="inFill"
-                    label="Relleno"
-                    placeholder="50"
-                    type="number"
-                  >
+                  <AppTextField v-model="inFill" label="Relleno" placeholder="50" type="number">
                     <template #append-inner>
-                      <VTooltip
-                        text="El rellenado en impresión 3D es el soporte interno del objeto para dar estabilidad y reducir material. Sera aplicado a todos estos modelos"
+                      <VTooltip 
+                        text="El rellenado en impresión 3D es el soporte interno del objeto para dar estabilidad y reducir material. Se aplicará a todos estos modelos" 
                         location="bottom"
                       >
-                        <template #activator="{ props: tooltipProps }">
-                          <VIcon
-                            v-bind="tooltipProps"
-                            size="20"
-                            icon="tabler-help"
-                          />
+                        <template #activator="{ props }">
+                          <VIcon v-bind="props" size="20" icon="tabler-help" />
                         </template>
                       </VTooltip>
                     </template>

@@ -48,7 +48,7 @@ const deliveryOptions = [
   {
     icon: { icono: 'tabler-star' },
     title: 'Expreso',
-    desc: 'Recibe tu producto en 48h.',
+    desc: 'Recibe tu producto en 12h.',
     value: 'express',
   },
   {
