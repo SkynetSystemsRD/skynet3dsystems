@@ -89,37 +89,17 @@ let id = 0
 const modelCheckoutAddressDataLocal = ref<ModelCheckoutData>(props.modelCheckoutData)
 
 watch(() => props.modelCheckoutData, (value) => {
-  // modelCheckoutAddressDataLocal.value = { ...value }
+  modelCheckoutAddressDataLocal.value = { ...value };
 
-  console.log('Son el mismo objeto?', value.modelItems === modelCheckoutAddressDataLocal.value.modelItems);
-
-
-  // console.log('value: ', value)
-  // console.log('value: ', value.modelItems.length)
-  // console.log('modelCheckoutAddressDataLocal: ', modelCheckoutAddressDataLocal.value.modelItems.length)
-  // console.log('models_counts: ', models_counts.value)
-
-  if (value.modelItems.length !== modelCheckoutAddressDataLocal.value.modelItems.length){
-    console.log('diferente!')
-  }
-
-  // console.log('value: ', value.modelItems)
-  // console.log('A: ', modelCheckoutAddressDataLocal.value.modelItems.length)
-  // console.log('B: ', models_counts.value)
-  // console.log('C: ', modelCheckoutAddressDataLocal.value)
-
-  if (modelCheckoutAddressDataLocal.value.modelItems.length !== models_counts.value) {
+  if (models_counts.value !== modelCheckoutAddressDataLocal.value.modelItems.length){
+    console.log('modelos actuales: ', modelCheckoutAddressDataLocal.value.modelItems.length) 
+    console.log('modelo anteriores: ', models_counts.value)
     reload();
     initModels();
-    emit("update:checkout-data", { ...modelCheckoutAddressDataLocal.value });
   }
+  else console.log('modelos actuales: ', models_counts.value)
 
-  // if (modelCheckoutAddressDataLocal.value !== value) {
-  //   console.log('ha cambiado : ', modelCheckoutAddressDataLocal.value)
-  //   emit("update:checkout-data", { ...modelCheckoutAddressDataLocal.value });
-  // }
-
-  models_counts.value = modelCheckoutAddressDataLocal.value.modelItems.length;
+  models_counts.value = modelCheckoutAddressDataLocal.value.modelItems.length
 });
 
 
@@ -182,7 +162,7 @@ const nextStep = () => {
   emit('update:currentStep', props.currentStep ? props.currentStep + 1 : 1)
 }
 
-// watch(() => props.currentStep, updateAddressData)
+watch(() => props.currentStep, updateAddressData)
 
 const reload = () => {
   var container = document.getElementById("model-viewer");
