@@ -86,8 +86,7 @@ const generateCardToken = (cardFormData) => {
 const validateForm = async () => {
   const { valid } = await paymentForm.value.validate();
   if (valid) {
-    modelCheckoutPaymentDataLocal.value.paymentMethod.card = generateCardToken(cardFormData)
-    console.log('Formulario válido', modelCheckoutPaymentDataLocal.value.paymentMethod.card);
+    console.log('Formulario válido', cardFormData.value);
   } else {
     console.log('Errores en el formulario');
   }
@@ -113,60 +112,12 @@ const nextStep = () => {
   emit('update:currentStep', prop.currentStep ? prop.currentStep + 1 : 1)
 }
 
-const paymentMethod = (method: string) => {
-  switch (method){
-    case 'cash':
-      modelCheckoutPaymentDataLocal.value.paymentMethod.cash = true
-      modelCheckoutPaymentDataLocal.value.paymentMethod.card = ''
-      modelCheckoutPaymentDataLocal.value.paymentMethod.transfer = { 
-        name: '',
-        owner: '',
-        accountNumber: 0,
-        accountType: ''
-      }
-    break;
-    case 'transfer': 
-      modelCheckoutPaymentDataLocal.value.paymentMethod.cash = false
-      modelCheckoutPaymentDataLocal.value.paymentMethod.card = ''
-  }
-}
-
-const selectedBankAccount = (data: string) => {
-  switch (data){
-    case 'banreservas':
-      modelCheckoutPaymentDataLocal.value.paymentMethod.transfer = { 
-        name: accounts.banreservas.bank,
-        owner: accounts.banreservas.holder,
-        accountNumber: parseInt(accounts.banreservas.accountNumber),
-        accountType: accounts.banreservas.accountType
-      }
-    break;
-    case 'popular': 
-      modelCheckoutPaymentDataLocal.value.paymentMethod.transfer = { 
-        name: accounts.popular.bank,
-        owner: accounts.popular.holder,
-        accountNumber: parseInt(accounts.popular.accountNumber),
-        accountType: accounts.popular.accountType
-      }
-    break;
-    case 'bhd': 
-      modelCheckoutPaymentDataLocal.value.paymentMethod.transfer = { 
-        name: accounts.bhd.bank,
-        owner: accounts.bhd.holder,
-        accountNumber: parseInt(accounts.bhd.accountNumber),
-        accountType: accounts.bhd.accountType
-      }
-    break;
-  }
-
-  console.log('transfer info: ', modelCheckoutPaymentDataLocal.value.paymentMethod.transfer)
-}
-
 watch(
   () => [prop.currentStep, prop.modelCheckoutData],
   ([newStep, newAddress]) => {
     // updateCartData();
     modelCheckoutPaymentDataLocal.value = newAddress;
+    console.log('pay: ', modelCheckoutPaymentDataLocal.value )
   }
 );
 
@@ -204,10 +155,10 @@ watch(
         class="v-tabs-pill"
         density="comfortable"
       >
-        <VTab value="cash-on-delivery" @click="paymentMethod('cash')">
+        <VTab value="cash-on-delivery">
           En Efectivo
         </VTab>
-        <VTab value="transfer" @click="paymentMethod('transfer')">
+        <VTab value="gift-card">
           Transferencia Bancaria
         </VTab>
         <VTab value="card">
@@ -297,7 +248,7 @@ watch(
           </VBtn>
         </VWindowItem>
 
-        <VWindowItem value="transfer">
+        <VWindowItem value="gift-card">
           <h6 class="text-base font-weight-medium mt-6">
             Detalles de Numero de Cuenta
           </h6>
@@ -314,7 +265,7 @@ watch(
                 </VTabs>
 
                 <VCardText>
-                  <VWindow v-model="currentTab" :click="selectedBankAccount(currentTab)">
+                  <VWindow v-model="currentTab">
                     <VWindowItem
                     v-for="(data, key) in accounts"
                     :key="key"
