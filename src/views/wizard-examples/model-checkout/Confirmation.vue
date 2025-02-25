@@ -26,7 +26,12 @@ const resolveDeliveryMethod = computed(() => {
     return { method: 'Envio Estándar', desc: 'Normalmente en 24h' }
 })
 // Thank You! 😇
-const messageInfo = ref('Ahora Confirma tu pedido 👍')
+const messageInfo = ref('Ahora Verifica tu Pedido 👍')
+
+watch(() => props.modelCheckoutData, (value) => {
+  
+  console.log('en confir: ', value)
+})
 </script>
 
 <template>
@@ -38,7 +43,7 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
       <p>
         Tu numero de orden es <span class="text-body-1 font-weight-medium text-high-emphasis">#1536548131</span>, verificala tus modelos antes de confirmarla
       </p>
-      <p class="mb-0">
+      <p class="mb-0"> 
         Te enviaremos un correo a <span class="text-body-1 font-weight-medium text-high-emphasis">john.doe@example.com</span> con la confirmacion de la orden y la factura
       </p>
       <p>Si el correo electrónico no ha llegado dentro de dos minutos, revise su carpeta de correo no deseado para ver si el correo electrónico fue enviado allí.</p>
@@ -103,7 +108,7 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
         </div>
 
         <template
-          v-for="item in selectedDeliveryAddress"
+          v-for="(item, index) in props.modelCheckoutData.addresses"
           :key="item.value"
         >
           <p class="mb-0">
@@ -177,7 +182,7 @@ const messageInfo = ref('Ahora Confirma tu pedido 👍')
                     {{ item.fileName.split('.')[0] }}
                   </h6>
                   <div class="text-body-1 mb-2">
-                    Vendido por:
+                    Formato:
                     <span class="d-inline-block text-primary">  {{ item.format }}</span>
                   </div>
                   <VChip

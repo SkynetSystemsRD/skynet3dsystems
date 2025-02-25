@@ -139,8 +139,8 @@ const resolveAddressBadgeColor: any = {
 
 const resolveDeliveryBadgeData: any = {
   free: { color: 'success', price: 0, text: 'Free' },
-  express: { color: 'secondary', price: 10, text: '$200' },
-  overnight: { color: 'secondary', price: 15, text: '$350' },
+  express: { color: 'secondary', price:2000, text: '$200' },
+  overnight: { color: 'secondary', price: 350, text: '$350' },
 }
 
 const totalPriceWithDeliveryCharges = computed(() => {

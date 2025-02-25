@@ -143,7 +143,7 @@ const currentStep = ref(0)
                 />
                 <AddressContent
                   v-model:current-step="currentStep"
-                  v-model:model-checkout-data="modelCheckoutData"s
+                  v-model:model-checkout-data="modelCheckoutData"
                   @update:checkout-data="(data) => { 
                     modelCheckoutData.addresses = data.addresses; 
                     modelCheckoutData.deliveryAddress = data.deliveryAddress; 
