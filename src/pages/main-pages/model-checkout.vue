@@ -145,9 +145,7 @@ const currentStep = ref(0)
                   v-model:current-step="currentStep"
                   v-model:model-checkout-data="modelCheckoutData"
                   @update:checkout-data="(data) => { 
-                    modelCheckoutData.addresses = data.addresses; 
-                    modelCheckoutData.deliveryAddress = data.deliveryAddress; 
-                    modelCheckoutData.orderAmount = data.orderAmount; 
+                    modelCheckoutData = data 
                     console.log('ADDRESS: ', modelCheckoutData) 
                   }"
                 />
