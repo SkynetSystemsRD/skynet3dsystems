@@ -24,6 +24,19 @@ export interface Addresses {
   value: string
 }
 
+interface bankInfo {
+  name: string
+  owner: string
+  accountNumber: number
+  accountType: string
+}
+
+interface paymentMethod {
+  cash: boolean
+  transfer: bankInfo
+  card: string // as a token
+}
+
 export interface ModelCheckoutData {
   modelItems: ModelItem[]
   promoCode: string
@@ -32,4 +45,5 @@ export interface ModelCheckoutData {
   deliverySpeed: string
   deliveryCharges: number
   addresses: Addresses[]
+  paymentMethod: paymentMethod
 }
