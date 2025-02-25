@@ -89,7 +89,7 @@ const nextStep = () => {
 }
 
 const changeAddress = (item: CustomInputContent) => {
-  modelCheckoutAddressDataLocal.value.deliveryAddress = item.value.toLowerCase()
+  modelCheckoutAddressDataLocal.value.deliveryAddress
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
 }
 
@@ -125,8 +125,7 @@ const deleteAddress = (item: CustomInputContent) => {
 
 const addNewAddress = (data: ModelCheckoutData) => {
   const newAddress = data.addresses[0];
-
-  // Busca la dirección existente
+  
   const existingAddressIndex = modelCheckoutAddressDataLocal.value.addresses.findIndex(
     (addr) => addr.value === newAddress.value
   );
@@ -146,7 +145,7 @@ const addNewAddress = (data: ModelCheckoutData) => {
       return;
     }
   }
-
+  console.log('newAddress:  ', modelCheckoutAddressDataLocal.value)  // Busca la dirección existente
   // Emitir evento de actualización
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
 };

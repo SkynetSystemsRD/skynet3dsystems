@@ -70,6 +70,16 @@ let modelCheckoutData = ref<ModelCheckoutData>({
     //   value: 'Trabajo',
     // },
   ],
+  paymentMethod: {
+    cash: false,
+    transfer: {
+      name: '',
+      owner: '',
+      accountNumber: 0,
+      accountType: ''
+    },
+    card: ''
+  }
 })
 
 // function updateModels(data: ModelCheckoutData, component: string){
