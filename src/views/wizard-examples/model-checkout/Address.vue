@@ -258,7 +258,7 @@ const buttonAddNewAddress = () => {
             </div>
 
             <VIcon
-              
+              :icon="item.icon.icono"
               size="28"
             />
 
