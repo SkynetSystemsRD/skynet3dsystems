@@ -551,7 +551,10 @@ const initModels = () => {
     const weightGrams = effectiveVolume * density;
 
     // Precio total con 2 decimales
-    return Math.round(weightGrams * costPerGram);
+    let cost = 0
+    Math.round(weightGrams * costPerGram) < 500 ? cost = 500 : cost = Math.round(weightGrams * costPerGram);
+
+    return cost
   }
 
   renderer.domElement.addEventListener('mousedown', selectAndDragModel);
