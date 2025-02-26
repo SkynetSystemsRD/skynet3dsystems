@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { themeConfig } from '@themeConfig';
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -16,6 +17,10 @@ interface Emit {
   (e: 'update:currentStep', value: number): void
   (e: 'update:checkout-data', value: ModelCheckoutData): void
 }
+
+const message = ref('')
+
+const loadingCodePromo = ref(false)
 
 const props = defineProps<Props>()
 
@@ -59,6 +64,16 @@ const totalCost = computed(() => {
 })
 
 const updateCartData = () => {
+  modelCheckoutCartDataLocal.value.promoCode = message.value
+
+  loadingCodePromo.value = true
+  message.value = 'Porfavor espere!'
+
+  setTimeout(() => {
+    loadingCodePromo.value = false
+    message.value = 'Codigo aplicado!'
+  }, 2000)
+
   modelCheckoutCartDataLocal.value.orderAmount = totalCost.value;
   emit("update:checkout-data", { ...modelCheckoutCartDataLocal.value });
 
@@ -426,14 +441,57 @@ onBeforeUnmount(() => {
         <!-- 👉 payment offer -->
         <VCardText>
           <h6 class="text-h6 mb-4">
-            Oferta
+            Oferta Codigo de Promo
           </h6>
 
           <div class="d-flex align-center gap-4 flex-wrap">
             <AppTextField
+              v-model="message"
+              clearable
+              placeholder="Hey!"
+              type="text"
+              class="textfield-demo-icon-slot"
+            >
+              <!-- AppendInner -->
+              <template #append-inner>
+                <VFadeTransition leave-absolute>
+                  <VProgressCircular
+                    v-if="loadingCodePromo"
+                    color="primary"
+                    width="3"
+                    size="24"
+                    indeterminate
+                  />
+
+                  <VNodeRenderer
+                    v-else
+                    class="text-2xl"
+                    :nodes="themeConfig.app.logo"
+                  />
+                </VFadeTransition>
+              </template>
+
+              <!-- Append -->
+              <template #append>
+                <VBtn
+                  :icon="$vuetify.display.smAndDown"
+                  @click="updateCartData"
+                >
+                  <span
+                    v-if="$vuetify.display.mdAndUp"
+                    class="ms-3"
+                  >Aplicar</span>
+                </VBtn>
+              </template>
+            </AppTextField>
+<!-- 
+
+            <AppTextField
               v-model="modelCheckoutCartDataLocal.promoCode"
               placeholder="Codigo Promo"
+              crearable
               style="min-inline-size: 200px;"
+              
             />
 
             <VBtn
@@ -441,7 +499,7 @@ onBeforeUnmount(() => {
               @click="updateCartData"
             >
               Aplicar
-            </VBtn>
+            </VBtn> -->
           </div>
 
           <!-- 👉 Gift wrap banner -->
