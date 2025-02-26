@@ -32,6 +32,18 @@ const router = useRouter()
 
 const sidebar = ref(false)
 
+const colors = ref({ color1: '26B99A', color2: '556080', color3: '434C6D' })
+
+const logo = `
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40.13176" height="27.51903"
+  version="1.1" id="Capa_1" viewBox="0 0 58 58" xml:space="preserve">
+  <g>
+    <polygon style="fill:#${colors.value.color1};" points="29,58 3,45 3,13 29,26  " />
+    <polygon style="fill:#${colors.value.color2};" points="29,58 55,45 55,13 29,26  " />
+    <polygon style="fill:#${colors.value.color3};" points="3,13 28,0 55,13 29,26  " />
+  </g>
+</svg>`
+
 watch(() => display, () => {
   return display.mdAndUp ? sidebar.value = false : sidebar.value
 }, { deep: true })
@@ -255,7 +267,7 @@ const setReverseRotationSequence = () => {
               :class="$vuetify.display.mdAndUp ? 'd-none' : 'd-block'"
             >
               <div class="app-logo">
-                <VNodeRenderer :nodes="themeConfig.app.logo" :class="rotatingClass" />
+                <VNodeRenderer :nodes="h('div', { innerHTML: logo, style: 'line-height:0; color: rgb(var(--v-global-theme-primary))' })" :class="rotatingClass" />
                 <h1 class="app-logo-title">
                   {{ themeConfig.app.title }}
                 </h1>
