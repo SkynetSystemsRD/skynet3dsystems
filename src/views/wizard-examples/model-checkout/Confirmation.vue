@@ -56,7 +56,7 @@ const resolveDeliveryMethod = computed(() => {
   if (props.modelCheckoutData.deliverySpeed === 'overnight')
     return { method: 'Envio Nocturno', desc: 'En 1h' }
   else if (props.modelCheckoutData.deliverySpeed === 'express')
-    return { method: 'Envio Expreso, desc: Normalmente en 12h' }
+    return { method: 'Envio Expreso', desc: 'Normalmente en 12h' }
   else
     return { method: 'Envio Estándar', desc: 'Normalmente en 24h' }
 })
@@ -142,7 +142,7 @@ watch(() => props.modelCheckoutData, (value) => {
         </div>
 
         <template
-          v-for="(item, index) in props.modelCheckoutData.addresses"
+          v-for="(item, index) in props.modelCheckoutData.addresses.filter(address => address.value === modelCheckoutData.deliveryAddress)"
           :key="item.value"
         >
           <p class="mb-0">
