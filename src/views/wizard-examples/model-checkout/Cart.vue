@@ -4,6 +4,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+import { onBeforeUnmount, onMounted } from 'vue';
 import type { ModelCheckoutData, ModelItem } from './types';
 
 interface Props {
@@ -25,6 +26,8 @@ const models_counts = ref(0);
 const loading = ref(false)
 
 const showNote = ref(false)
+
+const noteMessage = ref('Añadir una nota')
 
 const modelCheckoutCartDataLocal = ref({ ...props.modelCheckoutData });
 
@@ -241,6 +244,31 @@ function handleFileChange(files: File[]) {
     loading.value = false
   }, 1000)
 }
+
+const shouldWarnBeforeUnload = computed(() => 
+  modelCheckoutCartDataLocal.value.modelItems.length > 0
+);
+
+const handleBeforeUnload = (event) => {
+  if (shouldWarnBeforeUnload.value) {
+    event.preventDefault();
+    event.returnValue = '¿Está seguro de que desea salir? Es posible que sus cambios no se guarden?';
+  }
+};
+
+// Handle the update event
+const handleNoteUpdate = (newValue) => {
+  modelCheckoutCartDataLocal.value.note = newValue
+  emit("update:checkout-data", { ...modelCheckoutCartDataLocal.value });
+};
+
+onMounted(() => {
+  window.addEventListener('beforeunload', handleBeforeUnload);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload);
+});
 </script>
 
 <template>
@@ -427,7 +455,7 @@ function handleFileChange(files: File[]) {
             <AppTextarea
               v-if="showNote"
               v-model="modelCheckoutCartDataLocal.note"
-              @update:modelValue="modelCheckoutCartDataLocal.note = $event"
+              @input="handleNoteUpdate($event.target.value)"
               rows="2"
               label="NOTA"
               placeholder="Dinos lo que piensas"
@@ -437,7 +465,7 @@ function handleFileChange(files: File[]) {
             <br>
 
             <h6 class="text-h6">
-              <a href= "#" @click="showNote = !showNote">Añadir una nota</a>
+              <a href= "#" @click="showNote = !showNote; if (showNote) noteMessage = 'Eliminar esta nota'; else { noteMessage = 'Añadir una nota'; modelCheckoutCartDataLocal.note = '' }">{{ noteMessage }}</a>
             </h6>
           </div>
         </VCardText>
