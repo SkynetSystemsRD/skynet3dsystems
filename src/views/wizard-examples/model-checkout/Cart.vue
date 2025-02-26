@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { themeConfig } from '@themeConfig';
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -17,7 +16,6 @@ interface Emit {
   (e: 'update:currentStep', value: number): void
   (e: 'update:checkout-data', value: ModelCheckoutData): void
 }
-
 const message = ref('')
 
 const loadingCodePromo = ref(false)
@@ -461,12 +459,6 @@ onBeforeUnmount(() => {
                     width="3"
                     size="24"
                     indeterminate
-                  />
-
-                  <VNodeRenderer
-                    v-else
-                    class="text-2xl"
-                    :nodes="themeConfig.app.logo"
                   />
                 </VFadeTransition>
               </template>
