@@ -128,10 +128,23 @@ const paymentMethod = (method: string) => {
     case 'transfer': 
       modelCheckoutPaymentDataLocal.value.paymentMethod.cash = false
       modelCheckoutPaymentDataLocal.value.paymentMethod.card = ''
+    break;
+    case 'card':
+    modelCheckoutPaymentDataLocal.value.paymentMethod.cash = false
+    modelCheckoutPaymentDataLocal.value.paymentMethod.transfer = { 
+      name: '',
+      owner: '',
+      accountNumber: 0,
+      accountType: ''
+    }
+    break;
   }
 }
 
 const selectedBankAccount = (data: string) => {
+  if (selectedPaymentMethod.value !== 'tranfer')
+  return;
+
   switch (data){
     case 'banreservas':
       modelCheckoutPaymentDataLocal.value.paymentMethod.transfer = { 
@@ -210,7 +223,7 @@ watch(
         <VTab value="transfer" @click="paymentMethod('transfer')">
           Transferencia Bancaria
         </VTab>
-        <VTab value="card">
+        <VTab value="card" @click="paymentMethod('card')">
           Tarjeta de Debido/Credito
         </VTab>
       </VTabs>

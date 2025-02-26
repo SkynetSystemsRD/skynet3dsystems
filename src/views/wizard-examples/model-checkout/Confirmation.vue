@@ -12,10 +12,18 @@ defineEmits<{
 }>()
 
 const selectedDeliveryAddress = computed(() => {
-  return props.modelCheckoutData.addresses.filter(address => {
-    console.log('selectedDeliveryAddress: ', address.value)
-    return address.value.toLowerCase() === props.modelCheckoutData.deliveryAddress
-  })
+  if (props.modelCheckoutData.paymentMethod.cash){
+    // with cash
+    console.log('cash')
+  }
+  else if (props.modelCheckoutData.paymentMethod.card !== ''){
+    // with card
+    console.log('card')
+  }
+  else if (props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0){
+    // with transfer
+    console.log('transfer')
+  }
 })
 
 const resolveDeliveryMethod = computed(() => {
@@ -71,7 +79,7 @@ watch(() => props.modelCheckoutData, (value) => {
             size="20"
           />
           <span class="text-base font-weight-medium">
-            Envio
+            Metodo de Pago
           </span>
         </div>
 
