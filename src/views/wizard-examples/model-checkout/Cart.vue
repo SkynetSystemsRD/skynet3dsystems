@@ -24,6 +24,8 @@ const models_counts = ref(0);
 
 const loading = ref(false)
 
+const showNote = ref(false)
+
 const modelCheckoutCartDataLocal = ref({ ...props.modelCheckoutData });
 
 watch(() => props.modelCheckoutData, (newData) => {
@@ -419,11 +421,20 @@ function handleFileChange(files: File[]) {
               ¿Personaliza tu pedido?
             </h6>
             <p class="mb-2">
-              Agrega un acabado especial o una nota personalizada por solo $2.
+              Agrega una nota indicando lo que deseas en especifico, NOTA: alguna modificacion de los modelos pueden alterar el precio, tiempo de impresion y costos.
             </p>
+            <AppTextarea
+              v-if="showNote"
+              rows="2"
+              label="NOTA"
+              placeholder="Dinos lo que piensas"
+              hint="Comparte tus ideas o sugerencias sobre el diseño o la calidad de la impresión."
+            />
+
+            <br>
 
             <h6 class="text-h6">
-              <a href="#">Añadir personalización</a>
+              <a href= "#" @click="showNote = !showNote">Añadir una nota</a>
             </h6>
           </div>
         </VCardText>
