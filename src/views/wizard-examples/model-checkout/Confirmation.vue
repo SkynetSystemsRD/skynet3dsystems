@@ -15,14 +15,40 @@ const selectedDeliveryAddress = computed(() => {
   if (props.modelCheckoutData.paymentMethod.cash){
     // with cash
     console.log('cash')
+    return [{ 
+      value: 1,  
+      title: 'En efectivo', 
+      desc: 'El 50% restante del total se realiza en la entrega',
+      subtitle: ''
+    }]
   }
   else if (props.modelCheckoutData.paymentMethod.card !== ''){
     // with card
     console.log('card')
+    return [{ 
+      value: 1,  
+      title: 'Tarjeta Credito/Debido',
+      desc: 'El pago se realizara por tarjeta de credito o debido',
+      subtitle: 'MasterCard debito termina en ** 8546'
+    }]
   }
   else if (props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0){
     // with transfer
     console.log('transfer')
+    return [{ 
+      value: 1,  
+      title: 'Transferencia Bancaria',
+      desc: 'El pago se realizara mediante transaccion bancaria del banco',
+      subtitle: props.modelCheckoutData.paymentMethod.transfer.name
+    }]
+  }
+  else {
+    return [{ 
+      value: null,  
+      title: null,
+      desc: null,
+      subtitle: null
+    }]
   }
 })
 
@@ -93,9 +119,8 @@ watch(() => props.modelCheckoutData, (value) => {
           <p class="mb-4">
             {{ item.desc }}
           </p>
-
           <div class="text-base">
-            +{{ item.subtitle }}
+            {{ item.subtitle }}
           </div>
         </template>
       </VCol>

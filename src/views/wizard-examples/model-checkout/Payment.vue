@@ -17,8 +17,9 @@ const emit = defineEmits<{
 const modelCheckoutPaymentDataLocal = ref(prop.modelCheckoutData)
 const paymentForm = ref(null);
 
+
 const required = v => !!v || 'Campo requerido';
-const cardNumberRule = v => /^\d{16}$/.test(v) || 'Debe tener 16 dígitos';
+const cardNumberRule = v => (v.length === 16) || (v.length === 19) || "Debe tener 16 dígitos";
 const expiryRule = v => /^(0[1-9]|1[0-2])\/\d{2}$/.test(v) || 'Formato MM/YY';
 const cvvRule = v => /^\d{3,4}$/.test(v) || 'Debe tener 3 o 4 dígitos';
 
@@ -83,10 +84,17 @@ const generateCardToken = (cardFormData) => {
   return token;
 }
 
+const maskCardNumber = (cardNumber) => {
+    if (!cardNumber) return "";
+    const last4 = cardNumber.slice(-4); // Obtiene los últimos 4 dígitos
+    return "**** **** **** " + last4; // Reemplaza los anteriores con *
+}
+
 const validateForm = async () => {
   const { valid } = await paymentForm.value.validate();
   if (valid) {
     modelCheckoutPaymentDataLocal.value.paymentMethod.card = generateCardToken(cardFormData)
+    cardFormData.value.cardNumber = maskCardNumber(cardFormData.value.cardNumber)
     console.log('Formulario válido', modelCheckoutPaymentDataLocal.value.paymentMethod.card);
   } else {
     console.log('Errores en el formulario');
@@ -101,6 +109,7 @@ const resetForm = () => {
     cardCvv: '', 
     isCardSave: false,
   };
+  modelCheckoutPaymentDataLocal.value.paymentMethod.card = ''
   paymentForm.value.resetValidation();
 };
 
@@ -130,20 +139,21 @@ const paymentMethod = (method: string) => {
       modelCheckoutPaymentDataLocal.value.paymentMethod.card = ''
     break;
     case 'card':
-    modelCheckoutPaymentDataLocal.value.paymentMethod.cash = false
-    modelCheckoutPaymentDataLocal.value.paymentMethod.transfer = { 
-      name: '',
-      owner: '',
-      accountNumber: 0,
-      accountType: ''
-    }
+      modelCheckoutPaymentDataLocal.value.paymentMethod.cash = false
+      modelCheckoutPaymentDataLocal.value.paymentMethod.transfer = { 
+        name: '',
+        owner: '',
+        accountNumber: 0,
+        accountType: ''
+      }
+      validateForm()
     break;
   }
 }
 
 const selectedBankAccount = (data: string) => {
-  if (selectedPaymentMethod.value !== 'tranfer')
-  return;
+  if (selectedPaymentMethod.value !== 'transfer')
+    return;
 
   switch (data){
     case 'banreservas':
@@ -242,9 +252,9 @@ watch(
             <VCol cols="12">
               <AppTextField
                 v-model="cardFormData.cardNumber"
-                type="number"
+                type="text"
                 label="Número de Tarjeta"
-                placeholder="1356 3215 6548 7898"
+                placeholder="**** **** **** 7898"
                 :rules="[required, cardNumberRule]"
               />
             </VCol>
@@ -271,8 +281,8 @@ watch(
               <AppTextField
                 v-model="cardFormData.cardCvv"
                 label="CVV"
-                placeholder="123"
-                type="number"
+                placeholder="•••"
+                type="password" 
                 :rules="[required, cvvRule]"
               >
                 <template #append-inner>
