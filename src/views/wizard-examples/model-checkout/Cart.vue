@@ -269,7 +269,8 @@ function handleFileChange(files: File[]) {
       </VAlert>
 
       <h5 class="text-h5 my-4">
-        Mi Projecto tiene ({{ modelCheckoutCartDataLocal.modelItems.length }} Modelos 3D)
+        Mi Proyecto tiene ({{ modelCheckoutCartDataLocal.modelItems.length }} 
+        {{ modelCheckoutCartDataLocal.modelItems.length === 1 ? 'Modelo 3D' : 'Modelos 3D' }})
       </h5>
 
       <!-- 👉 Cart items -->
@@ -425,6 +426,8 @@ function handleFileChange(files: File[]) {
             </p>
             <AppTextarea
               v-if="showNote"
+              v-model="modelCheckoutCartDataLocal.note"
+              @update:modelValue="modelCheckoutCartDataLocal.note = $event"
               rows="2"
               label="NOTA"
               placeholder="Dinos lo que piensas"

@@ -52,6 +52,7 @@ const modelCheckoutSteps = [
 let modelCheckoutData = ref<ModelCheckoutData>({
   modelItems: [],
   promoCode: '',
+  note: '',
   orderAmount: 0,
   deliveryAddress: 'casa',
   deliverySpeed: 'free',

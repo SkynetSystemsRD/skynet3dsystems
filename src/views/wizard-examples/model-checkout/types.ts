@@ -40,6 +40,7 @@ interface paymentMethod {
 export interface ModelCheckoutData {
   modelItems: ModelItem[]
   promoCode: string
+  note: string
   orderAmount: number
   deliveryAddress: string
   deliverySpeed: string
