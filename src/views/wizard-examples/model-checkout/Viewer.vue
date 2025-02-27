@@ -634,7 +634,7 @@ onMounted(() => {
                         />
                       </template> -->
                       <VListItemTitle class="text-high-emphasis font-weight-medium">
-                        {{ id + 1 }} . {{ topic.title }} 
+                        {{ topic.title }} 
                         <VIcon
                           size="24"
                           :icon="topic.icon"
