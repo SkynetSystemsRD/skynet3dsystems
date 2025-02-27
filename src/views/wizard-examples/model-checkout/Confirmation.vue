@@ -79,7 +79,7 @@ watch(() => props.modelCheckoutData, (value) => {
         Tu numero de orden es <span class="text-body-1 font-weight-medium text-high-emphasis">#1536548131</span>, verificala tus modelos antes de confirmarla
       </p>
       <p class="mb-0"> 
-        Te enviaremos un correo a <span class="text-body-1 font-weight-medium text-high-emphasis">john.doe@example.com</span> con la confirmacion de la orden y la factura
+        Te enviaremos un correo a <span class="text-body-1 font-weight-medium text-high-emphasis">{{ props.modelCheckoutData.addresses.filter(address => address.value === modelCheckoutData.deliveryAddress)[0].email }}</span> con la confirmacion de la orden y la factura
       </p>
       <p>Si el correo electrónico no ha llegado dentro de dos minutos, revise su carpeta de correo no deseado para ver si el correo electrónico fue enviado allí.</p>
       <div class="d-flex align-center gap-2 justify-center">
