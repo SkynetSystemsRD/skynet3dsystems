@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ModelCheckoutData } from '@/@core/types'
+import gym from '@images/svg/gym.svg'
 import home from '@images/svg/home.svg'
+import hotel from '@images/svg/hotel.svg'
+import mall from '@images/svg/mall.svg'
 import office from '@images/svg/office.svg'
 
 interface BillingAddress {
@@ -295,14 +298,32 @@ const addressTypes = [
   {
     icon: { icon: home, size: '28' },
     title: 'Casa',
-    desc: 'Delivery Time (9am - 9pm)',
+    desc: 'Hora de Envio (7am - 10pm)',
     value: 'Casa',
   },
   {
     icon: { icon: office, size: '28' },
     title: 'Trabajo',
-    desc: 'Delivery Time (9am - 5pm)',
+    desc: 'Hora de Envio (7am - 10pm)',
     value: 'Trabajo',
+  },
+  {
+    icon: { icon: mall, size: '28' },
+    title: 'Centro comercial',
+    desc: 'Hora de Envio (7am - 10pm)',
+    value: 'Centro comercial',
+  },
+  {
+    icon: { icon: hotel, size: '28' },
+    title: 'Hotel',
+    desc: 'Hora de Envio (7am - 10pm)',
+    value: 'Hotel',
+  },
+  {
+    icon: { icon: gym, size: '28' },
+    title: 'Gimnasio',
+    desc: 'Hora de Envio (7am - 10pm)',
+    value: 'Gimnasio',
   },
 ]
 
