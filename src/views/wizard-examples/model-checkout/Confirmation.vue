@@ -14,7 +14,7 @@ defineEmits<{
 const selectedDeliveryAddress = computed(() => {
   if (props.modelCheckoutData.paymentMethod.cash){
     // with cash
-    console.log('cash')
+    
     return [{ 
       value: 1,  
       title: 'En efectivo', 
@@ -24,7 +24,7 @@ const selectedDeliveryAddress = computed(() => {
   }
   else if (props.modelCheckoutData.paymentMethod.card !== ''){
     // with card
-    console.log('card')
+    
     return [{ 
       value: 1,  
       title: 'Tarjeta Credito/Debido',
@@ -34,7 +34,7 @@ const selectedDeliveryAddress = computed(() => {
   }
   else if (props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0){
     // with transfer
-    console.log('transfer')
+    
     return [{ 
       value: 1,  
       title: 'Transferencia Bancaria',
@@ -64,7 +64,7 @@ const resolveDeliveryMethod = computed(() => {
 const messageInfo = ref('Ahora Verifica tu Pedido 👍')
 
 watch(() => props.modelCheckoutData, (value) => {
-  console.log('en confir: ', value)
+  // console.log('en confir: ', value)
 })
 </script>
 
