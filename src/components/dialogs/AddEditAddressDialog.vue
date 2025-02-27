@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { ModelCheckoutData } from '@/@core/types'
+import gym from '@images/svg/gym.svg'
 import home from '@images/svg/home.svg'
+import hotel from '@images/svg/hotel.svg'
+import mall from '@images/svg/mall.svg'
 import office from '@images/svg/office.svg'
 
 interface BillingAddress {
   firstName: string | undefined
   lastName: string | undefined
+  email: string | undefined
   phone: string 
   selectedCountry: string | null
   addressLine1: string
@@ -230,6 +234,7 @@ const props = withDefaults(defineProps<Props>(), {
     firstName: 'Jose',
     lastName: 'Lopez',
     phone: '849 000 1111',
+    email: 'juanperez@gmail.com',
     selectedCountry: 'República Dominicana',
     addressLine1: 'Av. 27 de Febrero',
     addressLine2: '',
@@ -251,6 +256,7 @@ const emit = defineEmits<Emit>()
 // Reglas de validación
 const requiredRule = value => !!value || 'Este campo es obligatorio';
 const phoneRule = value => /^\d{10,11}$/.test(value) || 'Número no válido';
+const emailRule = value => /^(?=[a-zA-Z0-9._%+-]{1,256})([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.[a-zA-Z]{2,}$/.test(value) || 'Formato de correo inválido'
 
 // Referencia local para el checkout data
 const modelCheckoutCartDataLocal = ref<ModelCheckoutData>({
@@ -271,6 +277,7 @@ const onFormSubmit = async () => {
     if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
       modelCheckoutCartDataLocal.value.addresses.push({
         title: toggleSwitch.value ? `${billingAddress.value.firstName} ${billingAddress.value.lastName} (Predeterminado)`  : `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
+        email: billingAddress.value.email,
         desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.selectedCountry}`,
         subtitle: billingAddress.value.phone,
         value: selectedAddress.value
@@ -295,14 +302,32 @@ const addressTypes = [
   {
     icon: { icon: home, size: '28' },
     title: 'Casa',
-    desc: 'Delivery Time (9am - 9pm)',
+    desc: 'Hora de Envio (7am - 10pm)',
     value: 'Casa',
   },
   {
     icon: { icon: office, size: '28' },
     title: 'Trabajo',
-    desc: 'Delivery Time (9am - 5pm)',
+    desc: 'Hora de Envio (7am - 10pm)',
     value: 'Trabajo',
+  },
+  {
+    icon: { icon: mall, size: '28' },
+    title: 'Centro comercial',
+    desc: 'Hora de Envio (7am - 10pm)',
+    value: 'Centro comercial',
+  },
+  {
+    icon: { icon: hotel, size: '28' },
+    title: 'Hotel',
+    desc: 'Hora de Envio (7am - 10pm)',
+    value: 'Hotel',
+  },
+  {
+    icon: { icon: gym, size: '28' },
+    title: 'Gimnasio',
+    desc: 'Hora de Envio (7am - 10pm)',
+    value: 'Gimnasio',
   },
 ]
 
@@ -364,6 +389,16 @@ watch(() => props.billingAddress, (newbillingAddress) => {
                 label="Apellido"
                 placeholder="Pérez"
                 :rules="[requiredRule]"
+              />
+            </VCol>
+
+            <!-- 👉 Phone Number -->
+            <VCol cols="12">
+              <AppTextField
+                v-model="billingAddress.email"
+                label="Correo Electronico"
+                placeholder="juanperez@gmail.com"
+                :rules="[requiredRule, emailRule]"
               />
             </VCol>
 

@@ -69,6 +69,7 @@ interface xyz {
 
 export interface Addresses {
   title: string
+  email: string
   desc: string
   subtitle: string
   value: string

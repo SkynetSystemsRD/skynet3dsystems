@@ -54,7 +54,7 @@ let modelCheckoutData = ref<ModelCheckoutData>({
   promoCode: '',
   note: '',
   orderAmount: 0,
-  deliveryAddress: 'casa',
+  deliveryAddress: 'Casa',
   deliverySpeed: 'free',
   deliveryCharges: 0,
   addresses: [
