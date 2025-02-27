@@ -139,7 +139,7 @@ const resolveAddressBadgeColor: any = {
 
 const resolveDeliveryBadgeData: any = {
   free: { color: 'success', price: 0, text: 'Free' },
-  express: { color: 'secondary', price:2000, text: '$200' },
+  express: { color: 'secondary', price: 200, text: '$200' },
   overnight: { color: 'secondary', price: 350, text: '$350' },
 }
 

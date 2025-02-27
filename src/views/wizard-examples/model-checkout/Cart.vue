@@ -61,7 +61,7 @@ const totalCost = computed(() => {
   }, 0)
 })
 
-const updateCartData = () => {
+const updateCodePromo = () => {
   modelCheckoutCartDataLocal.value.promoCode = message.value
 
   loadingCodePromo.value = true
@@ -71,7 +71,11 @@ const updateCartData = () => {
     loadingCodePromo.value = false
     message.value = 'Codigo aplicado!'
   }, 2000)
+  
+  emit("update:checkout-data", { ...modelCheckoutCartDataLocal.value });
+}
 
+const updateCartData = () => {
   modelCheckoutCartDataLocal.value.orderAmount = totalCost.value;
   emit("update:checkout-data", { ...modelCheckoutCartDataLocal.value });
 
@@ -467,7 +471,7 @@ onBeforeUnmount(() => {
               <template #append>
                 <VBtn
                   :icon="$vuetify.display.smAndDown"
-                  @click="updateCartData"
+                  @click="updateCodePromo"
                 >
                   <span
                     v-if="$vuetify.display.mdAndUp"

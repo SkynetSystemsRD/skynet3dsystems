@@ -66,8 +66,8 @@ const resolveAddressBadgeColor: any = {
 
 const resolveDeliveryBadgeData: any = {
   free: { color: 'success', price: 0, text: 'Gratis' },
-  express: { color: 'secondary', price: 250, text: 'RD$200' },
-  overnight: { color: 'secondary', price: 350, text: 'RD$350' },
+  express: { color: 'secondary', price: 200, text: 'RD$200' },
+  overnight: { color: 'secondary', price: 300, text: 'RD$300' },
 }
 
 const totalPriceWithDeliveryCharges = computed(() => {
@@ -89,7 +89,27 @@ const nextStep = () => {
 }
 
 const changeAddress = (item: CustomInputContent) => {
-  modelCheckoutAddressDataLocal.value.deliveryAddress
+  modelCheckoutAddressDataLocal.value.deliveryAddress = item.value
+  const addresses = modelCheckoutAddressDataLocal.value.addresses;
+
+  // Find index of the item to replace
+  const index = addresses.findIndex(addr => addr.value === item.value);
+
+  if (index !== -1) {
+    // Replace the item at the found index
+    modelCheckoutAddressDataLocal.value.addresses[index].desc = item.desc;
+    modelCheckoutAddressDataLocal.value.addresses[index].subtitle = item.subtitle;
+    modelCheckoutAddressDataLocal.value.addresses[index].title = item.title;
+    modelCheckoutAddressDataLocal.value.addresses[index].value = item.value;
+  }
+
+  // Emit the updated checkout data
+  emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
+};
+
+
+const changeDeliverySpeed = (item: CustomInputContent) => {
+  modelCheckoutAddressDataLocal.value.deliverySpeed = item.value
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
 }
 
@@ -246,7 +266,7 @@ const buttonAddNewAddress = () => {
         :grid-column="{ cols: '12', sm: '4' }"
       >
         <template #default="{ item }">
-          <div class="d-flex flex-column align-center gap-2 w-100">
+          <div class="d-flex flex-column align-center gap-2 w-100" @click="changeDeliverySpeed(item)">
             <div class="d-flex justify-end w-100 mb-n3">
               <VChip
                 :color="resolveDeliveryBadgeData[item.value].color"
