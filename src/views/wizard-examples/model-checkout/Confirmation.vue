@@ -79,9 +79,9 @@ watch(() => props.modelCheckoutData, (value) => {
         Tu numero de orden es <span class="text-body-1 font-weight-medium text-high-emphasis">#1536548131</span>, verificala tus modelos antes de confirmarla
       </p>
       <p class="mb-0"> 
-        Te enviaremos un correo a <span class="text-body-1 font-weight-medium text-high-emphasis">{{ props.modelCheckoutData.addresses.filter(address => address.value === modelCheckoutData.deliveryAddress)[0].email }}</span> con la confirmacion de la orden y la factura
+        Te enviaremos un correo a <span class="text-body-1 font-weight-medium text-high-emphasis">{{ props.modelCheckoutData.addresses.filter(address => address.value.toLowerCase() == modelCheckoutData.deliveryAddress.toLowerCase())[0].email }}</span> con la confirmacion de la orden y la factura
       </p>
-      <p>Si el correo electrónico no ha llegado dentro de dos minutos, revise su carpeta de correo no deseado para ver si el correo electrónico fue enviado allí.</p>
+      <p>Si el correo electrónico no ha llegado dentro de dos minutos, revise su carpeta de correo no deseado para ver si el correo electrónico fue enviado allí.</p>    
       <div class="d-flex align-center gap-2 justify-center">
         <VIcon
           size="20"
@@ -131,7 +131,7 @@ watch(() => props.modelCheckoutData, (value) => {
         class="pa-6"
         :class="$vuetify.display.mdAndUp ? 'border-e' : 'border-b'"
       >
-        <div class="d-flex align-center gap-2 text-high-emphasis mb-4">
+         <div class="d-flex align-center gap-2 text-high-emphasis mb-4">
           <VIcon
             icon="tabler-credit-card"
             size="20"
@@ -142,7 +142,7 @@ watch(() => props.modelCheckoutData, (value) => {
         </div>
 
         <template
-          v-for="(item, index) in props.modelCheckoutData.addresses.filter(address => address.value === modelCheckoutData.deliveryAddress)"
+          v-for="(item, index) in props.modelCheckoutData.addresses.filter(address => address.value.toLowerCase() == modelCheckoutData.deliveryAddress.toLowerCase())"
           :key="item.value"
         >
           <p class="mb-0">
