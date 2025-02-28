@@ -23,6 +23,7 @@ let symbolImage = ref('mastercard')
 
 const required = value => !! value || 'Campo requerido';
 const cardNumberRule = value => (value.length === 19) || "Debe tener 16 dígitos";
+const validateCardType = () => (getCardType(cardFormData.value.cardNumber) !== 'unknown') || "Numero de Tarjeta Invalida";
 const expiryRule = value => /^(0[1-9]|1[0-2])\/\d{2}$/.test(value) || 'Formato MM/YY';
 const cvvRule = value => /^\d{3,4}$/.test(value) || 'Debe tener 3 o 4 dígitos';
 
@@ -300,7 +301,7 @@ watch(
                 type="text"
                 label="Número de Tarjeta"
                 placeholder="**** **** **** 7898"
-                :rules="[required, cardNumberRule]"
+                :rules="[required, cardNumberRule, validateCardType]"
               />
             </VCol>
 
