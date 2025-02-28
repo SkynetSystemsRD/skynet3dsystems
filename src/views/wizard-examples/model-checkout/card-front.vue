@@ -3,17 +3,17 @@
     <img class="card-front__image" :src="backgroundImage" />
     <img class="card-front__symbol" :src="symbolImage" />
     <img class="card-front__chip" :src="'/images/chip.png'" />
-    <p class="card-front__number">{{ cardNumber }}</p>
+    <p class="card-front__number value">{{ cardNumber }}</p>
     <div class="card-front__info">
-      <p>Expires</p>
+      <p>Expira</p>
       <p class="card-front__expires value">
         {{ expireMonth || "MM" }} /
         {{ (expireYear && sliceYear) || "YY" }}
       </p>
     </div>
     <div class="card-front__info left">
-      <p>Card Owner</p>
-      <p class="value">{{ name || "name" }}</p>
+      <p>Nombre Propietario</p>
+      <p class="value">{{ name || "nombre" }}</p>
     </div>
   </div>
 </template>

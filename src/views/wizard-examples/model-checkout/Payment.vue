@@ -205,6 +205,8 @@ const detectCardType = () => {
   const sanitizedNumber = cardFormData.value.cardNumber.replace(/\D/g, ''); // Remove non-numeric characters
   cardType.value = cardTypes.find(type => type.prefix.test(sanitizedNumber)) || null;
 
+  symbolImage.value = maskCardNumber(cardTypes[0].name.toLowerCase())
+
   console.log('cardType: ', cardType.value)
 };
 
@@ -279,6 +281,7 @@ watch(
                 label="Número de Tarjeta"
                 placeholder="**** **** **** 7898"
                 :rules="[required, cardNumberRule]"
+                v-imask="cardMasks"
               />
             </VCol>
 
@@ -487,17 +490,15 @@ watch(
             />
           </div>
         </div> -->
-        <div class="card-container">
-          <credit-card
-            :expireYear="cardFormData.cardExpiry.split('/')[0]"
-            :expireMonth="cardFormData.cardExpiry.split('/')[1]"
-            :cardNumber="cardFormData.cardNumber"
-            :name="cardFormData.cardName"
-            :cvv="cardFormData.cardCvv"
-            :showBack="showBack"
-            :symbolImage="'/images/' + symbolImage + '.png'"
-          />
-        </div>
+        <credit-card
+          :expireYear="cardFormData.cardExpiry.split('/')[0]"
+          :expireMonth="cardFormData.cardExpiry.split('/')[1]"
+          :cardNumber="cardFormData.cardNumber"
+          :name="cardFormData.cardName"
+          :cvv="cardFormData.cardCvv"
+          :showBack="showBack"
+          :symbolImage="'/images/' + symbolImage + '.png'"
+        />
       </VCardText>
       </VCard>
     </VCol>

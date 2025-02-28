@@ -14,18 +14,21 @@
         :expireYear="expireYear"
         :name="name"
       />
+      <card-back :cvv="cvv" :backgroundImage="backgroundImage" />
     </div>
   </div>
 </template>
 
 <script>
+import cardBack from './card-back.vue';
 import cardFront from './card-front.vue';
 
 export default {
   components: {
-    cardFront
+    cardFront,
+    cardBack
   },
- data() {
+  data() {
     return {
       backgroundImage: this.randomCard()
     };
@@ -51,11 +54,11 @@ export default {
 .credit-card {
   display: inline-block;
   background-color: transparent;
-  block-size: 245px;
+  block-size: 204px;  /* Height of a credit card */
   color: white;
   font-family: "Source Code Pro", monospace;
-  inline-size: 100%;
-  max-inline-size: 420px;
+  inline-size: 323px; /* Width of a credit card */
+  max-inline-size: 420px;  /* Ensure it doesn't stretch too far */
   perspective: 1000px;
 
   &:hover &__inner {
@@ -72,11 +75,11 @@ export default {
   }
 
   @media screen and (max-width: 480px) {
-    block-size: 210px;
+    block-size: 170px; /* Adjusted size for smaller screens */
   }
 
   @media screen and (max-width: 360px) {
-    block-size: 180px;
+    block-size: 150px; /* Adjusted size for very small screens */
   }
 }
 
