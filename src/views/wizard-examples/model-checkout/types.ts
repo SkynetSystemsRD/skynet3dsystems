@@ -49,3 +49,4 @@ export interface ModelCheckoutData {
   addresses: Addresses[]
   paymentMethod: paymentMethod
 }
+

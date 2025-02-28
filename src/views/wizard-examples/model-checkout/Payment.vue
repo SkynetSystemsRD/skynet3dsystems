@@ -2,6 +2,7 @@
 import banreservas from '@images/logos/banreservas.png';
 import bhd from '@images/logos/bhd.png';
 import popular from '@images/logos/popular.png';
+import creditCard from './credit-card.vue';
 import type { ModelCheckoutData } from './types';
 
 const prop = defineProps<{
@@ -16,12 +17,14 @@ const emit = defineEmits<{
 
 const modelCheckoutPaymentDataLocal = ref(prop.modelCheckoutData)
 const paymentForm = ref(null);
+const showCardSimulator = ref(true)
+const showBack = ref(false)
+const symbolImage = ref('mastercard')
 
-
-const required = v => !!v || 'Campo requerido';
-const cardNumberRule = v => (v.length === 16) || (v.length === 19) || "Debe tener 16 dígitos";
-const expiryRule = v => /^(0[1-9]|1[0-2])\/\d{2}$/.test(v) || 'Formato MM/YY';
-const cvvRule = v => /^\d{3,4}$/.test(v) || 'Debe tener 3 o 4 dígitos';
+const required = value => !! value || 'Campo requerido';
+const cardNumberRule = value => (value.length === 16) || (value.length === 19) || "Debe tener 16 dígitos";
+const expiryRule = value => /^(0[1-9]|1[0-2])\/\d{2}$/.test(value) || 'Formato MM/YY';
+const cvvRule = value => /^\d{3,4}$/.test(value) || 'Debe tener 3 o 4 dígitos';
 
 const selectedPaymentMethod = ref('card')
 
@@ -133,10 +136,12 @@ const paymentMethod = (method: string) => {
         accountNumber: 0,
         accountType: ''
       }
+      showCardSimulator.value = false
     break;
     case 'transfer': 
       modelCheckoutPaymentDataLocal.value.paymentMethod.cash = false
       modelCheckoutPaymentDataLocal.value.paymentMethod.card = ''
+      showCardSimulator.value = false
     break;
     case 'card':
       modelCheckoutPaymentDataLocal.value.paymentMethod.cash = false
@@ -147,6 +152,7 @@ const paymentMethod = (method: string) => {
         accountType: ''
       }
       validateForm()
+      showCardSimulator.value = true
     break;
   }
 }
@@ -185,6 +191,23 @@ const selectedBankAccount = (data: string) => {
   console.log('transfer info: ', modelCheckoutPaymentDataLocal.value.paymentMethod.transfer)
 }
 
+const cardNumber = ref('');
+const cardType = ref(null);
+
+const cardTypes = [
+  { name: 'Visa', prefix: /^4/, logo: 'https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png' },
+  { name: 'MasterCard', prefix: /^5[1-5]/, logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg' },
+  { name: 'American Express', prefix: /^3[47]/, logo: 'https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo_%282018%29.svg' },
+  { name: 'Discover', prefix: /^6(?:011|5)/, logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b9/Discover_Card_logo.svg' }
+];
+
+const detectCardType = () => {
+  const sanitizedNumber = cardFormData.value.cardNumber.replace(/\D/g, ''); // Remove non-numeric characters
+  cardType.value = cardTypes.find(type => type.prefix.test(sanitizedNumber)) || null;
+
+  console.log('cardType: ', cardType.value)
+};
+
 watch(
   () => [prop.currentStep, prop.modelCheckoutData],
   ([newStep, newAddress]) => {
@@ -192,7 +215,6 @@ watch(
     modelCheckoutPaymentDataLocal.value = newAddress;
   }
 );
-
 </script>
 
 <template>
@@ -252,6 +274,7 @@ watch(
             <VCol cols="12">
               <AppTextField
                 v-model="cardFormData.cardNumber"
+                @input="detectCardType"
                 type="text"
                 label="Número de Tarjeta"
                 placeholder="**** **** **** 7898"
@@ -444,6 +467,38 @@ watch(
             <a href="#">Cambiar Direccion</a>
           </h6> -->
         </VCardText>
+      </VCard>
+
+      <br v-for="n in 5" :key="n" />
+
+      <VCard
+        v-if="showCardSimulator"
+        flat
+        variant="outlined"
+      >
+      <VCardText>
+        <!-- <div class="relative w-96 p-6 border rounded-lg shadow-md bg-gray-100">
+          <div class="flex items-center justify-center">
+            <VImg 
+              :src="emptyCard" 
+              max-height="200"
+              max-width="100%" 
+              class="object-contain"
+            />
+          </div>
+        </div> -->
+        <div class="card-container">
+          <credit-card
+            :expireYear="cardFormData.cardExpiry.split('/')[0]"
+            :expireMonth="cardFormData.cardExpiry.split('/')[1]"
+            :cardNumber="cardFormData.cardNumber"
+            :name="cardFormData.cardName"
+            :cvv="cardFormData.cardCvv"
+            :showBack="showBack"
+            :symbolImage="'/images/' + symbolImage + '.png'"
+          />
+        </div>
+      </VCardText>
       </VCard>
     </VCol>
   </VRow>
