@@ -3,12 +3,12 @@
     <img class="card-front__image" :src="backgroundImage" />
     <img class="card-front__symbol" :src="symbolImage" />
     <img class="card-front__chip" :src="'/images/chip.png'" />
-    <p class="card-front__number value">{{ cardNumber }}</p>
+    <p class="card-front__number">{{ cardNumber }}</p>
     <div class="card-front__info">
       <p>Expira</p>
       <p class="card-front__expires value">
         {{ expireMonth || "MM" }} /
-        {{ (expireYear && sliceYear) || "YY" }}
+        {{ expireYear  || "YY" }}
       </p>
     </div>
     <div class="card-front__info left">
@@ -57,7 +57,7 @@ $y-space: 16px;
     position: absolute;
     font-size: 26px;
     inset-block-start: 35%;
-    inset-inline-start: x-space;
+    inset-inline-start: calc($x-space + 5px);  // Aumenté el valor
   }
 
   &__chip {

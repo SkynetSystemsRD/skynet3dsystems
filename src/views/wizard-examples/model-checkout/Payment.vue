@@ -19,7 +19,7 @@ const modelCheckoutPaymentDataLocal = ref(prop.modelCheckoutData)
 const paymentForm = ref(null);
 const showCardSimulator = ref(true)
 const showBack = ref(false)
-const symbolImage = ref('mastercard')
+let symbolImage = ref('mastercard')
 
 const required = value => !! value || 'Campo requerido';
 const cardNumberRule = value => (value.length === 16) || (value.length === 19) || "Debe tener 16 dígitos";
@@ -194,21 +194,25 @@ const selectedBankAccount = (data: string) => {
 const cardNumber = ref('');
 const cardType = ref(null);
 
-const cardTypes = [
-  { name: 'Visa', prefix: /^4/, logo: 'https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png' },
-  { name: 'MasterCard', prefix: /^5[1-5]/, logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg' },
-  { name: 'American Express', prefix: /^3[47]/, logo: 'https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo_%282018%29.svg' },
-  { name: 'Discover', prefix: /^6(?:011|5)/, logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b9/Discover_Card_logo.svg' }
-];
+function getCardType(cardNumber: string) {
+  const cardPatterns = [
+    { type: "visa", pattern: /^4/ },
+    { type: "mastercard", pattern: /^(5[1-5]|222[1-9]|22[3-9]\d|2[3-6]\d{2}|27[01]\d|2720)/ },
+    { type: "american express", pattern: /^3[47]/ },
+    { type: "discover", pattern: /^(60|62|64|65)/ },
+    { type: "jcb", pattern: /^35/ },
+    { type: "diners club", pattern: /^(30|36|38|39)/ },
+    { type: "unionPay", pattern: /^62/ }
+  ];
 
-const detectCardType = () => {
-  const sanitizedNumber = cardFormData.value.cardNumber.replace(/\D/g, ''); // Remove non-numeric characters
-  cardType.value = cardTypes.find(type => type.prefix.test(sanitizedNumber)) || null;
+  for (let card of cardPatterns) {
+    if (card.pattern.test(cardNumber)) {
+      return card.type;
+    }
+  }
 
-  symbolImage.value = maskCardNumber(cardTypes[0].name.toLowerCase())
-
-  console.log('cardType: ', cardType.value)
-};
+  return "unknown";
+}
 
 watch(
   () => [prop.currentStep, prop.modelCheckoutData],
@@ -276,12 +280,11 @@ watch(
             <VCol cols="12">
               <AppTextField
                 v-model="cardFormData.cardNumber"
-                @input="detectCardType"
+                @input="symbolImage = getCardType(cardFormData.cardNumber)"
                 type="text"
                 label="Número de Tarjeta"
                 placeholder="**** **** **** 7898"
                 :rules="[required, cardNumberRule]"
-                v-imask="cardMasks"
               />
             </VCol>
 
@@ -310,6 +313,8 @@ watch(
                 placeholder="•••"
                 type="password" 
                 :rules="[required, cvvRule]"
+                :focus="showBack == true"
+                :blur="showBack == false"
               >
                 <template #append-inner>
                   <VTooltip text="Valor de Verificación de la Tarjeta" location="bottom">
@@ -491,8 +496,8 @@ watch(
           </div>
         </div> -->
         <credit-card
-          :expireYear="cardFormData.cardExpiry.split('/')[0]"
-          :expireMonth="cardFormData.cardExpiry.split('/')[1]"
+          :expireYear="cardFormData.cardExpiry.split('/')[1]"
+          :expireMonth="cardFormData.cardExpiry.split('/')[0]"
           :cardNumber="cardFormData.cardNumber"
           :name="cardFormData.cardName"
           :cvv="cardFormData.cardCvv"
