@@ -22,7 +22,7 @@ const showBack = ref(false)
 let symbolImage = ref('mastercard')
 
 const required = value => !! value || 'Campo requerido';
-const cardNumberRule = value => (value.length === 16) || (value.length === 19) || "Debe tener 16 dígitos";
+const cardNumberRule = value => (value.length === 19) || "Debe tener 16 dígitos";
 const expiryRule = value => /^(0[1-9]|1[0-2])\/\d{2}$/.test(value) || 'Formato MM/YY';
 const cvvRule = value => /^\d{3,4}$/.test(value) || 'Debe tener 3 o 4 dígitos';
 
@@ -106,11 +106,11 @@ const validateForm = async () => {
 
 const resetForm = () => {
   cardFormData.value = {
-    cardNumber: '',
+    cardNumber: null,
     cardName: '',
     cardExpiry: '',
-    cardCvv: '', 
-    isCardSave: false,
+    cardCvv: null,
+    isCardSave: true,
   };
   modelCheckoutPaymentDataLocal.value.paymentMethod.card = ''
   paymentForm.value.resetValidation();
@@ -191,10 +191,26 @@ const selectedBankAccount = (data: string) => {
   console.log('transfer info: ', modelCheckoutPaymentDataLocal.value.paymentMethod.transfer)
 }
 
-const cardNumber = ref('');
-const cardType = ref(null);
+function formatCardNumber(cardNumber) {
+  // Remove non-numeric characters first
+  let formattedNumber = cardNumber.replace(/\D/g, ''); // Keep only digits
+  
+  // Limit the card number to 16 digits (standard length for most cards)
+  if (formattedNumber.length > 16) {
+    formattedNumber = formattedNumber.slice(0, 16);
+  }
+
+  // Add spaces after every 4 digits, if there are digits
+  if (formattedNumber.length > 0) {
+    formattedNumber = formattedNumber.replace(/(\d{4})(?=\d)/g, '$1 ');
+  }
+
+  return formattedNumber;
+}
 
 function getCardType(cardNumber: string) {
+  cardFormData.value.cardNumber = formatCardNumber(cardNumber)
+
   const cardPatterns = [
     { type: "visa", pattern: /^4/ },
     { type: "mastercard", pattern: /^(5[1-5]|222[1-9]|22[3-9]\d|2[3-6]\d{2}|27[01]\d|2720)/ },
