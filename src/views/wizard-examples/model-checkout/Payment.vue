@@ -20,8 +20,9 @@ const paymentForm = ref(null);
 const showCardSimulator = ref(true)
 const showBack = ref(false)
 let symbolImage = ref('mastercard')
+const changesSaves = ref(false)
 
-const required = value => !! value || 'Campo requerido';
+const required = value => !! value || 'Campo requerido'; 
 const cardNumberRule = value => (value.length === 19) || "Debe tener 16 dígitos";
 const validateCardType = () => (getCardType(cardFormData.value.cardNumber) !== 'unknown') || "Numero de Tarjeta Invalida";
 const expiryRule = value => /^(0[1-9]|1[0-2])\/\d{2}$/.test(value) || 'Formato MM/YY';
@@ -98,8 +99,10 @@ const validateForm = async () => {
   const { valid } = await paymentForm.value.validate();
   if (valid) {
     modelCheckoutPaymentDataLocal.value.paymentMethod.card = generateCardToken(cardFormData)
-    cardFormData.value.cardNumber = maskCardNumber(cardFormData.value.cardNumber)
+    // cardFormData.value.cardNumber = maskCardNumber(cardFormData.value.cardNumber)
     console.log('Formulario válido', modelCheckoutPaymentDataLocal.value.paymentMethod.card);
+    
+    changesSaves.value = true
   } else {
     console.log('Errores en el formulario');
   }
@@ -350,7 +353,7 @@ watch(
               />
 
               <div class="mt-4">
-                <VBtn class="me-4" @click="validateForm">Guardar Cambios</VBtn>
+                <VBtn class="me-4" @click="validateForm">Guardar Cambios<VIcon v-if="changesSaves" icon="tabler-check" size="30"/></VBtn>
                 <VBtn variant="tonal" color="secondary" @click="resetForm">Borrar Todo</VBtn>
               </div>
             </VCol>
