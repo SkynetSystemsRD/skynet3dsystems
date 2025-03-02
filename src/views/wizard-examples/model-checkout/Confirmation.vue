@@ -11,6 +11,10 @@ defineEmits<{
   (e: 'update:checkout-data', value: ModelCheckoutData): void
 }>()
 
+const confirmOrder = () => {
+  messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+}
+
 const selectedDeliveryAddress = computed(() => {
   if (props.modelCheckoutData.paymentMethod.cash){
     // with cash
@@ -295,7 +299,9 @@ watch(() => props.modelCheckoutData, (value) => {
 
         <br>
 
-        <VBtn>
+        <VBtn
+          @click="confirmOrder"
+        >
           Confirmar Pedido
         </VBtn>
       </VCol>
