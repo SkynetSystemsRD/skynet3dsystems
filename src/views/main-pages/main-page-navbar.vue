@@ -39,31 +39,44 @@ const isMenuOpen = ref(false)
 const isMegaMenuOpen = ref(false)
 
 const menuItems: MenuItem[] = [
+  // {
+  //   listTitle: 'Page',
+  //   listIcon: 'tabler-layout-grid',
+  //   navItems: [
+  //     { name: 'Pricing', to: { name: 'main-pages-pricing' } },
+  //     { name: 'Payment', to: { name: 'main-pages-payment' } },s
+  //     { name: 'Checkout', to: { name: 'main-pages-checkout' } },
+  //     { name: 'Help Center', to: { name: 'main-pages-help-center' } },
+  //   ],
+  // },
   {
-    listTitle: 'Page',
-    listIcon: 'tabler-layout-grid',
+    listTitle: 'Innovaciones',
+    listIcon: 'tabler-settings-2',
     navItems: [
-      { name: 'Pricing', to: { name: 'main-pages-pricing' } },
-      { name: 'Payment', to: { name: 'main-pages-payment' } },
-      { name: 'Checkout', to: { name: 'main-pages-checkout' } },
-      { name: 'Help Center', to: { name: 'main-pages-help-center' } },
+      // { name: 'Personaliza tu Modelo en 3D 🚀', to: { name: 'main-pages-pricing' } },
+      // { name: 'Visualiza en Realidad Aumentada 📱', to: { name: 'main-pages-payment' } },
+      // { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' } },
+      // { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' } },
+      { name: 'Convierte imagen a Modelo en 3D 🚀', to: { name: 'main-pages-pricing' } },
+      { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' } },
+      // { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' } },
     ],
   },
-  {
-    listTitle: 'Auth Demo',
-    listIcon: 'tabler-lock-open',
-    navItems: [
-      { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' } },
-      { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' } },
-      { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' } },
-      { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' } },
-      { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' } },
-      { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' } },
-      { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' } },
-      { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' } },
-      { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' } },
-    ],
-  },
+  // {
+  //   listTitle: 'Auth Demo',
+  //   listIcon: 'tabler-lock-open',
+  //   navItems: [
+  //     { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' } },
+  //     { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' } },
+  //     { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' } },
+  //     { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' } },
+  //     { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' } },
+  //     { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' } },
+  //     { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' } },
+  //     { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' } },
+  //     { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' } },
+  //   ],
+  // },
   {
     listTitle: 'Other',
     listIcon: 'tabler-photo',
@@ -78,6 +91,7 @@ const menuItems: MenuItem[] = [
     ],
   },
 ]
+
 
 const isCurrentRoute = (to: RouteLocationRaw) => {
   return route.matched.some(_route => _route.path.startsWith(router.resolve(to).path))
