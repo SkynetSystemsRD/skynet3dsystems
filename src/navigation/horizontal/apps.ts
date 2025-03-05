@@ -52,8 +52,8 @@ export default [
         icon: { icon: 'tabler-book' },
         children: [
           { title: 'Dashboard', to: 'apps-academy-dashboard' },
-          { title: 'projects', to: 'apps-all-projects-projects' },
-          { title: 'Course Details', to: 'apps-academy-course-details' },
+          { title: 'Projects', to: 'apps-all-projects-projects' },
+          { title: 'Project Details', to: 'apps-projet-details' },
         ],
       },
       {

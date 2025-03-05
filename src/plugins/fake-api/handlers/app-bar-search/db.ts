@@ -57,7 +57,7 @@ export const db: DB = {
           title: 'Payment Front',
         },
         {
-          url: { name: 'main-pages-checkout' },
+          url: { name: 'main-pages-model-checkout' },
           icon: 'tabler-file-description',
           title: 'Checkout Front',
         },
@@ -333,7 +333,7 @@ export const db: DB = {
           title: 'Register Multi-Steps',
         },
         {
-          url: { name: 'wizard-examples-checkout' },
+          url: { name: 'wizard-examples-model-checkout' },
           icon: 'tabler-shopping-cart',
           title: 'Wizard - Checkout',
         },

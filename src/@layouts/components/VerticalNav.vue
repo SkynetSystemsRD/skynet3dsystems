@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import type { Component } from 'vue'
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import { VNodeRenderer } from './VNodeRenderer'
 import { layoutConfig } from '@layouts'
 import { VerticalNavGroup, VerticalNavLink, VerticalNavSectionTitle } from '@layouts/components'
 import { useLayoutConfigStore } from '@layouts/stores/config'
 import { injectionKeyIsVerticalNavHovered } from '@layouts/symbols'
 import type { NavGroup, NavLink, NavSectionTitle, VerticalNavItems } from '@layouts/types'
+import type { Component } from 'vue'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import { VNodeRenderer } from './VNodeRenderer'
 
 interface Props {
   tag?: string | Component
@@ -75,7 +75,7 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
     <div class="nav-header">
       <slot name="nav-header">
         <RouterLink
-          to="/"
+          to="/main-pages/landing-page"
           class="app-logo app-title-wrapper"
         >
           <VNodeRenderer :nodes="layoutConfig.app.logo" />
@@ -85,13 +85,14 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
               v-show="!hideTitleAndIcon"
               class="app-logo-title"
             >
-              {{ layoutConfig.app.title }}
+              <!-- {{ layoutConfig.app.title }} -->
+                Skynet 3D Sys
             </h1>
           </Transition>
         </RouterLink>
         <!-- 👉 Vertical nav actions -->
         <!-- Show toggle collapsible in >md and close button in <md -->
-        <div class="header-action">
+        <!-- <div class="header-action">
           <Component
             :is="layoutConfig.app.iconRenderer || 'div'"
             v-show="configStore.isVerticalNavCollapsed"
@@ -114,7 +115,7 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
             v-bind="layoutConfig.icons.close"
             @click="toggleIsOverlayNavActive(false)"
           />
-        </div>
+        </div> -->
       </slot>
     </div>
     <slot name="before-nav-items">
@@ -170,6 +171,8 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
   display: flex;
   flex-direction: column;
   block-size: 100%;
+
+  // inline-size: variables.$layout-vertical-nav-width;
   inline-size: variables.$layout-vertical-nav-width;
   inset-block-start: 0;
   inset-inline-start: 0;

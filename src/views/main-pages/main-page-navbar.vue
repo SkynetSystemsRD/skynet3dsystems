@@ -7,6 +7,7 @@ import { useDisplay } from 'vuetify'
 
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+import { onMounted, ref } from 'vue'
 
 const props = defineProps({
   activeId: String,
@@ -39,31 +40,43 @@ const isMenuOpen = ref(false)
 const isMegaMenuOpen = ref(false)
 
 const menuItems: MenuItem[] = [
+  // {
+  //   listTitle: 'Page',
+  //   listIcon: 'tabler-layout-grid',
+  //   navItems: [
+  //     { name: 'Pricing', to: { name: 'main-pages-pricing' } },
+  //     { name: 'Payment', to: { name: 'main-pages-payment' } },s
+  //     { name: 'Checkout', to: { name: 'main-pages-checkout' } },
+  //     { name: 'Help Center', to: { name: 'main-pages-help-center' } },
+  //   ],
+  // },
   {
-    listTitle: 'Page',
-    listIcon: 'tabler-layout-grid',
+    listTitle: 'Innovaciones',
+    listIcon: 'tabler-settings-2',
     navItems: [
-      { name: 'Pricing', to: { name: 'main-pages-pricing' } },
-      { name: 'Payment', to: { name: 'main-pages-payment' } },
-      { name: 'Checkout', to: { name: 'main-pages-checkout' } },
-      { name: 'Help Center', to: { name: 'main-pages-help-center' } },
+      { name: 'Personaliza tu Modelo en 3D 🚀', to: { name: 'main-pages-pricing' } },
+      { name: 'Visualiza en Realidad Aumentada 📱', to: { name: 'main-pages-payment' } },
+      { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' } },
+      { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' } },
+      { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' } },
+      { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' } },
     ],
   },
-  {
-    listTitle: 'Auth Demo',
-    listIcon: 'tabler-lock-open',
-    navItems: [
-      { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' } },
-      { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' } },
-      { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' } },
-      { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' } },
-      { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' } },
-      { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' } },
-      { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' } },
-      { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' } },
-      { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' } },
-    ],
-  },
+  // {
+  //   listTitle: 'Auth Demo',
+  //   listIcon: 'tabler-lock-open',
+  //   navItems: [
+  //     { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' } },
+  //     { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' } },
+  //     { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' } },
+  //     { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' } },
+  //     { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' } },
+  //     { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' } },
+  //     { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' } },
+  //     { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' } },
+  //     { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' } },
+  //   ],
+  // },
   {
     listTitle: 'Other',
     listIcon: 'tabler-photo',
@@ -87,6 +100,31 @@ const isCurrentRoute = (to: RouteLocationRaw) => {
 }
 
 const isPageActive = computed(() => menuItems.some(item => item.navItems.some(listItem => isCurrentRoute(listItem.to))))
+
+const rotatingClass = ref('rotating-logo');
+let rotationTimeout: ReturnType<typeof setTimeout>;
+
+onMounted(() => {
+  setRotationSequence();
+});
+
+const setRotationSequence = () => {
+  // Rota hacia adelante por 7 segundos
+  rotationTimeout = setTimeout(() => {
+    rotatingClass.value = 'rotating-logo reverse-rotation'; // Cambia a rotación inversa
+    console.log('rotating-logo reverse-rotation')
+    setReverseRotationSequence();
+  }, 10000);
+};
+
+const setReverseRotationSequence = () => {
+  // Rota hacia atrás por 2 segundos
+  setTimeout(() => {
+    rotatingClass.value = 'rotating-logo'; // Vuelve a la rotación original
+    console.log('rotating-logo')
+    setRotationSequence();
+  }, 10000);
+};
 </script>
 
 <template>
@@ -218,7 +256,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
               :class="$vuetify.display.mdAndUp ? 'd-none' : 'd-block'"
             >
               <div class="app-logo">
-                <VNodeRenderer :nodes="themeConfig.app.logo" />
+                <VNodeRenderer :nodes="themeConfig.app.logo" :class="rotatingClass" />
                 <h1 class="app-logo-title">
                   {{ themeConfig.app.title }}
                 </h1>
@@ -287,9 +325,8 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
                             class="text-body-1 mb-4 text-no-wrap"
                           >
                             <RouterLink
-                              class="mega-menu-item"
                               :to="listItem.to"
-                              :target="item.listTitle === 'Page' ? '_self' : '_blank'"
+                              class="mega-menu-item"
                               :class="isCurrentRoute(listItem.to) ? 'active-link' : 'text-high-emphasis'"
                             >
                               <div class="d-flex align-center">
@@ -509,4 +546,37 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
   inset-block-start: 0.5rem;
   inset-inline-end: 1rem;
 }
+
+@keyframes rotateForward {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateBackward {
+  0% {
+    transform: rotate(360deg);
+  }
+
+  50% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.rotating-logo {
+  animation: rotateForward 7s ease-in-out infinite alternate;
+}
+
 </style>

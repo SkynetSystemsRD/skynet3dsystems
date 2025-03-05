@@ -209,6 +209,11 @@ module.exports = {
           message: 'Use \'@images\' path alias for image imports',
         },
         {
+          regex: '@/assets/3d-model-temp',
+          replacement: '@3d-model-temp',
+          message: 'Use \'@3d-model-temp\' path alias for 3d-model-temp imports',
+        },
+        {
           regex: '@/assets/styles',
           replacement: '@styles',
           message: 'Use \'@styles\' path alias for importing styles from \'src/assets/styles\'',

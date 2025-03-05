@@ -49,8 +49,8 @@ export default [
     icon: { icon: 'tabler-school' },
     children: [
       { title: 'Dashboard', to: 'apps-academy-dashboard' },
-      { title: 'projects', to: 'apps-all-projects-projects' },
-      { title: 'Course Details', to: 'apps-academy-course-details' },
+      { title: 'Projects', to: 'apps-all-projects-projects' },
+      { title: 'Project Details', to: 'apps-project-details' },
     ],
   },
   {
@@ -181,7 +181,7 @@ export default [
     title: 'Wizard Examples',
     icon: { icon: 'tabler-dots' },
     children: [
-      { title: 'Checkout', to: { name: 'wizard-examples-checkout' } },
+      { title: 'Checkout', to: { name: 'wizard-examples-model-checkout' } },
       { title: 'Property Listing', to: { name: 'wizard-examples-property-listing' } },
       { title: 'Create Deal', to: { name: 'wizard-examples-create-deal' } },
     ],
