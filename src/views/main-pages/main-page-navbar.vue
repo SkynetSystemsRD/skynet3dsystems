@@ -58,6 +58,7 @@ const menuItems: MenuItem[] = [
       { name: 'Visualiza en Realidad Aumentada 📱', to: { name: 'main-pages-payment' } },
       { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' } },
       { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' } },
+      { name: 'Convierte de Imagen a Modelo 3D 🎨', to: { name: 'main-pages-pricing' } },
       { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' } },
       { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' } },
     ],
