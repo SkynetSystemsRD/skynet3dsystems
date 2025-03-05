@@ -1,6 +1,6 @@
 import type { OffsetOptions } from '@floating-ui/dom'
-import type { RouteLocationRaw } from 'vue-router'
 import type { AppContentLayoutNav, ContentWidth, FooterType, HorizontalNavType, NavbarType } from '@layouts/enums'
+import type { RouteLocationRaw } from 'vue-router'
 
 export interface LayoutConfig {
   app: {

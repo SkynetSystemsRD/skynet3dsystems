@@ -364,7 +364,6 @@ const initModels = () => {
     modelCheckoutAddressDataLocal.value.orderAmount = modelCheckoutAddressDataLocal.value.modelItems
       .reduce((total, model) => total + (model.price || 0), 0);
     
-    console.log('Total Order Amount:', modelCheckoutAddressDataLocal.value.orderAmount);
     // Emitir el cambio para actualizar en los demás componentes
     emit("update:checkout-data", { ...modelCheckoutAddressDataLocal.value });
   }
@@ -417,7 +416,6 @@ const initModels = () => {
         }
 
         selectedModel = intersects[0].object;
-        console.log("Modelo seleccionado:", selectedModel);
 
         // Cambiar el color del modelo seleccionado
         selectedModel.traverse((child) => {
@@ -501,7 +499,6 @@ const initModels = () => {
       }
     });
 
-    console.log("Modelo eliminado:", uuid);
     selectedModel = null;
   }
 
@@ -634,7 +631,7 @@ onMounted(() => {
                         />
                       </template> -->
                       <VListItemTitle class="text-high-emphasis font-weight-medium">
-                        {{ id + 1 }} . {{ topic.title }} 
+                        {{ topic.title }} 
                         <VIcon
                           size="24"
                           :icon="topic.icon"
