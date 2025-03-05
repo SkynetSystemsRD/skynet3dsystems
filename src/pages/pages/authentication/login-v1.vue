@@ -12,6 +12,12 @@ definePage({
   },
 })
 
+const emailRule = value => !!value && /\S+@\S+\.\S+/.test(value) || 'Correo electrónico no válido';
+const strongPasswordRule = value => 
+  !!value && /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value) || 
+  'La contraseña debe tener al menos 8 caracteres, un número y un carácter especial';
+const required = value => !! value || 'Campo requerido'; 
+
 const form = ref({
   email: '',
   password: '',
@@ -74,7 +80,8 @@ const isPasswordVisible = ref(false)
                   autofocus
                   label="Email o Usuario"
                   type="email"
-                  placeholder="johndoe@email.com"
+                  placeholder="juanperez@email.com"
+                  :rules="[required, emailRule]"
                 />
               </VCol>
 
@@ -88,6 +95,7 @@ const isPasswordVisible = ref(false)
                   autocomplete="password"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
+                  :rules="[required, strongPasswordRule]"
                 />
 
                 <!-- remember me checkbox -->
