@@ -4,6 +4,7 @@ import authV1BottomShape from '@images/svg/auth-v1-bottom-shape.svg?raw'
 import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+import axios from 'axios'
 
 definePage({
   meta: {
@@ -13,11 +14,43 @@ definePage({
 })
 
 const form = ref({
-  username: '',
-  email: '',
+  userName: '',
+  userEmail: '',
   password: '',
   privacyPolicies: false,
 })
+
+const emailRule = value => !!value && /\S+@\S+\.\S+/.test(value) || 'Correo electrónico no válido';
+const strongPasswordRule = value => 
+  !!value && /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value) || 
+  'La contraseña debe tener al menos 8 caracteres, un número y un carácter especial';
+const required = value => !! value || 'Campo requerido'; 
+const userExists = value => !!true || 'Este usuario ya existe' // modificarlo para que verifique si ya existe el usuario en la ddbb con la API
+const noSpecialCharsRule = value => !!value && /^[a-zA-Z0-9]+$/.test(value) || 'El nombre de usuario solo puede contener letras y números';
+
+
+const validateForm = async () => {
+  if (!form.value.userName || !form.value.userEmail || !form.value.password) {
+    console.log('Errores en el formulario');
+    return;
+  }
+
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/newUser`, {
+      userName: form.value.userName,
+      userEmail: form.value.userEmail,
+      password: form.value.password,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log('Registro exitoso:', response.data);
+  } catch (error) {
+    console.log('Error en el registro:', error.response?.data?.message || error.message);
+  }
+};
 
 const isPasswordVisible = ref(false)
 </script>
@@ -66,24 +99,26 @@ const isPasswordVisible = ref(false)
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm @submit.prevent="validateForm">
             <VRow>
               <!-- Username -->
               <VCol cols="12">
                 <AppTextField
-                  v-model="form.username"
+                  v-model="form.userName"
                   autofocus
                   label="Usuario"
-                  placeholder="Johndoe"
+                  placeholder="juanperez"
+                  :rules="[required, noSpecialCharsRule, userExists]"
                 />
               </VCol>
               <!-- email -->
               <VCol cols="12">
                 <AppTextField
-                  v-model="form.email"
+                  v-model="form.userEmail"
                   label="Email"
                   type="email"
-                  placeholder="johndoe@email.com"
+                  placeholder="juanperez@email.com"
+                  :rules="[required, emailRule]"
                 />
               </VCol>
 
@@ -97,6 +132,7 @@ const isPasswordVisible = ref(false)
                   autocomplete="password"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
+                  :rules="[required, strongPasswordRule]"
                 />
 
                 <div class="d-flex align-center my-6">
@@ -113,7 +149,7 @@ const isPasswordVisible = ref(false)
                     <a
                       href="javascript:void(0)"
                       class="text-primary"
-                    >Política de privacidad y términos</a>
+                    >Política de priv. y términos</a>
                   </VLabel>
                 </div>
 
