@@ -4,6 +4,10 @@ import authV1BottomShape from '@images/svg/auth-v1-bottom-shape.svg?raw'
 import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
+
+const router = useRouter()
 
 definePage({
   meta: {
@@ -19,12 +23,47 @@ const strongPasswordRule = value =>
 const required = value => !! value || 'Campo requerido'; 
 
 const form = ref({
-  email: '',
+  userEmailOrUserName: '',
   password: '',
   remember: false,
 })
 
+const messageinfo = ref(`🚨 ¡Oops! Parece que esas credenciales no son correctas. 🤔
+Verifica tu usuario y contraseña, o tal vez tu teclado está jugando una broma. ⌨️😆
+¡Inténtalo de nuevo! 🚀`)
+const isSnackbarScrollReverseVisible = ref(false)
 const isPasswordVisible = ref(false)
+
+const login = async () => {
+  if (!form.value.userEmailOrUserName || !form.value.password) {
+    console.log('Errores en el formulario');
+    return;
+  }
+
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/userLogin`, {
+      userName: form.value.userEmailOrUserName,
+      userEmail: form.value.userEmailOrUserName,
+      password: form.value.password,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.data && response.data.validLogin) {
+      localStorage.setItem('userData', JSON.stringify(jwtDecode(response.data.token)));
+
+      await router.push('/main-pages/landing-page')
+    } else {
+      console.error("El campo 'user' no está presente en la respuesta");
+      isSnackbarScrollReverseVisible.value = true
+    }
+  } catch (error) {
+    console.log('validateForm: ', error.response?.data?.message || error.message);
+    isSnackbarScrollReverseVisible.value = true
+  }
+}
 </script>
 
 <template>
@@ -71,17 +110,16 @@ const isPasswordVisible = ref(false)
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm @submit.prevent="login">
             <VRow>
               <!-- email -->
               <VCol cols="12">
                 <AppTextField
-                  v-model="form.email"
+                  v-model="form.userEmailOrUserName"
                   autofocus
                   label="Email o Usuario"
                   type="email"
-                  placeholder="juanperez@email.com"
-                  :rules="[required, emailRule]"
+                  :rules="[required]"
                 />
               </VCol>
 
@@ -160,6 +198,13 @@ const isPasswordVisible = ref(false)
       </VCard>
     </div>
   </div>
+  <VSnackbar
+    v-model="isSnackbarScrollReverseVisible"
+    transition="scroll-y-reverse-transition"
+    location="top end"
+  >
+    {{ messageinfo }}
+  </VSnackbar>
 </template>
 
 <style lang="scss">

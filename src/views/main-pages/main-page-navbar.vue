@@ -5,6 +5,7 @@ import type { RouteLocationRaw } from 'vue-router/auto'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useDisplay } from 'vuetify'
 
+import UserProfile from '@/layouts/components/UserProfile.vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 
@@ -30,6 +31,7 @@ const route = useRoute()
 const router = useRouter()
 
 const sidebar = ref(false)
+const userData = localStorage.getItem('userData')
 
 watch(() => display, () => {
   return display.mdAndUp ? sidebar.value = false : sidebar.value
@@ -53,6 +55,7 @@ const menuItems: MenuItem[] = [
     listTitle: 'Auth Demo',
     listIcon: 'tabler-lock-open',
     navItems: [
+
       { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' } },
       { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' } },
       { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' } },
@@ -335,7 +338,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
           <!-- <NavbarThemeSwitcher /> -->
 
           <VBtn
-            v-if="$vuetify.display.lgAndUp"
+            v-if="!userData"
             prepend-icon="tabler-login"
             variant="elevated"
             color="primary"
@@ -346,7 +349,11 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
             Iniciar Sección
           </VBtn>
 
-          <VBtn
+          <UserProfile
+            v-else
+          ></UserProfile>
+
+          <!-- <VBtn
             v-else
             rounded
             icon
@@ -357,7 +364,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
             rel="noopener noreferrer"
           >
             <VIcon icon="tabler-shopping-cart" />
-          </VBtn>
+          </VBtn> -->
         </div>
       </VAppBar>
     </div>
