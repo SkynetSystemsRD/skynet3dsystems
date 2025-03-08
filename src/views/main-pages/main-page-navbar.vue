@@ -64,6 +64,10 @@ const menuItems: MenuItem[] = [
       { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' } },
       { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' } },
       { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' } },
+      { name: 'Pricing', to: { name: 'main-pages-pricing' } },
+      { name: 'Payment', to: { name: 'main-pages-payment' } },
+      { name: 'Checkout', to: { name: 'main-pages-checkout' } },
+      { name: 'Help Center', to: { name: 'main-pages-help-center' } },
     ],
   },
   {
@@ -376,32 +380,23 @@ const setReverseRotationSequence = () => {
         <div class="d-flex gap-x-4">
           <!-- <NavbarThemeSwitcher /> -->
 
-          <VBtn
+          <RouterLink
             v-if="!userData"
-            prepend-icon="tabler-login"
-            variant="elevated"
-            color="primary"
-            href="/pages/authentication/login-v1"
-            target="_blank"
-            rel="noopener noreferrer"
+            class="mega-menu-item"
+            to="/pages/authentication/login-v1"
           >
-            Iniciar Sección
-          </VBtn>
-
+            <VBtn
+              prepend-icon="tabler-login"
+              variant="elevated"
+              color="primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Iniciar Sección
+            </VBtn>
+          </RouterLink>
+          
           <UserProfile v-else/>
-
-          <!-- <VBtn
-            v-else
-            rounded
-            icon
-            variant="elevated"
-            color="primary"
-            href="https://1.envato.market/vuexy_admin"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <VIcon icon="tabler-shopping-cart" />
-          </VBtn> -->
         </div>
       </VAppBar>
     </div>

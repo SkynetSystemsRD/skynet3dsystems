@@ -36,8 +36,6 @@ const userProfileList = [
   { type: 'navItem', icon: 'tabler-currency-dollar', title: 'Pricing', to: { name: 'pages-pricing' } },
   { type: 'navItem', icon: 'tabler-question-mark', title: 'FAQ', to: { name: 'pages-faq' } },
 ]
-
-console.log(userData)
 </script>
 
 <template>
