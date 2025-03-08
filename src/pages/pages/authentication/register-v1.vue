@@ -5,7 +5,7 @@ import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import axios from 'axios'
-import CryptoJS from 'crypto-js'
+import { jwtDecode } from "jwt-decode"
 
 definePage({
   meta: {
@@ -32,6 +32,10 @@ const required = value => !! value || 'Campo requerido';
 const userExists = value => !! true || 'Este usuario ya existe' // modificarlo para que verifique si ya existe el usuario en la ddbb con la API
 const noSpecialCharsRule = value => !!value && /^[a-zA-Z0-9]+$/.test(value) || 'El nombre de usuario solo puede contener letras y números';
 
+const decrypt = (word: string, key: string) => {
+  
+}
+
 const validateForm = async () => {
   if (!form.value.userName || !form.value.userEmail || !form.value.password) {
     console.log('Errores en el formulario');
@@ -53,11 +57,8 @@ const validateForm = async () => {
     });
 
     if (response.data && response.data.user) {
-      // Decrypt the token
-      const bytes = CryptoJS.AES.decrypt(response.data.user, import.meta.env.VITE_SECRET_KEY);
-      const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-
-      console.log(decryptedData)
+      const decodedData = jwtDecode(response.data.user);
+      console.log("Decoded JWT:", decodedData);
     } else {
       console.error("El campo 'user' no está presente en la respuesta");
     }
