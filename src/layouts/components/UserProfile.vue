@@ -1,29 +1,31 @@
 <script setup lang="ts">
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 
 const router = useRouter()
 const ability = useAbility()
 
 // TODO: Get type from backend
-const userData = useCookie<any>('userData')
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
 
 const logout = async () => {
   // Remove "accessToken" from cookie
-  useCookie('accessToken').value = null
+  useCookie('accessToken').value = null;
 
-  // Remove "userData" from cookie
-  userData.value = null
+  // Remove "userData" from localStorage
+  localStorage.removeItem('userData');
 
   // Redirect to login page
-  await router.push('/login')
+  await router.push('/pages/authentication/login-v1');
 
-  // ℹ️ We had to remove abilities in then block because if we don't nav menu items mutation is visible while redirecting user to login page
+  // ℹ️ We had to remove abilities in then block because if we don't, nav menu items mutation is visible while redirecting user to login page
   // Remove "userAbilities" from cookie
-  useCookie('userAbilityRules').value = null
-
+  useCookie('userAbilityRules').value = null;
+  
   // Reset ability to initial ability
-  ability.update([])
-}
+  ability.update([]);
+};
+
 
 const userProfileList = [
   { type: 'divider' },
@@ -34,6 +36,8 @@ const userProfileList = [
   { type: 'navItem', icon: 'tabler-currency-dollar', title: 'Pricing', to: { name: 'pages-pricing' } },
   { type: 'navItem', icon: 'tabler-question-mark', title: 'FAQ', to: { name: 'pages-faq' } },
 ]
+
+console.log(userData)
 </script>
 
 <template>
@@ -98,7 +102,7 @@ const userProfileList = [
 
               <div>
                 <h6 class="text-h6 font-weight-medium">
-                  {{ userData.fullName || userData.username }}
+                  {{ userData.useNname }}
                 </h6>
                 <VListItemSubtitle class="text-capitalize text-disabled">
                   {{ userData.role }}
