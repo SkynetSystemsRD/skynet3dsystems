@@ -10,21 +10,22 @@ const userData = storedData ? JSON.parse(storedData) : null;
 
 const logout = async () => {
   // Remove "accessToken" from cookie
-  useCookie('accessToken').value = null
+  useCookie('accessToken').value = null;
 
-  // Remove "userData" from cookie
-  userData.value = null
+  // Remove "userData" from localStorage
+  localStorage.removeItem('userData');
 
   // Redirect to login page
-  await router.push('/login')
+  await router.push('/pages/authentication/login-v1');
 
-  // ℹ️ We had to remove abilities in then block because if we don't nav menu items mutation is visible while redirecting user to login page
+  // ℹ️ We had to remove abilities in then block because if we don't, nav menu items mutation is visible while redirecting user to login page
   // Remove "userAbilities" from cookie
-  useCookie('userAbilityRules').value = null
-
+  useCookie('userAbilityRules').value = null;
+  
   // Reset ability to initial ability
-  ability.update([])
-}
+  ability.update([]);
+};
+
 
 const userProfileList = [
   { type: 'divider' },
@@ -101,7 +102,7 @@ console.log(userData)
 
               <div>
                 <h6 class="text-h6 font-weight-medium">
-                  {{ userData.fullName || userData.username }}
+                  {{ userData.useNname }}
                 </h6>
                 <VListItemSubtitle class="text-capitalize text-disabled">
                   {{ userData.role }}

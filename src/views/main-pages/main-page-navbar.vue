@@ -376,19 +376,19 @@ const setReverseRotationSequence = () => {
         <div class="d-flex gap-x-4">
           <!-- <NavbarThemeSwitcher /> -->
 
-          <!-- <VBtn
+          <VBtn
             v-if="!userData"
             prepend-icon="tabler-login"
             variant="elevated"
             color="primary"
-            href="http://localhost:5173/pages/authentication/login-v1"
+            href="/pages/authentication/login-v1"
             target="_blank"
             rel="noopener noreferrer"
           >
             Iniciar Sección
-          </VBtn> -->
+          </VBtn>
 
-          <UserProfile />
+          <UserProfile v-else/>
 
           <!-- <VBtn
             v-else
