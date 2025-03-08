@@ -35,8 +35,6 @@ const sidebar = ref(false)
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
 
-console.log(userData.userName)
-
 watch(() => display, () => {
   return display.mdAndUp ? sidebar.value = false : sidebar.value
 }, { deep: true })
@@ -378,7 +376,7 @@ const setReverseRotationSequence = () => {
         <div class="d-flex gap-x-4">
           <!-- <NavbarThemeSwitcher /> -->
 
-          <VBtn
+          <!-- <VBtn
             v-if="!userData"
             prepend-icon="tabler-login"
             variant="elevated"
@@ -388,11 +386,9 @@ const setReverseRotationSequence = () => {
             rel="noopener noreferrer"
           >
             Iniciar Sección
-          </VBtn>
+          </VBtn> -->
 
-          <UserProfile
-            v-else
-          ></UserProfile>
+          <UserProfile />
 
           <!-- <VBtn
             v-else
