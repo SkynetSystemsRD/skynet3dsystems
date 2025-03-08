@@ -29,11 +29,28 @@ const strongPasswordRule = value =>
   !!value && /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value) || 
   'La contraseña debe tener al menos 8 caracteres, un número y un carácter especial';
 const required = value => !! value || 'Campo requerido'; 
-const userExists = value => !! true || 'Este usuario ya existe' // modificarlo para que verifique si ya existe el usuario en la ddbb con la API
+const userExists = async (value) => {
+  const exists = await checkIfExists(value);
+  return exists ? 'Este usuario ya existe' : true;
+};
 const noSpecialCharsRule = value => !!value && /^[a-zA-Z0-9]+$/.test(value) || 'El nombre de usuario solo puede contener letras y números';
 
-const decrypt = (word: string, key: string) => {
-  
+const checkIfExists = async (value: string) => {
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/userExists`, {
+      userName: value,
+      userEmail: value
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data.exists
+  } catch (error) {
+    console.error('checkIfExists: ', error.response?.data?.message || error.message)
+    return false
+  }
 }
 
 const validateForm = async () => {
@@ -57,20 +74,27 @@ const validateForm = async () => {
     });
 
     if (response.data && response.data.user) {
-      const decodedData = jwtDecode(response.data.user);
-      console.log("Decoded JWT:", decodedData);
+      const result = jwtDecode(response.data.user);
+      if (result.validRegister){
+        isSnackbarScrollReverseVisible.value = true
+        resetForm()
+      }
     } else {
       console.error("El campo 'user' no está presente en la respuesta");
     }
-
-
-    // if (user.validRegister){
-    //   isSnackbarScrollReverseVisible.value = true
-    // }
   } catch (error) {
-    console.log('Error en el registro:', error.response?.data?.message || error.message);
+    console.log('validateForm: ', error.response?.data?.message || error.message);
   }
 };
+
+const resetForm = () => {
+  form.value = {
+    userName: null,
+    userEmail: null,
+    password: null,
+    privacyPolicies: false,
+  }
+}
 
 const isPasswordVisible = ref(false)
 </script>
@@ -138,7 +162,7 @@ const isPasswordVisible = ref(false)
                   label="Email"
                   type="email"
                   placeholder="juanperez@email.com"
-                  :rules="[required, emailRule]"
+                  :rules="[required, emailRule, userExists]"
                 />
               </VCol>
 
