@@ -48,7 +48,7 @@ export default [
       },
       {
         title: 'Checkout',
-        to: 'main-pages-checkout',
+        to: 'main-pages-model-checkout',
         target: '_blank',
       },
       {

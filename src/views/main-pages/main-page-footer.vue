@@ -19,7 +19,7 @@ const footerBg = useGenerateImageVariant(footerLightBg, footerDarkBg)
 const pagesList: Menu[] = [
   { name: 'Pricing', to: { name: 'main-pages-pricing' } },
   { name: 'Payment', to: { name: 'main-pages-payment' }, isNew: true },
-  { name: 'Checkout', to: { name: 'main-pages-checkout' } },
+  { name: 'Checkout', to: { name: 'main-pages-model-checkout' } },
   { name: 'Help Center', to: { name: 'main-pages-help-center' } },
   { name: 'Login/Register', to: { name: 'pages-authentication-login-v2' } },
 ]

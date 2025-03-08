@@ -5,7 +5,6 @@ import type { RouteLocationRaw } from 'vue-router/auto'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useDisplay } from 'vuetify'
 
-import UserProfile from '@/layouts/components/UserProfile.vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { onMounted, ref } from 'vue'
@@ -57,10 +56,6 @@ const menuItems: MenuItem[] = [
     listTitle: 'Innovaciones',
     listIcon: 'tabler-settings-2',
     navItems: [
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> main-page
       { name: 'Personaliza tu Modelo en 3D 🚀', to: { name: 'main-pages-pricing' } },
       { name: 'Visualiza en Realidad Aumentada 📱', to: { name: 'main-pages-payment' } },
       { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' } },
@@ -68,14 +63,6 @@ const menuItems: MenuItem[] = [
       { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' } },
       { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' } },
       { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' } },
-<<<<<<< HEAD
-=======
-      { name: 'Pricing', to: { name: 'main-pages-pricing' } },
-      { name: 'Payment', to: { name: 'main-pages-payment' } },
-      { name: 'Checkout', to: { name: 'main-pages-checkout' } },
-      { name: 'Help Center', to: { name: 'main-pages-help-center' } },
-=======
->>>>>>> main-page
     ],
   },
   {
@@ -92,10 +79,6 @@ const menuItems: MenuItem[] = [
       { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' } },
       { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' } },
       { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' } },
-<<<<<<< HEAD
->>>>>>> login
-=======
->>>>>>> main-page
     ],
   },
   {
@@ -390,56 +373,21 @@ const setReverseRotationSequence = () => {
         <VSpacer />
 
         <div class="d-flex gap-x-4">
-          <!-- <NavbarThemeSwitcher /> -->
-<<<<<<< HEAD
-<<<<<<< HEAD
           <RouterLink
             class="mega-menu-item"
             to="/pages/authentication/login-v1"
-=======
-=======
->>>>>>> main-page
-
-          <VBtn
-            v-if="!userData"
-            prepend-icon="tabler-login"
-            variant="elevated"
-            color="primary"
-            href="/pages/authentication/login-v1"
-            target="_blank"
-            rel="noopener noreferrer"
-<<<<<<< HEAD
->>>>>>> login
-=======
->>>>>>> main-page
           >
-            Iniciar Sección
-          </VBtn>
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-          <UserProfile
-            v-else
-          ></UserProfile>
-
->>>>>>> login
-=======
-          <UserProfile v-else/>
-
->>>>>>> main-page
-          <!-- <VBtn
-            v-else
-            rounded
-            icon
-            variant="elevated"
-            color="primary"
-            href="https://1.envato.market/vuexy_admin"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <VIcon icon="tabler-shopping-cart" />
-          </VBtn> -->
+            <VBtn
+              v-if="$vuetify.display.lgAndUp"
+              prepend-icon="tabler-login"
+              variant="elevated"
+              color="primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Iniciar Sección
+            </VBtn>
+          </RouterLink>
         </div>
       </VAppBar>
     </div>
