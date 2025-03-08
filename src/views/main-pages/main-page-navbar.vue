@@ -31,7 +31,10 @@ const route = useRoute()
 const router = useRouter()
 
 const sidebar = ref(false)
-const userData = localStorage.getItem('userData')
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
+
+console.log(userData.userName)
 
 watch(() => display, () => {
   return display.mdAndUp ? sidebar.value = false : sidebar.value
