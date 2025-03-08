@@ -26,15 +26,13 @@ const logout = async () => {
   ability.update([]);
 };
 
-
 const userProfileList = [
   { type: 'divider' },
   { type: 'navItem', icon: 'tabler-user', title: 'Perfil', to: { name: 'apps-user-view-id', params: { id: userData.id } } },
-  { type: 'navItem', icon: 'tabler-settings', title: 'Settings', to: { name: 'pages-account-settings-tab', params: { tab: 'account' } } },
-  { type: 'navItem', icon: 'tabler-file-dollar', title: 'Billing Plan', to: { name: 'pages-account-settings-tab', params: { tab: 'billing-plans' } }, badgeProps: { color: 'error', content: '4' } },
+  { type: 'navItem', icon: 'tabler-settings', title: 'configuracion', to: { name: 'pages-account-settings-tab', params: { tab: 'account' } } },
   { type: 'divider' },
-  { type: 'navItem', icon: 'tabler-currency-dollar', title: 'Pricing', to: { name: 'pages-pricing' } },
-  { type: 'navItem', icon: 'tabler-question-mark', title: 'FAQ', to: { name: 'pages-faq' } },
+  { type: 'navItem', icon: 'tabler-book-2', title: 'Mis Projectos', to: { name: 'pages-pricing' } },
+  // { type: 'navItem', icon: 'tabler-question-mark', title: 'FAQ', to: { name: 'pages-faq' } },
 ]
 </script>
 
@@ -93,14 +91,14 @@ const userProfileList = [
                     <VIcon
                       v-else
                       icon="tabler-user"
-                    />
+                    /> 
                   </VAvatar>
                 </VBadge>
               </VListItemAction>
 
               <div>
                 <h6 class="text-h6 font-weight-medium">
-                  {{ userData.useName }}
+                  {{ userData.userName }} 
                 </h6>
                 <VListItemSubtitle class="text-capitalize text-disabled">
                   {{ userData.userType }}
