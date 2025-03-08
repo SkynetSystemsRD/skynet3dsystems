@@ -1,7 +1,7 @@
 import { ofetch } from 'ofetch'
 
 export const $api = ofetch.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://skynetsystemsrdapi.onrender.com/api',
   async onRequest({ options }) {
     const accessToken = useCookie('accessToken').value
     if (accessToken)

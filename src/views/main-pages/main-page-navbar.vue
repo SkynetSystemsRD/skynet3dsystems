@@ -5,7 +5,6 @@ import type { RouteLocationRaw } from 'vue-router/auto'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useDisplay } from 'vuetify'
 
-import UserProfile from '@/layouts/components/UserProfile.vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { onMounted, ref } from 'vue'
@@ -378,14 +377,12 @@ const setReverseRotationSequence = () => {
         <VSpacer />
 
         <div class="d-flex gap-x-4">
-          <!-- <NavbarThemeSwitcher /> -->
-
           <RouterLink
-            v-if="!userData"
             class="mega-menu-item"
             to="/pages/authentication/login-v1"
           >
             <VBtn
+              v-if="$vuetify.display.lgAndUp"
               prepend-icon="tabler-login"
               variant="elevated"
               color="primary"
@@ -395,8 +392,6 @@ const setReverseRotationSequence = () => {
               Iniciar Sección
             </VBtn>
           </RouterLink>
-          
-          <UserProfile v-else/>
         </div>
       </VAppBar>
     </div>
