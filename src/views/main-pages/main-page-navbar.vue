@@ -130,8 +130,6 @@ const setReverseRotationSequence = () => {
     setRotationSequence();
   }, 10000);
 };
-
-console.log(userData)
 </script>
 
 <template>
