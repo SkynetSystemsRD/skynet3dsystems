@@ -64,7 +64,7 @@ const validateForm = async () => {
       userName: form.value.userName,
       userEmail: form.value.userEmail,
       password: form.value.password,
-      userType: 'client',
+      userType: 'cliente',
       userCreatedDate: new Date().toLocaleString(),
       userStatus: true
     }, {
