@@ -5,6 +5,7 @@ import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import axios from 'axios'
+import CryptoJS from 'crypto-js'
 
 definePage({
   meta: {
@@ -20,14 +21,16 @@ const form = ref({
   privacyPolicies: false,
 })
 
+const messageinfo = ref('¡Registro exitoso! 🎉 ¡Anímate a innovar con nuestra impresión 3D! 🚀🖨️')
+const isSnackbarScrollReverseVisible = ref(false)
+
 const emailRule = value => !!value && /\S+@\S+\.\S+/.test(value) || 'Correo electrónico no válido';
 const strongPasswordRule = value => 
   !!value && /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value) || 
   'La contraseña debe tener al menos 8 caracteres, un número y un carácter especial';
 const required = value => !! value || 'Campo requerido'; 
-const userExists = value => !!true || 'Este usuario ya existe' // modificarlo para que verifique si ya existe el usuario en la ddbb con la API
+const userExists = value => !! true || 'Este usuario ya existe' // modificarlo para que verifique si ya existe el usuario en la ddbb con la API
 const noSpecialCharsRule = value => !!value && /^[a-zA-Z0-9]+$/.test(value) || 'El nombre de usuario solo puede contener letras y números';
-
 
 const validateForm = async () => {
   if (!form.value.userName || !form.value.userEmail || !form.value.password) {
@@ -40,13 +43,29 @@ const validateForm = async () => {
       userName: form.value.userName,
       userEmail: form.value.userEmail,
       password: form.value.password,
+      userType: 'client',
+      userCreatedDate: new Date().toLocaleString(),
+      userStatus: true
     }, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    console.log('Registro exitoso:', response.data);
+    if (response.data && response.data.user) {
+      // Decrypt the token
+      const bytes = CryptoJS.AES.decrypt(response.data.user, import.meta.env.VITE_SECRET_KEY);
+      const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+
+      console.log(decryptedData)
+    } else {
+      console.error("El campo 'user' no está presente en la respuesta");
+    }
+
+
+    // if (user.validRegister){
+    //   isSnackbarScrollReverseVisible.value = true
+    // }
   } catch (error) {
     console.log('Error en el registro:', error.response?.data?.message || error.message);
   }
@@ -197,6 +216,14 @@ const isPasswordVisible = ref(false)
       </VCard>
     </div>
   </div>
+
+  <VSnackbar
+      v-model="isSnackbarScrollReverseVisible"
+      transition="scroll-y-reverse-transition"
+      location="top end"
+    >
+      {{ messageinfo }}
+    </VSnackbar>
 </template>
 
 <style lang="scss">
