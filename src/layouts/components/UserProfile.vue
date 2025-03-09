@@ -18,6 +18,10 @@ const logout = async () => {
   // Redirect to login page
   await router.push('/pages/authentication/login-v1');
 
+  // ℹ️ We had to remove abilities in then block because if we don't, nav menu items mutation is visible while redirecting user to login page
+  // Remove "userAbilities" from cookie
+  useCookie('userAbilityRules').value = null;
+
   // Reset ability to initial ability
   ability.update([]);
 };
@@ -50,13 +54,8 @@ const userProfileList = [
                     :variant="!(userData && userData.avatar) ? 'tonal' : undefined">
                     <VImg v-if="userData && userData.avatar" :src="userData.avatar" />
                     <VIcon v-else icon="tabler-user" />
-                    <VBadge dot location="bottom right" offset-x="3" offset-y="3" color="success" bordered>
-                      <VAvatar :color="!(userData && userData.avatar) ? 'primary' : undefined"
-                        :variant="!(userData && userData.avatar) ? 'tonal' : undefined">
-                        <VImg v-if="userData && userData.avatar" :src="userData.avatar" />
-                        <VIcon v-else icon="tabler-user" />
-                      </VAvatar>
-                    </VBadge>
+                  </VAvatar>
+                </VBadge>
               </VListItemAction>
 
               <div>
