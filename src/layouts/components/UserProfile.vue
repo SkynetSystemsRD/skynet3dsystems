@@ -89,10 +89,8 @@ const userProfileList = [
 
             <div class="px-4 py-2">
               <VBtn block size="small" color="error" append-icon="tabler-logout" @click="logout">
-                Logout
-                <VBtn block size="small" color="error" append-icon="tabler-logout" @click="logout">
-                  Cerrar Sección
-                </VBtn>
+                Cerrar Sección
+              </VBtn>
             </div>
           </PerfectScrollbar>
         </VList>
