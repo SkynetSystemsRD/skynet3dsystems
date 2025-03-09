@@ -5,40 +5,37 @@ import { themeConfig } from '@themeConfig';
 
 // Components
 import Footer from '@/layouts/components/Footer.vue';
+import UserProfile from '@/layouts/components/UserProfile.vue';
 import { HorizontalNavLayout } from '@layouts';
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'; /* PartiallyEnd: #3632/scriptSetup.vue */
+
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
+
+console.log(userData)
 </script>
 
 <template>
   <HorizontalNavLayout :nav-items="navItems">
     <!-- 👉 navbar -->
     <template #navbar>
-      <RouterLink
-        to="/main-pages/landing-page"
-        class="app-logo d-flex align-center gap-x-3"
-      >
+      <RouterLink to="/main-pages/landing-page" class="app-logo d-flex align-center gap-x-3">
         <VNodeRenderer :nodes="themeConfig.app.logo" />
 
         <h1 class="app-title font-weight-bold leading-normal text-xl text-capitalize">
           {{ themeConfig.app.title }}
         </h1>
       </RouterLink>
+
       <VSpacer />
-      <RouterLink
-        class="mega-menu-item"
-        to="/pages/authentication/login-v1"
-      >
-        <VBtn
-          v-if="$vuetify.display.lgAndUp"
-          prepend-icon="tabler-login"
-          variant="elevated"
-          color="primary"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+
+      <RouterLink v-if="!userData" class="mega-menu-item" to="/pages/authentication/login-v1">
+        <VBtn prepend-icon="tabler-login" variant="elevated" color="primary" target="_blank" rel="noopener noreferrer">
           Iniciar Sección
         </VBtn>
       </RouterLink>
+
+      <UserProfile v-else />
 
       <!-- <NavSearchBar trigger-btn-class="ms-lg-n3" />
 

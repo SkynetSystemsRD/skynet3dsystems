@@ -5,8 +5,10 @@ import type { RouteLocationRaw } from 'vue-router/auto'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useDisplay } from 'vuetify'
 
+import UserProfile from '@/layouts/components/UserProfile.vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+import { onMounted, ref } from 'vue'
 
 const props = defineProps({
   activeId: String,
@@ -30,6 +32,8 @@ const route = useRoute()
 const router = useRouter()
 
 const sidebar = ref(false)
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
 
 watch(() => display, () => {
   return display.mdAndUp ? sidebar.value = false : sidebar.value
@@ -51,12 +55,14 @@ const menuItems: MenuItem[] = [
   // },
   {
     listTitle: 'Innovaciones',
-    listIcon: 'tabler-layout-grid',
+    listIcon: 'tabler-settings-2',
     navItems: [
       { name: 'Personaliza tu Modelo en 3D 🚀', to: { name: 'main-pages-pricing' } },
       { name: 'Visualiza en Realidad Aumentada 📱', to: { name: 'main-pages-payment' } },
+      { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' } },
       { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' } },
       { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' } },
+      { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' } },
       { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' } },
     ],
   },
@@ -64,6 +70,7 @@ const menuItems: MenuItem[] = [
     listTitle: 'Auth Demo',
     listIcon: 'tabler-lock-open',
     navItems: [
+
       { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' } },
       { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' } },
       { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' } },
@@ -75,19 +82,19 @@ const menuItems: MenuItem[] = [
       { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' } },
     ],
   },
-  {
-    listTitle: 'Other',
-    listIcon: 'tabler-photo',
-    navItems: [
-      { name: 'Under Maintenance', to: { name: 'pages-misc-under-maintenance' } },
-      { name: 'Coming Soon', to: { name: 'pages-misc-coming-soon' } },
-      { name: 'Not Authorized', to: { path: '/not-authorized' } },
-      { name: 'Verify Email (Basic)', to: { name: 'pages-authentication-verify-email-v1' } },
-      { name: 'Verify Email (Cover)', to: { name: 'pages-authentication-verify-email-v2' } },
-      { name: 'Two Steps (Basic)', to: { name: 'pages-authentication-two-steps-v1' } },
-      { name: 'Two Steps (Cover)', to: { name: 'pages-authentication-two-steps-v2' } },
-    ],
-  },
+  // {
+  //   listTitle: 'Other',
+  //   listIcon: 'tabler-photo',
+  //   navItems: [
+  //     { name: 'Under Maintenance', to: { name: 'pages-misc-under-maintenance' } },
+  //     { name: 'Coming Soon', to: { name: 'pages-misc-coming-soon' } },
+  //     { name: 'Not Authorized', to: { path: '/not-authorized' } },
+  //     { name: 'Verify Email (Basic)', to: { name: 'pages-authentication-verify-email-v1' } },
+  //     { name: 'Verify Email (Cover)', to: { name: 'pages-authentication-verify-email-v2' } },
+  //     { name: 'Two Steps (Basic)', to: { name: 'pages-authentication-two-steps-v1' } },
+  //     { name: 'Two Steps (Cover)', to: { name: 'pages-authentication-two-steps-v2' } },
+  //   ],
+  // },
 ]
 
 const isCurrentRoute = (to: RouteLocationRaw) => {
@@ -98,6 +105,31 @@ const isCurrentRoute = (to: RouteLocationRaw) => {
 }
 
 const isPageActive = computed(() => menuItems.some(item => item.navItems.some(listItem => isCurrentRoute(listItem.to))))
+
+const rotatingClass = ref('rotating-logo');
+let rotationTimeout: ReturnType<typeof setTimeout>;
+
+onMounted(() => {
+  setRotationSequence();
+});
+
+const setRotationSequence = () => {
+  // Rota hacia adelante por 7 segundos
+  rotationTimeout = setTimeout(() => {
+    rotatingClass.value = 'rotating-logo reverse-rotation'; // Cambia a rotación inversa
+    console.log('rotating-logo reverse-rotation')
+    setReverseRotationSequence();
+  }, 10000);
+};
+
+const setReverseRotationSequence = () => {
+  // Rota hacia atrás por 2 segundos
+  setTimeout(() => {
+    rotatingClass.value = 'rotating-logo'; // Vuelve a la rotación original
+    console.log('rotating-logo')
+    setRotationSequence();
+  }, 10000);
+};
 </script>
 
 <template>
@@ -229,7 +261,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
               :class="$vuetify.display.mdAndUp ? 'd-none' : 'd-block'"
             >
               <div class="app-logo">
-                <VNodeRenderer :nodes="themeConfig.app.logo" />
+                <VNodeRenderer :nodes="themeConfig.app.logo" :class="rotatingClass" />
                 <h1 class="app-logo-title">
                   {{ themeConfig.app.title }}
                 </h1>
@@ -342,13 +374,12 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
         <VSpacer />
 
         <div class="d-flex gap-x-4">
-          <!-- <NavbarThemeSwitcher /> -->
           <RouterLink
+            v-if="!userData"
             class="mega-menu-item"
             to="/pages/authentication/login-v1"
           >
             <VBtn
-              v-if="$vuetify.display.lgAndUp"
               prepend-icon="tabler-login"
               variant="elevated"
               color="primary"
@@ -359,18 +390,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
             </VBtn>
           </RouterLink>
 
-          <!-- <VBtn
-            v-else
-            rounded
-            icon
-            variant="elevated"
-            color="primary"
-            href="https://1.envato.market/vuexy_admin"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <VIcon icon="tabler-shopping-cart" />
-          </VBtn> -->
+          <UserProfile v-else/>
         </div>
       </VAppBar>
     </div>
@@ -519,4 +539,37 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
   inset-block-start: 0.5rem;
   inset-inline-end: 1rem;
 }
+
+@keyframes rotateForward {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateBackward {
+  0% {
+    transform: rotate(360deg);
+  }
+
+  50% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.rotating-logo {
+  animation: rotateForward 7s ease-in-out infinite alternate;
+}
+
 </style>

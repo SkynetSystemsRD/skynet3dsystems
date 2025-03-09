@@ -12,6 +12,8 @@ const academyCourseIllustration1 = useGenerateImageVariant(academyCourseIllustra
 const academyCourseIllustration2 = useGenerateImageVariant(academyCourseIllustration2Light, academyCourseIllustration2Dark)
 
 const searchQuery = ref('')
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
 </script>
 
 <template>
