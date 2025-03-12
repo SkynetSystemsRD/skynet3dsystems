@@ -6,8 +6,12 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
+import { useRoute } from 'vue-router'
 
+const route = useRoute();
 const router = useRouter()
+
+const pendingToGo = route.query.pending_to_go || '/main-pages/landing-page'; // Default fallback
 
 definePage({
   meta: {
@@ -53,8 +57,15 @@ const login = async () => {
 
     if (response.data && response.data.validLogin) {
       localStorage.setItem('userData', JSON.stringify(jwtDecode(response.data.token)));
-
-      await router.push('/main-pages/landing-page')
+      console.log(pendingToGo)
+      // CORREGIR ESTO PARA QUE SI PENDINGTOGO NO ES INDEFINO O VACIO QUE VAYA A SU RUTA, DE LO CONTRARIO A LA PAGINA PRINCIPAL
+      // if (pendingToGo){
+      //   await router.push(pendingToGo)
+      // }
+      // else {
+      //   await router.push('/main-pages/landing-page')
+      // }
+      
     } else {
       console.error("El campo 'user' no está presente en la respuesta");
       isSnackbarScrollReverseVisible.value = true

@@ -330,7 +330,7 @@ const setReverseRotationSequence = () => {
                             class="text-body-1 mb-4 text-no-wrap"
                           >
                             <RouterLink
-                              :to="listItem.to"
+                              :to="userData ? listItem.to : { path: '/pages/authentication/login-v1', query: { pending_to_go: listItem.to.name } }"
                               class="mega-menu-item"
                               :class="isCurrentRoute(listItem.to) ? 'active-link' : 'text-high-emphasis'"
                             >
