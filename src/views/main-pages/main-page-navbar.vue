@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UserProfile from '@/layouts/components/UserProfile.vue'
 import navImg from '@images/main-pages/misc/nav-item-col-img.png'
 import { useWindowScroll } from '@vueuse/core'
 import type { RouteLocationRaw } from 'vue-router/auto'
