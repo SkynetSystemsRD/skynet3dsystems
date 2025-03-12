@@ -152,7 +152,7 @@ const isPasswordVisible = ref(false)
       </VCard>
     </div>
   </div>
-</template>
+plate>
 
 <style lang="scss">
 @use "@core/scss/template/pages/page-auth";

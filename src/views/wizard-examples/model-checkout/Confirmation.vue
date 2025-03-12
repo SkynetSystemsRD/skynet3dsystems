@@ -18,6 +18,12 @@ const confirmOrder = () => {
     (props.modelCheckoutData.paymentMethod.cash || props.modelCheckoutData.paymentMethod.card !== '' || props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0)
   ){
     messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+
+    
+  }
+  else {
+    messageInfo.value = '🚨 ¡Ups! Antes de confirmar, revisa que hayas seleccionado los modelos, la dirección y el método de pago. 🏡💳✅ ¡Completa estos datos y estarás listo para continuar! 🚀'
+    isSnackbarScrollReverseVisible.value = true
   }
 }
 
@@ -72,6 +78,7 @@ const resolveDeliveryMethod = computed(() => {
 })
 // Thank You! 😇
 const messageInfo = ref('Ahora Verifica tu Pedido 👍')
+const isSnackbarScrollReverseVisible = ref(false)
 
 watch(() => props.modelCheckoutData, (value) => {
   // console.log('en confir: ', value)
@@ -313,4 +320,12 @@ watch(() => props.modelCheckoutData, (value) => {
       </VCol>
     </VRow>
   </section>
+
+  <VSnackbar
+    v-model="isSnackbarScrollReverseVisible"
+    transition="scroll-y-reverse-transition"
+    location="top end"
+  >
+    {{ messageInfo }}
+  </VSnackbar>
 </template>
