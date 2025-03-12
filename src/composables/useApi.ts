@@ -2,7 +2,7 @@ import { createFetch } from '@vueuse/core'
 import { destr } from 'destr'
 
 export const useApi = createFetch({
-  baseUrl: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseUrl: 'https://skynetsystemsrdapi.onrender.com/api',
   fetchOptions: {
     headers: {
       Accept: 'application/json',

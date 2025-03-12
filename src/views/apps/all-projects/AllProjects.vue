@@ -38,7 +38,15 @@ const paginatedCourses = computed(() => {
   return coursesData.value.courses.slice(start, end);
 });
 
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
+
 const totalCourse = computed(() => coursesData.value.total);
+const messageInfo = ref('Proyectos de nuestros clientes ya realizados')
+
+if (userData){
+  messageInfo.value = 'Tus Projectos'
+}
 
 watch([hideCompleted, label, () => props.searchQuery], () => {
   page.value = 1;
@@ -50,7 +58,7 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
     <VCardText>
       <div class="d-flex justify-space-between align-center flex-wrap gap-4 mb-6">
         <div>
-          <h5 class="text-h5">Proyectos de nuestros clientes ya realizados</h5>
+          <h5 class="text-h5"> {{ messageInfo }} </h5>
           <div class="text-body-1">{{ totalCourse }} proyectos</div>
         </div>
         <!-- <VSwitch v-model="hideCompleted" label="Hide Completed" /> -->
