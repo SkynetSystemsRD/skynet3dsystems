@@ -2,7 +2,6 @@ export interface ModelItem {
   id: number
   fileName: string
   filePath: string
-  format: string
   size: number
   octetStreamContent: string
   uuid: string

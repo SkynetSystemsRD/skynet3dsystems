@@ -11,8 +11,53 @@ defineEmits<{
   (e: 'update:checkout-data', value: ModelCheckoutData): void
 }>()
 
-const confirmOrder = () => {
-  messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+const confirmOrder = async () => {
+  if (
+    props.modelCheckoutData.modelItems.length > 0 &&
+    props.modelCheckoutData.addresses.length > 0 &&
+    (props.modelCheckoutData.paymentMethod.cash || props.modelCheckoutData.paymentMethod.card !== '' || props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0)
+  ){
+    messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+
+    props.modelCheckoutData.modelItems.forEach(model => {
+      console.log(model)
+    })
+
+    // try {
+    //   const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/saveModels`, {
+    //     fileName: props.modelCheckoutData.modelItems,
+    //     filePath: form.value.userEmailOrUserName,
+    //     size: form.value.password,
+    //     octetStreamContent: form.value.userEmailOrUserName,
+    //     dimentions: form.value.userEmailOrUserName,
+    //     weight: form.value.password,
+    //     price: form.value.password,
+    //   }, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //   });
+
+    //   if (response.data && response.data.validLogin) {
+    //     localStorage.setItem('userData', JSON.stringify(jwtDecode(response.data.token)));
+
+    //     if (pending_to_go){
+    //       await router.push(pending_to_go.value)
+    //     }
+    //     else await router.push('/main-pages/landing-page')
+    //   } else {
+    //     console.error("El campo 'user' no está presente en la respuesta");
+    //     isSnackbarScrollReverseVisible.value = true
+    //   }
+    // } catch (error) {
+    //   console.log('validateForm: ', error.response?.data?.message || error.message);
+    //   isSnackbarScrollReverseVisible.value = true
+    // }
+  }
+  else {
+    messageInfo.value = '🚨 ¡Ups! Antes de confirmar, revisa que hayas seleccionado los modelos, la dirección y el método de pago. 🏡💳✅ ¡Completa estos datos y estarás listo para continuar! 🚀'
+    isSnackbarScrollReverseVisible.value = true
+  }
 }
 
 const selectedDeliveryAddress = computed(() => {
@@ -66,6 +111,7 @@ const resolveDeliveryMethod = computed(() => {
 })
 // Thank You! 😇
 const messageInfo = ref('Ahora Verifica tu Pedido 👍')
+const isSnackbarScrollReverseVisible = ref(false)
 
 watch(() => props.modelCheckoutData, (value) => {
   // console.log('en confir: ', value)
@@ -307,4 +353,12 @@ watch(() => props.modelCheckoutData, (value) => {
       </VCol>
     </VRow>
   </section>
+
+  <VSnackbar
+    v-model="isSnackbarScrollReverseVisible"
+    transition="scroll-y-reverse-transition"
+    location="top end"
+  >
+    {{ messageInfo }}
+  </VSnackbar>
 </template>
