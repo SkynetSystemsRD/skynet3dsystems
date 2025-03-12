@@ -9,6 +9,7 @@ import { jwtDecode } from 'jwt-decode'
 
 const router = useRouter()
 const route = useRoute()
+const pending_to_go = ref(route.query.pending_to_go)
 
 definePage({
   meta: {
@@ -55,7 +56,7 @@ const login = async () => {
     if (response.data && response.data.validLogin) {
       localStorage.setItem('userData', JSON.stringify(jwtDecode(response.data.token)));
 
-      await router.push(route.query.pending_to_go)
+      await router.push(pending_to_go)
     } else {
       console.error("El campo 'user' no está presente en la respuesta");
       isSnackbarScrollReverseVisible.value = true
