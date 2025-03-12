@@ -12,7 +12,13 @@ defineEmits<{
 }>()
 
 const confirmOrder = () => {
-  messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+  if (
+    props.modelCheckoutData.modelItems.length > 0 &&
+    props.modelCheckoutData.addresses.length > 0 &&
+    (props.modelCheckoutData.paymentMethod.cash || props.modelCheckoutData.paymentMethod.card !== '' || props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0)
+  ){
+    messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+  }
 }
 
 const selectedDeliveryAddress = computed(() => {
