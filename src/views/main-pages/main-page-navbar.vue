@@ -30,6 +30,8 @@ const route = useRoute()
 const router = useRouter()
 
 const sidebar = ref(false)
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
 
 watch(() => display, () => {
   return display.mdAndUp ? sidebar.value = false : sidebar.value
@@ -61,21 +63,21 @@ const menuItems: MenuItem[] = [
       { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' } },
     ],
   },
-  // {
-  //   listTitle: 'Auth Demo',
-  //   listIcon: 'tabler-lock-open',
-  //   navItems: [
-  //     { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' } },
-  //     { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' } },
-  //     { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' } },
-  //     { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' } },
-  //     { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' } },
-  //     { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' } },
-  //     { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' } },
-  //     { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' } },
-  //     { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' } },
-  //   ],
-  // },
+  {
+    listTitle: 'Auth Demo',
+    listIcon: 'tabler-lock-open',
+    navItems: [
+      { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' } },
+      { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' } },
+      { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' } },
+      { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' } },
+      { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' } },
+      { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' } },
+      { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' } },
+      { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' } },
+      { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' } },
+    ],
+  },
   {
     listTitle: 'Other',
     listIcon: 'tabler-photo',
@@ -344,23 +346,20 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
 
         <div class="d-flex gap-x-4">
           <!-- <NavbarThemeSwitcher /> -->
-          <RouterLink
-            class="mega-menu-item"
-            to="/pages/authentication/login-v1"
-          >
-            <VBtn
-              v-if="$vuetify.display.lgAndUp"
-              prepend-icon="tabler-login"
-              variant="elevated"
-              color="primary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Iniciar Sección
-            </VBtn>
-          </RouterLink>
 
-          <!-- <VBtn
+          <VBtn
+            v-if="$vuetify.display.lgAndUp"
+            prepend-icon="tabler-login"
+            variant="elevated"
+            color="primary"
+            href="http://localhost:5173/pages/authentication/login-v1"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Iniciar Sección
+          </VBtn>
+
+          <VBtn
             v-else
             rounded
             icon
