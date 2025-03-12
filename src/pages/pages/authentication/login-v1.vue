@@ -56,7 +56,10 @@ const login = async () => {
     if (response.data && response.data.validLogin) {
       localStorage.setItem('userData', JSON.stringify(jwtDecode(response.data.token)));
 
-      await router.push(pending_to_go)
+      if (pending_to_go){
+        await router.push(pending_to_go.value)
+      }
+      else await router.push('/main-pages/landing-page')
     } else {
       console.error("El campo 'user' no está presente en la respuesta");
       isSnackbarScrollReverseVisible.value = true
