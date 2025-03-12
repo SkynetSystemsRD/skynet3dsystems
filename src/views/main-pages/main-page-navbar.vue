@@ -62,7 +62,7 @@ const menuItems: MenuItem[] = [
       { name: 'Visualiza en Realidad Aumentada 📱', to: { name: 'main-pages-payment' }, route: "faf" },
       { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment'}, route: "faf"  },
       { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' }, route: "faf" },
-      { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' }, route: "faf" },
+      { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' }, route: "/main-pages/model-checkout" },
       { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
       { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
     ],
@@ -333,7 +333,7 @@ console.log(userData)
                             class="text-body-1 mb-4 text-no-wrap"
                           >
                             <RouterLink
-                              :to="userData ? listItem.to : { path: '/pages/authentication/login-v1', query: { pending_to_go: listItem.to.name } }"
+                              :to="userData ? listItem.to : { path: '/pages/authentication/login-v1', query: { pending_to_go: listItem.route } }"
                               class="mega-menu-item"
                               :class="isCurrentRoute(listItem.to) ? 'active-link' : 'text-high-emphasis'"
                             >
