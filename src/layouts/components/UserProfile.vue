@@ -31,7 +31,7 @@ const userProfileList = [
   { type: 'navItem', icon: 'tabler-user', title: 'Perfil', to: { name: 'apps-user-view-id', params: { id: userData.id } } },
   { type: 'navItem', icon: 'tabler-settings', title: 'configuracion', to: { name: 'pages-account-settings-tab', params: { tab: 'account' } } },
   { type: 'divider' },
-  { type: 'navItem', icon: 'tabler-book-2', title: 'Mis Projectos', to: { name: 'apps-all-projects-projects' } },
+  { type: 'navItem', icon: 'tabler-book-2', title: 'Mis Projectos', to: { name: 'apps-all-projects-projects', query: { from: 'my-projects' }  } },
   // { type: 'navItem', icon: 'tabler-question-mark', title: 'FAQ', to: { name: 'pages-faq' } },
 ]
 </script>
