@@ -7,6 +7,9 @@ interface Props {
 }
 const props = defineProps<Props>();
 
+const route = useRoute()
+const from = ref(route.query.from)
+
 // Data table options
 const itemsPerPage = ref(6);
 const page = ref(1);
@@ -44,7 +47,11 @@ const userData = storedData ? JSON.parse(storedData) : null;
 const totalCourse = computed(() => coursesData.value.total);
 const messageInfo = ref('Proyectos de nuestros clientes ya realizados')
 
-if (userData){
+
+if (from.value === 'main-pages') {
+  messageInfo.value = 'Proyectos de nuestros clientes ya realizados'
+}
+else if (userData && from.value === 'my-projects') {
   messageInfo.value = 'Tus Projectos'
 }
 
@@ -70,31 +77,23 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
 
           </RouterLink> -->
           <VCol v-for="course in paginatedCourses" :key="course.id" cols="12" md="4" sm="6">
-            <RouterLink
-              :to="{ name: 'apps-all-projects-project-details' }"
-            >
+            <RouterLink :to="{ name: 'apps-all-projects-project-details' }">
               <VCard flat border>
-              <VImg :src="course.projectImg" class="cursor-pointer" />
-              <VCardText>
-                <h5 class="text-h5 mb-1">{{ course.title }}</h5>
-                <p>{{ course.description }}</p>
-                <!-- SE PUEDE USAR EL PROGRESS BAR EN UN FUTURO -->
-                <!-- <VProgressLinear :model-value="course.completed ? 100 : 0" rounded color="primary" height="8" class="mb-4" /> -->
-              </VCardText>
-            </VCard>
+                <VImg :src="course.projectImg" class="cursor-pointer" />
+                <VCardText>
+                  <h5 class="text-h5 mb-1">{{ course.title }}</h5>
+                  <p>{{ course.description }}</p>
+                  <!-- SE PUEDE USAR EL PROGRESS BAR EN UN FUTURO -->
+                  <!-- <VProgressLinear :model-value="course.completed ? 100 : 0" rounded color="primary" height="8" class="mb-4" /> -->
+                </VCardText>
+              </VCard>
             </RouterLink>
           </VCol>
         </VRow>
       </div>
 
-      <VPagination
-        v-model="page"
-        :length="Math.ceil(totalCourse / itemsPerPage)"
-        active-color="primary"
-        first-icon="tabler-chevrons-left"
-        last-icon="tabler-chevrons-right"
-        show-first-last-page
-      />
+      <VPagination v-model="page" :length="Math.ceil(totalCourse / itemsPerPage)" active-color="primary"
+        first-icon="tabler-chevrons-left" last-icon="tabler-chevrons-right" show-first-last-page />
     </VCardText>
   </VCard>
 </template>
@@ -111,5 +110,4 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
     color: rgb(var(--v-theme-primary)) !important;
   }
 }
-
 </style>
