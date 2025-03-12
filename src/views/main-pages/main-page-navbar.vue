@@ -370,7 +370,7 @@ const isPageActive = computed(() => menuItems.some(item => item.navItems.some(li
             rel="noopener noreferrer"
           >
             <VIcon icon="tabler-shopping-cart" />
-          </VBtn> -->
+          </VBtn>
         </div>
       </VAppBar>
     </div>
