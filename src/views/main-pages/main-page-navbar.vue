@@ -5,6 +5,7 @@ import type { RouteLocationRaw } from 'vue-router/auto'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useDisplay } from 'vuetify'
 
+import UserProfile from '@/layouts/components/UserProfile.vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { onMounted, ref } from 'vue'
@@ -57,54 +58,19 @@ const menuItems: MenuItem[] = [
     listTitle: 'Innovaciones',
     listIcon: 'tabler-settings-2',
     navItems: [
-<<<<<<< HEAD
-      { name: 'Personaliza tu Modelo en 3D 🚀', to: { name: 'main-pages-pricing' } },
-      { name: 'Visualiza en Realidad Aumentada 📱', to: { name: 'main-pages-payment' } },
-      { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' } },
-      { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' } },
-      { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' } },
-      { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' } },
-=======
       { name: 'Personaliza tu Modelo en 3D 🚀', to: { name: 'main-pages-pricing' }, route: "faf" },
       { name: 'Visualiza en Realidad Aumentada 📱', to: { name: 'main-pages-payment' }, route: "faf" },
-      { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment'}, route: "faf"  },
+      { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' }, route: "faf" },
       { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' }, route: "faf" },
       { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' }, route: "/main-pages/model-checkout" },
       { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
       { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
->>>>>>> master
     ],
   },
   {
     listTitle: 'Auth Demo',
     listIcon: 'tabler-lock-open',
     navItems: [
-<<<<<<< HEAD
-      { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' } },
-      { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' } },
-      { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' } },
-      { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' } },
-      { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' } },
-      { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' } },
-      { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' } },
-      { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' } },
-      { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' } },
-    ],
-  },
-  {
-    listTitle: 'Other',
-    listIcon: 'tabler-photo',
-    navItems: [
-      { name: 'Under Maintenance', to: { name: 'pages-misc-under-maintenance' } },
-      { name: 'Coming Soon', to: { name: 'pages-misc-coming-soon' } },
-      { name: 'Not Authorized', to: { path: '/not-authorized' } },
-      { name: 'Verify Email (Basic)', to: { name: 'pages-authentication-verify-email-v1' } },
-      { name: 'Verify Email (Cover)', to: { name: 'pages-authentication-verify-email-v2' } },
-      { name: 'Two Steps (Basic)', to: { name: 'pages-authentication-two-steps-v1' } },
-      { name: 'Two Steps (Cover)', to: { name: 'pages-authentication-two-steps-v2' } },
-    ],
-  },
-=======
 
       { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' }, route: "faf" },
       { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' }, route: "faf" },
@@ -113,7 +79,7 @@ const menuItems: MenuItem[] = [
       { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' }, route: "faf" },
       { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' }, route: "faf" },
       { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' }, route: "faf" },
-      { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' }, route: "faf"  },
+      { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' }, route: "faf" },
       { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' }, route: "faf" },
     ],
   },
@@ -130,7 +96,6 @@ const menuItems: MenuItem[] = [
   //     { name: 'Two Steps (Cover)', to: { name: 'pages-authentication-two-steps-v2' } },
   //   ],
   // },
->>>>>>> master
 ]
 
 const isCurrentRoute = (to: RouteLocationRaw) => {
@@ -166,81 +131,47 @@ const setReverseRotationSequence = () => {
     setRotationSequence();
   }, 10000);
 };
+
+console.log(userData)
 </script>
 
 <template>
   <!-- 👉 Navigation drawer for mobile devices  -->
-  <VNavigationDrawer
-    v-model="sidebar"
-    width="275"
-    data-allow-mismatch
-    disable-resize-watcher
-  >
-    <PerfectScrollbar
-      :options="{ wheelPropagation: false }"
-      class="h-100"
-    >
+  <VNavigationDrawer v-model="sidebar" width="275" data-allow-mismatch disable-resize-watcher>
+    <PerfectScrollbar :options="{ wheelPropagation: false }" class="h-100">
       <!-- Nav items -->
       <div>
         <div class="d-flex flex-column gap-y-4 pa-4">
-          <RouterLink
-            v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contáctanos ']"
-            :key="index"
-            :to="{ name: 'main-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
+          <RouterLink v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contáctanos ']"
+            :key="index" :to="{ name: 'main-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
             class="nav-link font-weight-medium"
-            :class="[props.activeId?.toLocaleLowerCase().replace('-', ' ') === item.toLocaleLowerCase() ? 'active-link' : '']"
-          >
+            :class="[props.activeId?.toLocaleLowerCase().replace('-', ' ') === item.toLocaleLowerCase() ? 'active-link' : '']">
             {{ item }}
           </RouterLink>
 
           <div class="font-weight-medium cursor-pointer">
-            <div
-              :class="[isMenuOpen ? 'mb-6 active-link' : '', isPageActive ? 'active-link' : '']"
-              style="color: rgba(var(--v-theme-on-surface));"
-              class="page-link"
-              @click="isMenuOpen = !isMenuOpen"
-            >
-              Mas ... <VIcon :icon="isMenuOpen ? 'tabler-chevron-up' : 'tabler-chevron-down'" />
+            <div :class="[isMenuOpen ? 'mb-6 active-link' : '', isPageActive ? 'active-link' : '']"
+              style="color: rgba(var(--v-theme-on-surface));" class="page-link" @click="isMenuOpen = !isMenuOpen">
+              Mas ...
+              <VIcon :icon="isMenuOpen ? 'tabler-chevron-up' : 'tabler-chevron-down'" />
             </div>
 
-            <div
-              class="px-4"
-              :class="isMenuOpen ? 'd-block' : 'd-none'"
-            >
-              <div
-                v-for="(item, index) in menuItems"
-                :key="index"
-              >
+            <div class="px-4" :class="isMenuOpen ? 'd-block' : 'd-none'">
+              <div v-for="(item, index) in menuItems" :key="index">
                 <div class="d-flex align-center gap-x-3 mb-4">
-                  <VAvatar
-                    variant="tonal"
-                    color="primary"
-                    rounded
-                    :icon="item.listIcon"
-                  />
+                  <VAvatar variant="tonal" color="primary" rounded :icon="item.listIcon" />
                   <div class="text-body-1 text-high-emphasis font-weight-medium">
                     {{ item.listTitle }}
                   </div>
                 </div>
                 <ul class="mb-6">
-                  <li
-                    v-for="listItem in item.navItems"
-                    :key="listItem.name"
-                    style="list-style: none;"
-                    class="text-body-1 mb-4 text-no-wrap"
-                  >
-                    <RouterLink
-                      :to="listItem.to"
-                      :target="item.listTitle === 'Page' ? '_self' : '_blank'"
+                  <li v-for="listItem in item.navItems" :key="listItem.name" style="list-style: none;"
+                    class="text-body-1 mb-4 text-no-wrap">
+                    <RouterLink :to="listItem.to" :target="item.listTitle === 'Page' ? '_self' : '_blank'"
                       class="mega-menu-item"
-                      :class="isCurrentRoute(listItem.to) ? 'active-link' : 'text-high-emphasis'"
-                    >
-                      <VIcon
-                        icon="tabler-circle"
-                        :size="10"
-                        class="me-2"
-                      />
-                      <span>  {{ listItem.name }}</span>
+                      :class="isCurrentRoute(listItem.to) ? 'active-link' : 'text-high-emphasis'">
+                      <VIcon icon="tabler-circle" :size="10" class="me-2" />
+                      <span> {{ listItem.name }}</span>
                     </RouterLink>
                   </li>
                 </ul>
@@ -259,12 +190,7 @@ const setReverseRotationSequence = () => {
       </div>
 
       <!-- Navigation drawer close icon -->
-      <VIcon
-        id="navigation-drawer-close-btn"
-        icon="tabler-x"
-        size="20"
-        @click="sidebar = !sidebar"
-      />
+      <VIcon id="navigation-drawer-close-btn" icon="tabler-x" size="20" @click="sidebar = !sidebar" />
     </PerfectScrollbar>
   </VNavigationDrawer>
 
@@ -274,28 +200,16 @@ const setReverseRotationSequence = () => {
       <VAppBar
         :color="$vuetify.theme.current.dark ? 'rgba(var(--v-theme-surface),0.38)' : 'rgba(var(--v-theme-surface), 0.38)'"
         :class="y > 10 ? 'app-bar-scrolled' : [$vuetify.theme.current.dark ? 'app-bar-dark' : 'app-bar-light', 'elevation-0']"
-        class="navbar-blur"
-      >
+        class="navbar-blur">
         <!-- toggle icon for mobile device -->
-        <IconBtn
-          id="vertical-nav-toggle-btn"
-          class="ms-n3 me-2 d-inline-block d-md-none"
-          @click="sidebar = !sidebar"
-        >
-          <VIcon
-            size="26"
-            icon="tabler-menu-2"
-            color="rgba(var(--v-theme-on-surface))"
-          />
+        <IconBtn id="vertical-nav-toggle-btn" class="ms-n3 me-2 d-inline-block d-md-none" @click="sidebar = !sidebar">
+          <VIcon size="26" icon="tabler-menu-2" color="rgba(var(--v-theme-on-surface))" />
         </IconBtn>
         <!-- Title and Landing page sections -->
         <div class="d-flex align-center">
           <VAppBarTitle class="me-6">
-            <RouterLink
-              to="/main-pages/landing-page"
-              class="d-flex gap-x-4"
-              :class="$vuetify.display.mdAndUp ? 'd-none' : 'd-block'"
-            >
+            <RouterLink to="/main-pages/landing-page" class="d-flex gap-x-4"
+              :class="$vuetify.display.mdAndUp ? 'd-none' : 'd-block'">
               <div class="app-logo">
                 <VNodeRenderer :nodes="themeConfig.app.logo" :class="rotatingClass" />
                 <h1 class="app-logo-title">
@@ -307,90 +221,51 @@ const setReverseRotationSequence = () => {
 
           <!-- landing page sections -->
           <div class="text-base align-center d-none d-md-flex">
-            <RouterLink
-              v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contáctanos']"
-              :key="index"
-              :to="{ name: 'main-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
+            <RouterLink v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contáctanos']"
+              :key="index" :to="{ name: 'main-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
               class="nav-link font-weight-medium py-2 px-2 px-lg-4"
-              :class="[props.activeId?.toLocaleLowerCase().replace('-', ' ') === item.toLocaleLowerCase() ? 'active-link' : '']"
-            >
+              :class="[props.activeId?.toLocaleLowerCase().replace('-', ' ') === item.toLocaleLowerCase() ? 'active-link' : '']">
               {{ item }}
             </RouterLink>
 
             <!-- Pages Menu -->
-            <span
-              class="font-weight-medium cursor-pointer px-2 px-lg-4 py-2"
+            <span class="font-weight-medium cursor-pointer px-2 px-lg-4 py-2"
               :class="isPageActive || isMegaMenuOpen ? 'active-link' : ''"
-              style="color: rgba(var(--v-theme-on-surface));"
-            >
+              style="color: rgba(var(--v-theme-on-surface));">
               Mas ...
-              <VIcon
-                icon="tabler-chevron-down"
-                size="16"
-                class="ms-2"
-              />
-              <VMenu
-                v-model="isMegaMenuOpen"
-                open-on-hover
-                activator="parent"
-                transition="slide-y-transition"
-                location="bottom center"
-                offset="16"
-                content-class="mega-menu"
-                location-strategy="static"
-                close-on-content-click
-              >
+              <VIcon icon="tabler-chevron-down" size="16" class="ms-2" />
+              <VMenu v-model="isMegaMenuOpen" open-on-hover activator="parent" transition="slide-y-transition"
+                location="bottom center" offset="16" content-class="mega-menu" location-strategy="static"
+                close-on-content-click>
                 <VCard max-width="1000">
                   <VCardText class="pa-8">
                     <div class="nav-menu">
-                      <div
-                        v-for="(item, index) in menuItems"
-                        :key="index"
-                      >
+                      <div v-for="(item, index) in menuItems" :key="index">
                         <div class="d-flex align-center gap-x-3 mb-6">
-                          <VAvatar
-                            variant="tonal"
-                            color="primary"
-                            rounded
-                            :icon="item.listIcon"
-                          />
+                          <VAvatar variant="tonal" color="primary" rounded :icon="item.listIcon" />
                           <div class="text-body-1 text-high-emphasis font-weight-medium">
                             {{ item.listTitle }}
                           </div>
                         </div>
                         <ul>
-                          <li
-                            v-for="listItem in item.navItems"
-                            :key="listItem.name"
-                            style="list-style: none;"
-                            class="text-body-1 mb-4 text-no-wrap"
-                          >
+                          <li v-for="listItem in item.navItems" :key="listItem.name" style="list-style: none;"
+                            class="text-body-1 mb-4 text-no-wrap">
                             <RouterLink
                               :to="userData ? listItem.to : { path: '/pages/authentication/login-v1', query: { pending_to_go: listItem.route } }"
                               class="mega-menu-item"
-                              :class="isCurrentRoute(listItem.to) ? 'active-link' : 'text-high-emphasis'"
-                            >
+                              :class="isCurrentRoute(listItem.to) ? 'active-link' : 'text-high-emphasis'">
                               <div class="d-flex align-center">
-                                <VIcon
-                                  icon="tabler-circle"
-                                  color="primary"
-                                  :size="10"
-                                  class="me-2"
-                                />
+                                <VIcon icon="tabler-circle" color="primary" :size="10" class="me-2" />
                                 <span>{{ listItem.name }}</span>
                               </div>
                             </RouterLink>
                           </li>
                         </ul>
                       </div>
-                      <img
-                        :src="navImg"
-                        alt="Navigation Image"
-                        class="d-inline-block rounded-lg"
+                      <img :src="navImg" alt="Navigation Image" class="d-inline-block rounded-lg"
                         style="border: 10px solid rgb(var(--v-theme-background));"
                         :width="$vuetify.display.lgAndUp ? '330' : '250'"
-                        :height="$vuetify.display.lgAndUp ? '330' : '250'"
-                      >
+                        :height="$vuetify.display.lgAndUp ? '330' : '250'">
                     </div>
                   </VCardText>
                 </VCard>
@@ -410,52 +285,14 @@ const setReverseRotationSequence = () => {
         <VSpacer />
 
         <div class="d-flex gap-x-4">
-<<<<<<< HEAD
-          <!-- <NavbarThemeSwitcher /> -->
-
-          <VBtn
-            v-if="$vuetify.display.lgAndUp"
-            prepend-icon="tabler-login"
-            variant="elevated"
-            color="primary"
-            href="http://localhost:5173/pages/authentication/login-v1"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Iniciar Sección
-          </VBtn>
-
-          <VBtn
-            v-else
-            rounded
-            icon
-            variant="elevated"
-            color="primary"
-            href="https://1.envato.market/vuexy_admin"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <VIcon icon="tabler-shopping-cart" />
-          </VBtn>
-=======
-          <RouterLink
-            v-if="!userData"
-            class="mega-menu-item"
-            to="/pages/authentication/login-v1"
-          >
-            <VBtn
-              prepend-icon="tabler-login"
-              variant="elevated"
-              color="primary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+          <RouterLink v-if="!userData" class="mega-menu-item" to="/pages/authentication/login-v1">
+            <VBtn prepend-icon="tabler-login" variant="elevated" color="primary" target="_blank"
+              rel="noopener noreferrer">
               Iniciar Sección
             </VBtn>
           </RouterLink>
 
-          <UserProfile v-else/>
->>>>>>> master
+          <UserProfile v-else />
         </div>
       </VAppBar>
     </div>
@@ -636,5 +473,4 @@ const setReverseRotationSequence = () => {
 .rotating-logo {
   animation: rotateForward 7s ease-in-out infinite alternate;
 }
-
 </style>
