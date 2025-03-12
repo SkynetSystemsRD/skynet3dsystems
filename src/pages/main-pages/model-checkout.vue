@@ -20,7 +20,7 @@ const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
 
 if (!userData){
-  router.push({ path: '/pages/authentication/login-v1', query: '/main-pages/model-checkout' });
+  router.push({ path: '/pages/authentication/login-v1', query: { pending_to_go: '/main-pages/model-checkout' } });
 }
 
 definePage({
