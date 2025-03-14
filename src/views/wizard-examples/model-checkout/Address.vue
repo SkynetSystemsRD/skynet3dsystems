@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { CustomInputContent } from '@/@core/types'
+import axios from 'axios'
 import type { ModelCheckoutData } from './types'
 
 interface Props {
@@ -140,11 +141,33 @@ const editAddress = (item: CustomInputContent) => {
 
   isEditAddressDialogVisible.value = !isEditAddressDialogVisible.value
 }
+const deleteAddress = async (item: CustomInputContent) => {
+  try {
+    const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/addresses/deleteAddress`, {
+      data: { id: item.id }, // 🔹 Los datos deben ir dentro de "data"
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-const deleteAddress = (item: CustomInputContent) => {
-  modelCheckoutAddressDataLocal.value.addresses = modelCheckoutAddressDataLocal.value.addresses.filter(a => a.value !== item.value)
-  emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
-}
+    if (response.data.address) {
+      console.log('Dirección eliminada con éxito!');
+
+      // 🔹 Filtrar correctamente eliminando la dirección de la lista
+      modelCheckoutAddressDataLocal.value.addresses =
+        modelCheckoutAddressDataLocal.value.addresses.filter(a => a.value !== item.value);
+
+      // 🔹 Emitir el evento de actualización
+      emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
+    } else {
+      console.error("Error al eliminar la dirección");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    return null;
+  }
+};
 
 const addNewAddress = async (data: ModelCheckoutData) => {
   try {
@@ -348,7 +371,7 @@ const buttonAddNewAddress = () => {
                 </VChip>
               </div>
               <span v-else>RD${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed].price
-              }}.00</span>
+                }}.00</span>
             </div>
           </div>
         </VCardText>
