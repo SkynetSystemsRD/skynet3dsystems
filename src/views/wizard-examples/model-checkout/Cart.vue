@@ -71,7 +71,7 @@ const updateCodePromo = () => {
     loadingCodePromo.value = false
     message.value = 'Codigo aplicado!'
   }, 2000)
-  
+
   emit("update:checkout-data", { ...modelCheckoutCartDataLocal.value });
 }
 
@@ -100,7 +100,7 @@ function handleFileChange(files: File[]) {
       // Crear un FileReader para leer el archivo
       const reader = new FileReader();
       const file = files.target.files[count];
-      
+
       // Create a Promise to handle the file reading asynchronously
       const fileContent = new Promise<string | ArrayBuffer | null>((resolve) => {
         reader.onload = (object) => {
@@ -156,7 +156,7 @@ function handleFileChange(files: File[]) {
 
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
-        
+
               // Download or display the image
               // console.log('file format: gltf')
               modelCheckoutCartDataLocal.value.modelItems.push({
@@ -168,9 +168,14 @@ function handleFileChange(files: File[]) {
                 size: file.size,
                 imageContent: imageData,
                 octetStreamContent: content,
+                dimentions: {
+                  x: model.scale.x,
+                  y: model.scale.y,
+                  z: model.scale.z
+                },
                 price: 0
               });
-              
+
             });
             break;
           case 'obj':
@@ -181,7 +186,7 @@ function handleFileChange(files: File[]) {
               scene.add(obj);
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
-        
+
               // Download or display the image
               // console.log('file format: obj')
               modelCheckoutCartDataLocal.value.modelItems.push({
@@ -193,6 +198,11 @@ function handleFileChange(files: File[]) {
                 size: file.size,
                 imageContent: imageData,
                 octetStreamContent: content,
+                dimentions: {
+                  x: obj.scale.x,
+                  y: obj.scale.y,
+                  z: obj.scale.z
+                },
                 price: 0
               });
             });
@@ -202,11 +212,11 @@ function handleFileChange(files: File[]) {
             loader.load(content, (fbx) => {
               fbx.scale.set(1.2, 1.2, 1.2);   // Ajusta la escala del modelo
               fbx.position.set(0, 0, 0);  // Centra el modelo
-              scene.add(fbx); 
-              
+              scene.add(fbx);
+
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
-        
+
               // Download or display the image
               // console.log('file format: fbx')
               modelCheckoutCartDataLocal.value.modelItems.push({
@@ -218,6 +228,11 @@ function handleFileChange(files: File[]) {
                 size: file.size,
                 imageContent: imageData,
                 octetStreamContent: content,
+                dimentions: {
+                  x: fbx.scale.x,
+                  y: fbx.scale.y,
+                  z: fbx.scale.z
+                },
                 price: 0
               });
             });
@@ -229,10 +244,10 @@ function handleFileChange(files: File[]) {
               const mesh = new THREE.Mesh(geometry, material);
               mesh.scale.set(1.2, 1.2, 1.2);   // Ajusta la escala del modelo
               mesh.position.set(0, 0, 0);  // Centra el modelo
-              scene.add(mesh); 
+              scene.add(mesh);
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
-        
+
               // Download or display the image
               // console.log('file format: stl')
               modelCheckoutCartDataLocal.value.modelItems.push({
@@ -244,6 +259,11 @@ function handleFileChange(files: File[]) {
                 size: file.size,
                 imageContent: imageData,
                 octetStreamContent: content,
+                dimentions: {
+                  x: mesh.scale.x,
+                  y: mesh.scale.y,
+                  z: mesh.scale.z
+                },
                 price: 0
               });
             });
@@ -252,7 +272,7 @@ function handleFileChange(files: File[]) {
           default:
             console.error('Unsupported model format');
         }
-        
+
         emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
       });
     }
@@ -262,7 +282,7 @@ function handleFileChange(files: File[]) {
   }, 1000)
 }
 
-const shouldWarnBeforeUnload = computed(() => 
+const shouldWarnBeforeUnload = computed(() =>
   modelCheckoutCartDataLocal.value.modelItems.length > 0
 );
 
@@ -290,21 +310,13 @@ onBeforeUnmount(() => {
 
 <template>
   <VRow v-if="modelCheckoutCartDataLocal">
-    <VCol
-      cols="12"
-      lg="8"
-    >
+    <VCol cols="12" lg="8">
       <!-- 👉 Offers alert -->
-      <VAlert
-        type="success"
-        variant="tonal"
-        icon="tabler-tag"
-        title="Ofertas Disponibles"
-        closable
-      >
+      <VAlert type="success" variant="tonal" icon="tabler-tag" title="Ofertas Disponibles" closable>
         <template #text>
           <p class="mb-0">
-            - 🎉 5% de Descuento Instantáneo en tu primer pedido de impresión 3D con Visa, Mastercard y American Express.
+            - 🎉 5% de Descuento Instantáneo en tu primer pedido de impresión 3D con Visa, Mastercard y American
+            Express.
             <br>
             - 💰 RD$1,000 de Reembolso en compras superiores a RD$10,000 pagando con PayPal.
             <br>
@@ -314,39 +326,21 @@ onBeforeUnmount(() => {
       </VAlert>
 
       <h5 class="text-h5 my-4">
-        Mi Proyecto tiene ({{ modelCheckoutCartDataLocal.modelItems.length }} 
+        Mi Proyecto tiene ({{ modelCheckoutCartDataLocal.modelItems.length }}
         {{ modelCheckoutCartDataLocal.modelItems.length === 1 ? 'Modelo 3D' : 'Modelos 3D' }})
       </h5>
 
       <!-- 👉 Cart items -->
-      <div
-        v-if="modelCheckoutCartDataLocal.modelItems.length"
-        class="border rounded"
-      >
-        <template
-          v-for="(item, index) in modelCheckoutCartDataLocal.modelItems"
-          :key="item.name"
-        >
-          <div
-            class="d-flex align-center gap-4 pa-6 position-relative flex-column flex-sm-row"
-            :class="index ? 'border-t' : ''"
-          >
-            <IconBtn
-              class="checkout-item-remove-btn"
-              @click="removeItem(item)"
-            >
-              <VIcon
-                size="18"
-                icon="tabler-x"
-                class="text-disabled"
-              />
+      <div v-if="modelCheckoutCartDataLocal.modelItems.length" class="border rounded">
+        <template v-for="(item, index) in modelCheckoutCartDataLocal.modelItems" :key="item.name">
+          <div class="d-flex align-center gap-4 pa-6 position-relative flex-column flex-sm-row"
+            :class="index ? 'border-t' : ''">
+            <IconBtn class="checkout-item-remove-btn" @click="removeItem(item)">
+              <VIcon size="18" icon="tabler-x" class="text-disabled" />
             </IconBtn>
 
             <div>
-              <VImg
-                :src="item.imageContent"
-                width="140"
-              />
+              <VImg :src="item.imageContent" width="140" />
             </div>
 
             <div class="d-flex w-100 flex-column flex-md-row">
@@ -357,13 +351,9 @@ onBeforeUnmount(() => {
                 <div class="d-flex align-center text-no-wrap gap-4 text-body-1">
                   <div class="text-disabled">
                     Formato:
-                    <span class="d-inline-block text-primary">  {{ item.format }}</span>
+                    <span class="d-inline-block text-primary"> {{ item.format }}</span>
                   </div>
-                  <VChip
-                    :color="item.isSupported ? 'success' : 'error'"
-                    label
-                    size="small"
-                  >
+                  <VChip :color="item.isSupported ? 'success' : 'error'" label size="small">
                     {{ item.isSupported ? 'Soportado' : 'No Soportado' }}
                   </VChip>
                 </div>
@@ -385,28 +375,26 @@ onBeforeUnmount(() => {
 
               <VSpacer />
 
-              <div
-                class="d-flex flex-column mt-5 text-start text-md-end"
-                :class="$vuetify.display.mdAndDown ? 'gap-2' : 'gap-4'"
-              >
+              <div class="d-flex flex-column mt-5 text-start text-md-end"
+                :class="$vuetify.display.mdAndDown ? 'gap-2' : 'gap-4'">
                 <div class="d-flex text-base align-self-md-end">
                   <div class="text-primary">
-                    Peso: 
-                    {{ item.size < 1024 ? item.size + ' bytes' : item.size < 1024 * 1024 ? (item.size / 1024).toFixed(2) + ' KB' : (item.size / (1024 * 1024)).toFixed(2) + ' MB' }}
+                    Peso:
+                    {{ item.size < 1024 ? item.size + ' bytes' : item.size < 1024 * 1024 ? (item.size / 1024).toFixed(2)
+                      + ' KB' : (item.size / (1024 * 1024)).toFixed(2) + ' MB' }} </div>
                   </div>
-                </div>
 
-                <div>
-                  <!-- <VBtn
+                  <div>
+                    <!-- <VBtn
                     variant="tonal"
                     size="small"
                   >
                     move to wishlist
                   </VBtn> -->
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
         </template>
       </div>
 
@@ -418,13 +406,8 @@ onBeforeUnmount(() => {
       </div> -->
 
       <!-- 👉 Add more from wishlist -->
-      <VFileInput
-        :loading="loading"
-        multiple
-        prepend-icon="tabler-upload"
-        label="Sube más modelos 3D 🚀"
-        @change="handleFileChange"
-      />
+      <VFileInput :loading="loading" multiple prepend-icon="tabler-upload" label="Sube más modelos 3D 🚀"
+        @change="handleFileChange" />
       <!-- <VIcon
         icon="tabler-upload"
         size="16"
@@ -432,14 +415,8 @@ onBeforeUnmount(() => {
       /> -->
     </VCol>
 
-    <VCol
-      cols="12"
-      lg="4"
-    >
-      <VCard
-        flat
-        variant="outlined"
-      >
+    <VCol cols="12" lg="4">
+      <VCard flat variant="outlined">
         <!-- 👉 payment offer -->
         <VCardText>
           <h6 class="text-h6 mb-4">
@@ -447,40 +424,22 @@ onBeforeUnmount(() => {
           </h6>
 
           <div class="d-flex align-center gap-4 flex-wrap">
-            <AppTextField
-              v-model="message"
-              clearable
-              placeholder="Hey!"
-              type="text"
-              class="textfield-demo-icon-slot"
-            >
+            <AppTextField v-model="message" clearable placeholder="Hey!" type="text" class="textfield-demo-icon-slot">
               <!-- AppendInner -->
               <template #append-inner>
                 <VFadeTransition leave-absolute>
-                  <VProgressCircular
-                    v-if="loadingCodePromo"
-                    color="primary"
-                    width="3"
-                    size="24"
-                    indeterminate
-                  />
+                  <VProgressCircular v-if="loadingCodePromo" color="primary" width="3" size="24" indeterminate />
                 </VFadeTransition>
               </template>
 
               <!-- Append -->
               <template #append>
-                <VBtn
-                  :icon="$vuetify.display.smAndDown"
-                  @click="updateCodePromo"
-                >
-                  <span
-                    v-if="$vuetify.display.mdAndUp"
-                    class="ms-3"
-                  >Aplicar</span>
+                <VBtn :icon="$vuetify.display.smAndDown" @click="updateCodePromo">
+                  <span v-if="$vuetify.display.mdAndUp" class="ms-3">Aplicar</span>
                 </VBtn>
               </template>
             </AppTextField>
-<!-- 
+            <!-- 
 
             <AppTextField
               v-model="modelCheckoutCartDataLocal.promoCode"
@@ -504,22 +463,20 @@ onBeforeUnmount(() => {
               ¿Personaliza tu pedido?
             </h6>
             <p class="mb-2">
-              Agrega una nota indicando lo que deseas en especifico, NOTA: alguna modificacion de los modelos pueden alterar el precio, tiempo de impresion y costos.
+              Agrega una nota indicando lo que deseas en especifico, NOTA: alguna modificacion de los modelos pueden
+              alterar
+              el precio, tiempo de impresion y costos.
             </p>
-            <AppTextarea
-              v-if="showNote"
-              v-model="modelCheckoutCartDataLocal.note"
-              @input="handleNoteUpdate($event.target.value)"
-              rows="2"
-              label="NOTA"
-              placeholder="Dinos lo que piensas"
-              hint="Comparte tus ideas o sugerencias sobre el diseño o la calidad de la impresión."
-            />
+            <AppTextarea v-if="showNote" v-model="modelCheckoutCartDataLocal.note"
+              @input="handleNoteUpdate($event.target.value)" rows="2" label="NOTA" placeholder="Dinos lo que piensas"
+              hint="Comparte tus ideas o sugerencias sobre el diseño o la calidad de la impresión." />
 
             <br>
 
             <h6 class="text-h6">
-              <a href= "#" @click="showNote = !showNote; if (showNote) noteMessage = 'Eliminar esta nota'; else { noteMessage = 'Añadir una nota'; modelCheckoutCartDataLocal.note = '' }">{{ noteMessage }}</a>
+              <a href="#"
+                @click="showNote = !showNote; if (showNote) noteMessage = 'Eliminar esta nota'; else { noteMessage = 'Añadir una nota'; modelCheckoutCartDataLocal.note = '' }">{{
+                  noteMessage }}</a>
             </h6>
           </div>
         </VCardText>
@@ -584,11 +541,7 @@ onBeforeUnmount(() => {
 
       <br>
 
-      <VBtn
-        block
-        class="mt-auto"
-        @click="nextStep"
-      >
+      <VBtn block class="mt-auto" @click="nextStep">
         Continuar Pedido
       </VBtn>
     </VCol>

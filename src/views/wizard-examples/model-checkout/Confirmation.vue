@@ -50,7 +50,11 @@ const confirmOrder = async () => {
           fileName: model.fileName,
           filePath: model.filePath,
           size: model.size,
-          dimentions: model.dimentions,
+          dimentions: {
+            x: model.dimentions.x,
+            y: model.dimentions.y,
+            z: model.dimentions.z
+          },
           weight: model.weight,
           price: model.price,
           uuid: model.uuid,
