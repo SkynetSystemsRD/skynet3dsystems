@@ -8,6 +8,7 @@ import office from '@images/svg/office.svg'
 import axios from 'axios'
 
 interface BillingAddress {
+  id: string | undefined
   firstName: string | undefined
   lastName: string | undefined
   email: string | undefined
@@ -33,6 +34,8 @@ interface Emit {
   (e: 'submit', value: BillingAddress): void
   (e: 'update:checkout-data', value: ModelCheckoutData): void  // Añadido para permitir este evento
 }
+
+const AddOrEdit = ref(true)
 
 const countries = [
   'Afganistán',
@@ -235,6 +238,7 @@ const userData = storedData ? JSON.parse(storedData) : null;
 
 const props = withDefaults(defineProps<Props>(), {
   billingAddress: () => ({
+    id: '',
     firstName: 'Jose',
     lastName: 'Lopez',
     phone: '849 000 1111',
@@ -276,41 +280,83 @@ const resetForm = () => {
 }
 
 const onFormSubmit = async () => {
-  const { valid } = await form.value.validate();
-  if (valid) {
-    if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
-      const id = await saveAddress({
-        name: billingAddress.value.firstName,
-        lastName: billingAddress.value.lastName,
-        email: billingAddress.value.email,
-        phone: billingAddress.value.phone,
-        place: selectedAddress.value,
-        street: billingAddress.value.addressLine1,
-        city: billingAddress.value.city,
-        state: billingAddress.value.state,
-        country: billingAddress.value.selectedCountry,
-        // zipCode: model.uuid,
-        defaultAddress: toggleSwitch.value,
-      })
+  if ((props.billingAddress.addressLine1 || props.billingAddress.addressLine2)) {
+    const { valid } = await form.value.validate();
+    if (valid) {
+      if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
+        await updateAddress({
+          id: billingAddress.value.id,
+          name: billingAddress.value.firstName,
+          lastName: billingAddress.value.lastName,
+          email: billingAddress.value.email,
+          phone: billingAddress.value.phone,
+          place: selectedAddress.value,
+          street: billingAddress.value.addressLine1,
+          city: billingAddress.value.city,
+          state: billingAddress.value.state,
+          country: billingAddress.value.selectedCountry,
+          // zipCode: model.uuid,
+          defaultAddress: toggleSwitch.value,
+        })
 
-      modelCheckoutCartDataLocal.value.addresses.push({
-        id: id,
-        title: toggleSwitch.value ? `${billingAddress.value.firstName} ${billingAddress.value.lastName} (Predeterminado)` : `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
-        email: billingAddress.value.email,
-        desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.selectedCountry}`,
-        subtitle: billingAddress.value.phone,
-        value: selectedAddress.value
-      });
+        modelCheckoutCartDataLocal.value.addresses.push({
+          id: billingAddress.value.id,
+          title: toggleSwitch.value ? `${billingAddress.value.firstName} ${billingAddress.value.lastName} (Predeterminado)` : `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
+          email: billingAddress.value.email,
+          desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.selectedCountry}`,
+          subtitle: billingAddress.value.phone,
+          value: selectedAddress.value
+        });
 
-      // Eliminar el primer elemento después de agregar el nuevo
-      if (modelCheckoutCartDataLocal.value.addresses.length > 1) {
-        modelCheckoutCartDataLocal.value.addresses.shift();
+        // Eliminar el primer elemento después de agregar el nuevo
+        if (modelCheckoutCartDataLocal.value.addresses.length > 1) {
+          modelCheckoutCartDataLocal.value.addresses.shift();
+        }
+
+        emit('update:checkout-data', modelCheckoutCartDataLocal.value);
+        emit('update:isDialogVisible', false);
+      } else {
+        console.error("modelCheckoutCartDataLocal or addresses is not defined correctly");
       }
+    }
+  }
+  else {
+    const { valid } = await form.value.validate();
+    if (valid) {
+      if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
+        const id = await saveAddress({
+          name: billingAddress.value.firstName,
+          lastName: billingAddress.value.lastName,
+          email: billingAddress.value.email,
+          phone: billingAddress.value.phone,
+          place: selectedAddress.value,
+          street: billingAddress.value.addressLine1,
+          city: billingAddress.value.city,
+          state: billingAddress.value.state,
+          country: billingAddress.value.selectedCountry,
+          // zipCode: model.uuid,
+          defaultAddress: toggleSwitch.value,
+        })
 
-      emit('update:checkout-data', modelCheckoutCartDataLocal.value);
-      emit('update:isDialogVisible', false);
-    } else {
-      console.error("modelCheckoutCartDataLocal or addresses is not defined correctly");
+        modelCheckoutCartDataLocal.value.addresses.push({
+          id: id,
+          title: toggleSwitch.value ? `${billingAddress.value.firstName} ${billingAddress.value.lastName} (Predeterminado)` : `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
+          email: billingAddress.value.email,
+          desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.selectedCountry}`,
+          subtitle: billingAddress.value.phone,
+          value: selectedAddress.value
+        });
+
+        // Eliminar el primer elemento después de agregar el nuevo
+        if (modelCheckoutCartDataLocal.value.addresses.length > 1) {
+          modelCheckoutCartDataLocal.value.addresses.shift();
+        }
+
+        emit('update:checkout-data', modelCheckoutCartDataLocal.value);
+        emit('update:isDialogVisible', false);
+      } else {
+        console.error("modelCheckoutCartDataLocal or addresses is not defined correctly");
+      }
     }
   }
 };
@@ -351,6 +397,7 @@ const addressTypes = [
 ]
 
 interface Address {
+  id: string,
   userId: string,
   name: string,
   lastName: string,
@@ -388,6 +435,34 @@ const saveAddress = async (newAddress: Address) => {
   if (response.data.address) {
     console.log('Direccion guardada con exito!')
     return response.data.id
+  } else {
+    console.error("Error al guardar la direccion");
+    return null
+  }
+}
+
+const updateAddress = async (newAddress: Address) => {
+  const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/addresses/updateAddress`, {
+    id: newAddress.id,
+    name: newAddress.name,
+    lastName: newAddress.lastName,
+    email: newAddress.email,
+    phone: newAddress.phone,
+    place: newAddress.place,
+    street: newAddress.street,
+    city: newAddress.city,
+    state: newAddress.state,
+    country: newAddress.country,
+    // zipCode: model.uuid,
+    defaultAddress: newAddress.defaultAddress,
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (response.data.address) {
+    console.log('Direccion guardada con exito!')
   } else {
     console.error("Error al guardar la direccion");
     return null

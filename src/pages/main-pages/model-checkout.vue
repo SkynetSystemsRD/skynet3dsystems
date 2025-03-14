@@ -72,17 +72,15 @@ const getAddress = async () => {
 
     const address = response.data.address
 
-    console.log(address)
-
     // Ensure response data is handled correctly
     if (address) {
       modelCheckoutData.value.addresses.push({
-        id: address.id,
+        id: address._id,
         title: `${address.name} ${address.lastName}`,  // Adjust the title as needed
         email: address.email,  // Adjust the email
         desc: `${address.street}, ${address.city}, ${address.state}, ${address.country}`,  // Adjust the description
         subtitle: address.phone,  // Adjust subtitle
-        value: address.value  // Adjust the value
+        value: address.place  // Adjust the value
       });
     }
   } catch (error) {
@@ -127,6 +125,7 @@ const currentStep = ref(0)
 // Use onMounted or another async lifecycle hook to fetch addresses
 onMounted(async () => {
   await getAddress();
+  console.log(modelCheckoutData.value.addresses)
   // console.log(modelCheckoutData.value.addresses)
 });
 </script>

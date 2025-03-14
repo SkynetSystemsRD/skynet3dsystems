@@ -23,6 +23,7 @@ watch(() => props.modelCheckoutData, value => {
 })
 
 const selectedAddress = ref({
+  id: '',
   firstName: '',
   lastName: '',
   phone: '',
@@ -121,6 +122,7 @@ const editAddress = (item: CustomInputContent) => {
   const [addressLine1, city, state, country] = item.desc?.split(',')
 
   selectedAddress.value = {
+    id: item.id,
     firstName: firstName,
     lastName: lastName,
     phone: item.subtitle ?? "",
@@ -135,8 +137,6 @@ const editAddress = (item: CustomInputContent) => {
     zipCode: null,
     addressType: item.value
   }
-
-  // console.log("selectedAddress: ", selectedAddress.value)
 
   isEditAddressDialogVisible.value = !isEditAddressDialogVisible.value
 }
@@ -348,7 +348,7 @@ const buttonAddNewAddress = () => {
                 </VChip>
               </div>
               <span v-else>RD${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed].price
-                }}.00</span>
+              }}.00</span>
             </div>
           </div>
         </VCardText>
