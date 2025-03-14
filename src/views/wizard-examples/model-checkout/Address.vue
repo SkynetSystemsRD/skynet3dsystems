@@ -145,7 +145,11 @@ const deleteAddress = (item: CustomInputContent) => {
 
 const addNewAddress = (data: ModelCheckoutData) => {
   const newAddress = data.addresses[0];
-  
+
+  modelCheckoutAddressDataLocal.value.addresses.forEach(address => {
+    address.title = address.title.replace(' (Predeterminado)', '');
+  });
+
   const existingAddressIndex = modelCheckoutAddressDataLocal.value.addresses.findIndex(
     (addr) => addr.value === newAddress.value
   );
@@ -195,21 +199,15 @@ const buttonAddNewAddress = () => {
 
 <template>
   <VRow>
-    <VCol
-      cols="12"
-      md="8"
-    >
+    <VCol cols="12" md="8">
       <!-- 👉 Address options -->
       <h6 class="text-h6 mb-4">
         Seleccione su direccion de preferencia
       </h6>
 
       <!-- 👉 Address custom input -->
-      <CustomRadios
-        v-model:selected-radio="modelCheckoutAddressDataLocal.deliveryAddress"
-        :radio-content="modelCheckoutAddressDataLocal.addresses"
-        :grid-column="{ cols: '12', sm: '6' }"
-      >
+      <CustomRadios v-model:selected-radio="modelCheckoutAddressDataLocal.deliveryAddress"
+        :radio-content="modelCheckoutAddressDataLocal.addresses" :grid-column="{ cols: '12', sm: '6' }">
         <template #default="{ item }">
           <div class="w-100" @click="changeAddress(item)">
             <div class="d-flex justify-space-between mb-3">
@@ -217,12 +215,7 @@ const buttonAddNewAddress = () => {
                 {{ item.title }}
               </h6>
 
-              <VChip
-                :color="resolveAddressBadgeColor[item.value]"
-                label
-                size="small"
-                class="text-capitalize"
-              >
+              <VChip :color="resolveAddressBadgeColor[item.value]" label size="small" class="text-capitalize">
                 {{ item.value }}
               </VChip>
             </div>
@@ -235,10 +228,7 @@ const buttonAddNewAddress = () => {
             </p>
             <VDivider />
             <div class="pt-2">
-              <a
-                class="me-4"
-                @click="editAddress(item)"
-              >Editar</a>
+              <a class="me-4" @click="editAddress(item)">Editar</a>
               <a @click="deleteAddress(item)">Eliminar</a>
             </div>
           </div>
@@ -246,11 +236,7 @@ const buttonAddNewAddress = () => {
       </CustomRadios>
 
       <!-- 👉 Add New Address -->
-      <VBtn
-        variant="tonal"
-        class="mt-4 mb-6"
-        @click="buttonAddNewAddress"
-      >
+      <VBtn variant="tonal" class="mt-4 mb-6" @click="buttonAddNewAddress">
         Agregar Nueva Direccion
       </VBtn>
 
@@ -260,27 +246,17 @@ const buttonAddNewAddress = () => {
       </h6>
 
       <!-- 👉 Delivery options custom input -->
-      <CustomRadiosWithIcon
-        v-model:selected-radio="modelCheckoutAddressDataLocal.deliverySpeed"
-        :radio-content="deliveryOptions"
-        :grid-column="{ cols: '12', sm: '4' }"
-      >
+      <CustomRadiosWithIcon v-model:selected-radio="modelCheckoutAddressDataLocal.deliverySpeed"
+        :radio-content="deliveryOptions" :grid-column="{ cols: '12', sm: '4' }">
         <template #default="{ item }">
           <div class="d-flex flex-column align-center gap-2 w-100" @click="changeDeliverySpeed(item)">
             <div class="d-flex justify-end w-100 mb-n3">
-              <VChip
-                :color="resolveDeliveryBadgeData[item.value].color"
-                size="small"
-                label
-              >
+              <VChip :color="resolveDeliveryBadgeData[item.value].color" size="small" label>
                 {{ resolveDeliveryBadgeData[item.value].text }}
               </VChip>
             </div>
 
-            <VIcon
-              :icon="item.icon.icono"
-              size="28"
-            />
+            <VIcon :icon="item.icon.icono" size="28" />
 
             <h6 class="text-h6">
               {{ item.title }}
@@ -293,14 +269,8 @@ const buttonAddNewAddress = () => {
       </CustomRadiosWithIcon>
     </VCol>
 
-    <VCol
-      cols="12"
-      md="4"
-    >
-      <VCard
-        flat
-        variant="outlined"
-      >
+    <VCol cols="12" md="4">
+      <VCard flat variant="outlined">
         <!-- 👉 Delivery estimate date -->
         <VCardText>
           <h6 class="text-h6 mb-4">
@@ -308,17 +278,9 @@ const buttonAddNewAddress = () => {
           </h6>
 
           <VList class="card-list">
-            <VListItem
-              v-for="product in modelCheckoutAddressDataLocal.modelItems"
-              :key="product.fileName"
-            >
+            <VListItem v-for="product in modelCheckoutAddressDataLocal.modelItems" :key="product.fileName">
               <template #prepend>
-                <img
-                  height="70"
-                  width="60"
-                  :src="product.imageContent"
-                  class="me-4"
-                >
+                <img height="70" width="60" :src="product.imageContent" class="me-4">
               </template>
 
               <div class="text-body-1">
@@ -344,21 +306,16 @@ const buttonAddNewAddress = () => {
           <div class="d-flex align-center justify-space-between">
             <span class="text-high-emphasis">Cargos de Envio</span>
             <div class="text-end">
-              <div
-                v-if="modelCheckoutAddressDataLocal.deliverySpeed === 'free'"
-                class="d-flex align-center"
-              >
+              <div v-if="modelCheckoutAddressDataLocal.deliverySpeed === 'free'" class="d-flex align-center">
                 <div class="text-decoration-line-through text-disabled me-2">
                   RD$200.00
                 </div>
-                <VChip
-                  size="small"
-                  color="success"
-                >
+                <VChip size="small" color="success">
                   Gratis
                 </VChip>
               </div>
-              <span v-else>RD${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed].price }}.00</span>
+              <span v-else>RD${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed].price
+              }}.00</span>
             </div>
           </div>
         </VCardText>
@@ -374,21 +331,13 @@ const buttonAddNewAddress = () => {
         </VCardText>
       </VCard>
 
-      <VBtn
-        block
-        class="mt-4"
-        @click="nextStep"
-      >
+      <VBtn block class="mt-4" @click="nextStep">
         Realizar pedido
       </VBtn>
     </VCol>
   </VRow>
-  <AddEditAddressDialog 
-    :billingAddress="selectedAddress" 
-    v-model:is-dialog-visible="isEditAddressDialogVisible" 
-    :modelCheckoutData="modelCheckoutData"
-    @update:checkout-data="(data) => addNewAddress(data)"
-  />
+  <AddEditAddressDialog :billingAddress="selectedAddress" v-model:is-dialog-visible="isEditAddressDialogVisible"
+    :modelCheckoutData="modelCheckoutData" @update:checkout-data="(data) => addNewAddress(data)" />
 </template>
 
 <style lang="scss" scoped>

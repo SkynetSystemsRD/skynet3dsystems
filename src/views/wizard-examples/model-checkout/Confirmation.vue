@@ -34,6 +34,44 @@ const createProject = async () => {
   }
 }
 
+const saveBillingDetails = (proyectId: string) => {
+  // console.log(proyectId)
+  // console.log(props.modelCheckoutData.addresses)
+  // try {
+  //   const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/billing-details/createBillingDetails`, {
+  //     projectId: projectId,
+  //     userId: userData.id,
+  //     fileName: model.fileName,
+  //     filePath: model.filePath,
+  //     size: model.size,
+  //     dimentions: {
+  //       x: model.dimentions.x,
+  //       y: model.dimentions.y,
+  //       z: model.dimentions.z
+  //     },
+  //     weight: model.weight,
+  //     price: model.price,
+  //     uuid: model.uuid,
+  //     octetStreamContent: model.octetStreamContent,
+  //   }, {
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   });
+
+  //   if (response.data.result) {
+  //     messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+  //   } else {
+  //     console.error("El campo 'user' no está presente en la respuesta");
+  //     messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+  //     isSnackbarScrollReverseVisible.value = true
+  //   }
+  // } catch (error) {
+  //   console.log('confirmOrder: ', error.response?.data?.message || error.message);
+  //   isSnackbarScrollReverseVisible.value = true
+  // }
+}
+
 const confirmOrder = async () => {
   if (
     props.modelCheckoutData.modelItems.length > 0 &&
@@ -41,42 +79,43 @@ const confirmOrder = async () => {
     (props.modelCheckoutData.paymentMethod.cash || props.modelCheckoutData.paymentMethod.card !== '' || props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0)
   ) {
     const projectId = await createProject()
+    saveBillingDetails(projectId)
 
-    props.modelCheckoutData.modelItems.forEach(model => {
-      try {
-        const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/saveModels`, {
-          projectId: projectId,
-          userId: userData.id,
-          fileName: model.fileName,
-          filePath: model.filePath,
-          size: model.size,
-          dimentions: {
-            x: model.dimentions.x,
-            y: model.dimentions.y,
-            z: model.dimentions.z
-          },
-          weight: model.weight,
-          price: model.price,
-          uuid: model.uuid,
-          octetStreamContent: model.octetStreamContent,
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+    // props.modelCheckoutData.modelItems.forEach(model => {
+    //   try {
+    //     const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/saveModels`, {
+    //       projectId: projectId,
+    //       userId: userData.id,
+    //       fileName: model.fileName,
+    //       filePath: model.filePath,
+    //       size: model.size,
+    //       dimentions: {
+    //         x: model.dimentions.x,
+    //         y: model.dimentions.y,
+    //         z: model.dimentions.z
+    //       },
+    //       weight: model.weight,
+    //       price: model.price,
+    //       uuid: model.uuid,
+    //       octetStreamContent: model.octetStreamContent,
+    //     }, {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //     });
 
-        if (response.data.result) {
-          messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
-        } else {
-          console.error("El campo 'user' no está presente en la respuesta");
-          messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
-          isSnackbarScrollReverseVisible.value = true
-        }
-      } catch (error) {
-        console.log('confirmOrder: ', error.response?.data?.message || error.message);
-        isSnackbarScrollReverseVisible.value = true
-      }
-    })
+    //     if (response.data.result) {
+    //       messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+    //     } else {
+    //       console.error("El campo 'user' no está presente en la respuesta");
+    //       messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+    //       isSnackbarScrollReverseVisible.value = true
+    //     }
+    //   } catch (error) {
+    //     console.log('confirmOrder: ', error.response?.data?.message || error.message);
+    //     isSnackbarScrollReverseVisible.value = true
+    //   }
+    // })
   }
   else {
     messageInfo.value = '🚨 ¡Ups! Antes de confirmar, revisa que hayas seleccionado los modelos, la dirección y el método de pago. 🏡💳✅ ¡Completa estos datos y estarás listo para continuar! 🚀'
