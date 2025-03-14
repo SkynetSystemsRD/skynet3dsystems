@@ -15,38 +15,61 @@ defineEmits<{
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
 
+const createProject = async () => {
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/projects/createProject`, {
+      userId: userData.id
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.data.project) {
+      return response.data.project
+    }
+  } catch (error) {
+    console.log('createProject: ', error.response?.data?.message || error.message);
+    return null
+  }
+}
+
 const confirmOrder = async () => {
   if (
     props.modelCheckoutData.modelItems.length > 0 &&
     props.modelCheckoutData.addresses.length > 0 &&
     (props.modelCheckoutData.paymentMethod.cash || props.modelCheckoutData.paymentMethod.card !== '' || props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0)
   ) {
+    const projectId = await createProject()
+
     props.modelCheckoutData.modelItems.forEach(model => {
       try {
         const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/saveModels`, {
+          projectId: projectId,
           userId: userData.id,
           fileName: model.fileName,
           filePath: model.filePath,
           size: model.size,
-          octetStreamContent: model.octetStreamContent,
           dimentions: model.dimentions,
           weight: model.weight,
           price: model.price,
-          uuid: model.uuid
+          uuid: model.uuid,
+          octetStreamContent: model.octetStreamContent,
         }, {
           headers: {
             'Content-Type': 'application/json',
           },
         });
 
-        if (response.data && response.data.result) {
+        if (response.data.result) {
           messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
         } else {
           console.error("El campo 'user' no está presente en la respuesta");
+          messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
           isSnackbarScrollReverseVisible.value = true
         }
       } catch (error) {
-        console.log('validateForm: ', error.response?.data?.message || error.message);
+        console.log('confirmOrder: ', error.response?.data?.message || error.message);
         isSnackbarScrollReverseVisible.value = true
       }
     })
