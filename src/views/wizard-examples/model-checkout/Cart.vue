@@ -173,6 +173,8 @@ function handleFileChange(files: File[]) {
                   y: model.scale.y,
                   z: model.scale.z
                 },
+                weight: 0, // dar el valor correspondiente
+                uuid: 'uuid', // dar el valor correspondiente
                 price: 0
               });
 
@@ -203,6 +205,8 @@ function handleFileChange(files: File[]) {
                   y: obj.scale.y,
                   z: obj.scale.z
                 },
+                weight: 0, // dar el valor correspondiente
+                uuid: 'uuid', // dar el valor correspondiente
                 price: 0
               });
             });
@@ -233,6 +237,8 @@ function handleFileChange(files: File[]) {
                   y: fbx.scale.y,
                   z: fbx.scale.z
                 },
+                weight: 0, // dar el valor correspondiente
+                uuid: 'uuid', // dar el valor correspondiente
                 price: 0
               });
             });
@@ -264,6 +270,8 @@ function handleFileChange(files: File[]) {
                   y: mesh.scale.y,
                   z: mesh.scale.z
                 },
+                weight: 0, // dar el valor correspondiente
+                uuid: 'uuid', // dar el valor correspondiente
                 price: 0
               });
             });
