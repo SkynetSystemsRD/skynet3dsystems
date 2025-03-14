@@ -78,6 +78,9 @@ const totalPriceWithDeliveryCharges = computed(() => {
   return modelCheckoutAddressDataLocal.value.orderAmount + deliveryCharges
 })
 
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
+
 const updateAddressData = () => {
   modelCheckoutAddressDataLocal.value.deliveryCharges = resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.value.deliverySpeed].price
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
@@ -143,35 +146,65 @@ const deleteAddress = (item: CustomInputContent) => {
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
 }
 
-const addNewAddress = (data: ModelCheckoutData) => {
-  const newAddress = data.addresses[0];
+const addNewAddress = async (data: ModelCheckoutData) => {
+  try {
+    const newAddress = data.addresses[0];
 
-  modelCheckoutAddressDataLocal.value.addresses.forEach(address => {
-    address.title = address.title.replace(' (Predeterminado)', '');
-  });
+    modelCheckoutAddressDataLocal.value.addresses.forEach(address => {
+      address.title = address.title.replace(' (Predeterminado)', '');
+    });
 
-  const existingAddressIndex = modelCheckoutAddressDataLocal.value.addresses.findIndex(
-    (addr) => addr.value === newAddress.value
-  );
+    const existingAddressIndex = modelCheckoutAddressDataLocal.value.addresses.findIndex(
+      (addr) => addr.value === newAddress.value
+    );
 
-  if (existingAddressIndex === -1) {
-    // Si no existe, agregar la nueva dirección
-    modelCheckoutAddressDataLocal.value.addresses.push({ ...newAddress });
-  } else {
-    // Si ya existe, verifica si ha cambiado
-    const existingAddress = modelCheckoutAddressDataLocal.value.addresses[existingAddressIndex];
-
-    if (JSON.stringify(existingAddress) !== JSON.stringify(newAddress)) {
-      // Actualiza la dirección si hay cambios
-      modelCheckoutAddressDataLocal.value.addresses[existingAddressIndex] = { ...newAddress };
+    if (existingAddressIndex === -1) {
+      // Si no existe, agregar la nueva dirección
+      modelCheckoutAddressDataLocal.value.addresses.push({ ...newAddress });
     } else {
-      // console.log('La dirección ya existe y no tiene cambios.');
-      return;
+      // Si ya existe, verifica si ha cambiado
+      const existingAddress = modelCheckoutAddressDataLocal.value.addresses[existingAddressIndex];
+
+      if (JSON.stringify(existingAddress) !== JSON.stringify(newAddress)) {
+        // Actualiza la dirección si hay cambios
+        modelCheckoutAddressDataLocal.value.addresses[existingAddressIndex] = { ...newAddress };
+
+        // const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/address/updateAddress`, {
+        //   userId: id,
+        //   name: address.title.split(" ")[0],
+        //   lastName: address.title.split(" ")[1],
+        //   email: address.email,
+        //   phone: address.subtitle,
+        //   place: address.value,
+        //   street: address.desc.split(", ")[0],
+        //   city: address.desc.split(", ")[1],
+        //   state: address.desc.split(", ")[2],
+        //   country: address.desc.split(", ")[3],
+        //   // zipCode: model.uuid,
+        //   defaultAddress: address.title.includes('(Predeterminado)'),
+        // }, {
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        // });
+
+        // if (response.data.address) {
+        //   console.log('Direccion guardada con exito!')
+        // } else {
+        //   console.error("Error al guardar la direccion");
+        // }
+      } else {
+        // console.log('La dirección ya existe y no tiene cambios.');
+        return;
+      }
     }
+    console.log('newAddress:  ', modelCheckoutAddressDataLocal.value)  // Busca la dirección existente
+
+    // Emitir evento de actualización
+    emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
+  } catch (err) {
+    console.error(err)
   }
-  console.log('newAddress:  ', modelCheckoutAddressDataLocal.value)  // Busca la dirección existente
-  // Emitir evento de actualización
-  emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
 };
 
 const buttonAddNewAddress = () => {
@@ -315,7 +348,7 @@ const buttonAddNewAddress = () => {
                 </VChip>
               </div>
               <span v-else>RD${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed].price
-              }}.00</span>
+                }}.00</span>
             </div>
           </div>
         </VCardText>
