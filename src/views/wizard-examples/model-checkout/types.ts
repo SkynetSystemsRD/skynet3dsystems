@@ -2,8 +2,10 @@ export interface ModelItem {
   id: number
   fileName: string
   filePath: string
+  format: string
   size: number
   octetStreamContent: string
+  imageContent: string
   uuid: string
   dimentions: xyz;
   weight: number;
