@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import navImg from '@images/main-pages/misc/nav-item-col-img.png'
+// import navImg from '@images/main-pages/misc/nav-item-col-img.png'
+import navImg from '@images/main-pages/misc/AI-3D.jpg'
 import { useWindowScroll } from '@vueuse/core'
 import type { RouteLocationRaw } from 'vue-router/auto'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
@@ -58,31 +59,31 @@ const menuItems: MenuItem[] = [
     listTitle: 'Innovaciones',
     listIcon: 'tabler-settings-2',
     navItems: [
-      { name: 'Personaliza tu Modelo en 3D 🚀', to: { name: 'main-pages-pricing' }, route: "faf" },
-      { name: 'Visualiza en Realidad Aumentada 📱', to: { name: 'main-pages-payment' }, route: "faf" },
-      { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment'}, route: "faf"  },
-      { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' }, route: "faf" },
+      // { name: 'Personaliza tu Modelo en 3D 🚀', to: { name: 'main-pages-pricing' }, route: "faf" },
+      // { name: 'Visualiza en Realidad Aumentada 📱', to: { name: 'main-pages-payment' }, route: "faf" },
+      // { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' }, route: "faf" },
+      // { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' }, route: "faf" },
       { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' }, route: "/main-pages/model-checkout" },
-      { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
-      { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
+      // { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
+      // { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
     ],
   },
-  {
-    listTitle: 'Auth Demo',
-    listIcon: 'tabler-lock-open',
-    navItems: [
+  // {
+  //   listTitle: 'Auth Demo',
+  //   listIcon: 'tabler-lock-open',
+  //   navItems: [
 
-      { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' }, route: "faf" },
-      { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' }, route: "faf" },
-      { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' }, route: "faf" },
-      { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' }, route: "faf" },
-      { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' }, route: "faf" },
-      { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' }, route: "faf" },
-      { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' }, route: "faf" },
-      { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' }, route: "faf"  },
-      { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' }, route: "faf" },
-    ],
-  },
+  //     { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' }, route: "faf" },
+  //     { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' }, route: "faf" },
+  //     { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' }, route: "faf" },
+  //     { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' }, route: "faf" },
+  //     { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' }, route: "faf" },
+  //     { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' }, route: "faf" },
+  //     { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' }, route: "faf" },
+  //     { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' }, route: "faf" },
+  //     { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' }, route: "faf" },
+  //   ],
+  // },
   // {
   //   listTitle: 'Other',
   //   listIcon: 'tabler-photo',
@@ -97,7 +98,6 @@ const menuItems: MenuItem[] = [
   //   ],
   // },
 ]
-
 const isCurrentRoute = (to: RouteLocationRaw) => {
   return route.matched.some(_route => _route.path.startsWith(router.resolve(to).path))
 
