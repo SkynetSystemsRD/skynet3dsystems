@@ -56,7 +56,7 @@ const saveBillingDetails = (proyectId: string, addressId: string) => {
       messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
     } else {
       console.error("El campo 'user' no está presente en la respuesta");
-      messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+      messageInfo.value = '¡Uy! Algo salió mal 😵‍💫 Pero no te preocupes, estamos en ello 🛠️✨'
       isSnackbarScrollReverseVisible.value = true
     }
   } catch (error) {
@@ -100,9 +100,10 @@ const confirmOrder = async () => {
 
         if (response.data.result) {
           messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+          isSnackbarScrollReverseVisible.value = true
         } else {
           console.error("El campo 'user' no está presente en la respuesta");
-          messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+          messageInfo.value = '¡Uy! Algo salió mal 😵‍💫 Pero no te preocupes, estamos en ello 🛠️✨'
           isSnackbarScrollReverseVisible.value = true
         }
       } catch (error) {
