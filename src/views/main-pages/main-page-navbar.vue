@@ -72,18 +72,17 @@ const menuItems: MenuItem[] = [
   //   listTitle: 'Auth Demo',
   //   listIcon: 'tabler-lock-open',
   //   navItems: [
-
-  { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' }, route: "faf" },
-  { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' }, route: "faf" },
-  { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' }, route: "faf" },
-  { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' }, route: "faf" },
-  { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' }, route: "faf" },
-  { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' }, route: "faf" },
-  { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' }, route: "faf" },
-  { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' }, route: "faf" },
-  { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' }, route: "faf" },
-],
-  },
+  //   { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' }, route: "faf" },
+  //   { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' }, route: "faf" },
+  //   { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' }, route: "faf" },
+  //   { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' }, route: "faf" },
+  //   { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' }, route: "faf" },
+  //   { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' }, route: "faf" },
+  //   { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' }, route: "faf" },
+  //   { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' }, route: "faf" },
+  //   { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' }, route: "faf" },
+  // ],
+  // },
   // {
   //   listTitle: 'Other',
   //   listIcon: 'tabler-photo',
@@ -97,8 +96,8 @@ const menuItems: MenuItem[] = [
   //     { name: 'Two Steps (Cover)', to: { name: 'pages-authentication-two-steps-v2' } },
   //   ],
   // },
->>>>>>> model-checkout
 ]
+
 const isCurrentRoute = (to: RouteLocationRaw) => {
   return route.matched.some(_route => _route.path.startsWith(router.resolve(to).path))
 
