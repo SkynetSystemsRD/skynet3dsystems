@@ -5,12 +5,14 @@ import home from '@images/svg/home.svg'
 import hotel from '@images/svg/hotel.svg'
 import mall from '@images/svg/mall.svg'
 import office from '@images/svg/office.svg'
+import axios from 'axios'
 
 interface BillingAddress {
+  id: string | undefined
   firstName: string | undefined
   lastName: string | undefined
   email: string | undefined
-  phone: string 
+  phone: string
   selectedCountry: string | null
   addressLine1: string
   addressLine2: string
@@ -32,6 +34,8 @@ interface Emit {
   (e: 'submit', value: BillingAddress): void
   (e: 'update:checkout-data', value: ModelCheckoutData): void  // Añadido para permitir este evento
 }
+
+const AddOrEdit = ref(true)
 
 const countries = [
   'Afganistán',
@@ -229,8 +233,12 @@ const countries = [
   'Zimbabue'
 ]
 
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
+
 const props = withDefaults(defineProps<Props>(), {
   billingAddress: () => ({
+    id: '',
     firstName: 'Jose',
     lastName: 'Lopez',
     phone: '849 000 1111',
@@ -272,26 +280,83 @@ const resetForm = () => {
 }
 
 const onFormSubmit = async () => {
-  const { valid } = await form.value.validate();
-  if (valid) {
-    if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
-      modelCheckoutCartDataLocal.value.addresses.push({
-        title: toggleSwitch.value ? `${billingAddress.value.firstName} ${billingAddress.value.lastName} (Predeterminado)`  : `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
-        email: billingAddress.value.email,
-        desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.selectedCountry}`,
-        subtitle: billingAddress.value.phone,
-        value: selectedAddress.value
-      });
+  if ((props.billingAddress.addressLine1 || props.billingAddress.addressLine2)) {
+    const { valid } = await form.value.validate();
+    if (valid) {
+      if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
+        await updateAddress({
+          id: billingAddress.value.id,
+          name: billingAddress.value.firstName,
+          lastName: billingAddress.value.lastName,
+          email: billingAddress.value.email,
+          phone: billingAddress.value.phone,
+          place: selectedAddress.value,
+          street: billingAddress.value.addressLine1,
+          city: billingAddress.value.city,
+          state: billingAddress.value.state,
+          country: billingAddress.value.selectedCountry,
+          // zipCode: model.uuid,
+          defaultAddress: toggleSwitch.value,
+        })
 
-      // Eliminar el primer elemento después de agregar el nuevo
-      if (modelCheckoutCartDataLocal.value.addresses.length > 1) {
-        modelCheckoutCartDataLocal.value.addresses.shift();
+        modelCheckoutCartDataLocal.value.addresses.push({
+          id: billingAddress.value.id,
+          title: toggleSwitch.value ? `${billingAddress.value.firstName} ${billingAddress.value.lastName} (Predeterminado)` : `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
+          email: billingAddress.value.email,
+          desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.selectedCountry}`,
+          subtitle: billingAddress.value.phone,
+          value: selectedAddress.value
+        });
+
+        // Eliminar el primer elemento después de agregar el nuevo
+        if (modelCheckoutCartDataLocal.value.addresses.length > 1) {
+          modelCheckoutCartDataLocal.value.addresses.shift();
+        }
+
+        emit('update:checkout-data', modelCheckoutCartDataLocal.value);
+        emit('update:isDialogVisible', false);
+      } else {
+        console.error("modelCheckoutCartDataLocal or addresses is not defined correctly");
       }
+    }
+  }
+  else {
+    const { valid } = await form.value.validate();
+    if (valid) {
+      if (modelCheckoutCartDataLocal.value && Array.isArray(modelCheckoutCartDataLocal.value.addresses)) {
+        const id = await saveAddress({
+          name: billingAddress.value.firstName,
+          lastName: billingAddress.value.lastName,
+          email: billingAddress.value.email,
+          phone: billingAddress.value.phone,
+          place: selectedAddress.value,
+          street: billingAddress.value.addressLine1,
+          city: billingAddress.value.city,
+          state: billingAddress.value.state,
+          country: billingAddress.value.selectedCountry,
+          // zipCode: model.uuid,
+          defaultAddress: toggleSwitch.value,
+        })
 
-      emit('update:checkout-data', modelCheckoutCartDataLocal.value);
-      emit('update:isDialogVisible', false);
-    } else {
-      console.error("modelCheckoutCartDataLocal or addresses is not defined correctly");
+        modelCheckoutCartDataLocal.value.addresses.push({
+          id: id,
+          title: toggleSwitch.value ? `${billingAddress.value.firstName} ${billingAddress.value.lastName} (Predeterminado)` : `${billingAddress.value.firstName} ${billingAddress.value.lastName}`,
+          email: billingAddress.value.email,
+          desc: `${billingAddress.value.addressLine1}, ${billingAddress.value.city}, ${billingAddress.value.state}, ${billingAddress.value.selectedCountry}`,
+          subtitle: billingAddress.value.phone,
+          value: selectedAddress.value
+        });
+
+        // Eliminar el primer elemento después de agregar el nuevo
+        if (modelCheckoutCartDataLocal.value.addresses.length > 1) {
+          modelCheckoutCartDataLocal.value.addresses.shift();
+        }
+
+        emit('update:checkout-data', modelCheckoutCartDataLocal.value);
+        emit('update:isDialogVisible', false);
+      } else {
+        console.error("modelCheckoutCartDataLocal or addresses is not defined correctly");
+      }
     }
   }
 };
@@ -331,6 +396,79 @@ const addressTypes = [
   },
 ]
 
+interface Address {
+  id: string,
+  userId: string,
+  name: string,
+  lastName: string,
+  email: string,
+  phone: string,
+  place: string
+  street: string,
+  city: string,
+  state: string,
+  country: string,
+  // zipCode: model.uuid,
+  defaultAddress: boolean,
+}
+
+const saveAddress = async (newAddress: Address) => {
+  const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/addresses/saveAddress`, {
+    userId: userData.id,
+    name: newAddress.name,
+    lastName: newAddress.lastName,
+    email: newAddress.email,
+    phone: newAddress.phone,
+    place: newAddress.place,
+    street: newAddress.street,
+    city: newAddress.city,
+    state: newAddress.state,
+    country: newAddress.country,
+    // zipCode: model.uuid,
+    defaultAddress: newAddress.defaultAddress,
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (response.data.address) {
+    console.log('Direccion guardada con exito!')
+    return response.data.id
+  } else {
+    console.error("Error al guardar la direccion");
+    return null
+  }
+}
+
+const updateAddress = async (newAddress: Address) => {
+  const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/addresses/updateAddress`, {
+    id: newAddress.id,
+    name: newAddress.name,
+    lastName: newAddress.lastName,
+    email: newAddress.email,
+    phone: newAddress.phone,
+    place: newAddress.place,
+    street: newAddress.street,
+    city: newAddress.city,
+    state: newAddress.state,
+    country: newAddress.country,
+    // zipCode: model.uuid,
+    defaultAddress: newAddress.defaultAddress,
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (response.data.address) {
+    console.log('Direccion guardada con exito!')
+  } else {
+    console.error("Error al guardar la direccion");
+    return null
+  }
+}
+
 watch(() => props.modelCheckoutData, value => {
   modelCheckoutCartDataLocal.value = JSON.parse(JSON.stringify(value))
 })
@@ -343,11 +481,8 @@ watch(() => props.billingAddress, (newbillingAddress) => {
 </script>
 
 <template>
-  <VDialog
-    :width="$vuetify.display.smAndDown ? 'auto' : 900"
-    :model-value="props.isDialogVisible"
-    @update:model-value="val => $emit('update:isDialogVisible', val)"
-  >
+  <VDialog :width="$vuetify.display.smAndDown ? 'auto' : 900" :model-value="props.isDialogVisible"
+    @update:model-value="val => $emit('update:isDialogVisible', val)">
     <!-- 👉 Dialog close btn -->
     <DialogCloseBtn @click="$emit('update:isDialogVisible', false)" />
 
@@ -355,18 +490,16 @@ watch(() => props.billingAddress, (newbillingAddress) => {
       <VCardText>
         <!-- 👉 Title -->
         <h4 class="text-h4 text-center mb-2">
-          {{ (props.billingAddress.addressLine1 || props.billingAddress.addressLine2) ? 'Editar' : 'Agregar Nueva' }} Dirección
+          {{ (props.billingAddress.addressLine1 || props.billingAddress.addressLine2) ? 'Editar' : 'Agregar Nueva' }}
+          Dirección
         </h4>
         <p class="text-body-1 text-center mb-6">
           Agrega Una Nueva Dirección
         </p>
 
         <div class="d-flex mb-6">
-          <CustomRadiosWithIcon
-            v-model:selected-radio="selectedAddress"
-            :radio-content="addressTypes"
-            :grid-column="{ sm: '6', cols: '12' }"
-          />
+          <CustomRadiosWithIcon v-model:selected-radio="selectedAddress" :radio-content="addressTypes"
+            :grid-column="{ sm: '6', cols: '12' }" />
         </div>
 
         <!-- 👉 Form -->
@@ -374,112 +507,67 @@ watch(() => props.billingAddress, (newbillingAddress) => {
           <VRow>
             <!-- 👉 First Name -->
             <VCol cols="12" md="6">
-              <AppTextField
-                v-model="billingAddress.firstName"
-                label="Primer Nombre"
-                placeholder="Juan"
-                :rules="[requiredRule]"
-              />
+              <AppTextField v-model="billingAddress.firstName" label="Primer Nombre" placeholder="Juan"
+                :rules="[requiredRule]" />
             </VCol>
 
             <!-- 👉 Last Name -->
             <VCol cols="12" md="6">
-              <AppTextField
-                v-model="billingAddress.lastName"
-                label="Apellido"
-                placeholder="Pérez"
-                :rules="[requiredRule]"
-              />
+              <AppTextField v-model="billingAddress.lastName" label="Apellido" placeholder="Pérez"
+                :rules="[requiredRule]" />
             </VCol>
 
             <!-- 👉 Phone Number -->
             <VCol cols="12">
-              <AppTextField
-                v-model="billingAddress.email"
-                label="Correo Electronico"
-                placeholder="juanperez@gmail.com"
-                :rules="[requiredRule, emailRule]"
-              />
+              <AppTextField v-model="billingAddress.email" label="Correo Electronico" placeholder="juanperez@gmail.com"
+                :rules="[requiredRule, emailRule]" />
             </VCol>
 
             <!-- 👉 Phone Number -->
             <VCol cols="12">
-              <AppTextField
-                v-model="billingAddress.phone"
-                label="Número Celular"
-                placeholder="849 000 1111"
-                :rules="[requiredRule, phoneRule]"
-              />
+              <AppTextField v-model="billingAddress.phone" label="Número Celular" placeholder="849 000 1111"
+                :rules="[requiredRule, phoneRule]" />
             </VCol>
 
             <!-- 👉 Select Country -->
             <VCol cols="12">
-              <AppSelect
-                v-model="billingAddress.selectedCountry"
-                label="Seleccione su País"
-                placeholder="Seleccione su País"
-                :items="countries"
-                :rules="[requiredRule]"
-              />
+              <AppSelect v-model="billingAddress.selectedCountry" label="Seleccione su País"
+                placeholder="Seleccione su País" :items="countries" :rules="[requiredRule]" />
             </VCol>
 
             <!-- 👉 Address Line 1 -->
             <VCol cols="12">
-              <AppTextField
-                v-model="billingAddress.addressLine1"
-                label="Dirección #1"
-                placeholder="Av. 27 de Febrero"
-                :rules="[requiredRule]"
-              />
+              <AppTextField v-model="billingAddress.addressLine1" label="Dirección #1" placeholder="Av. 27 de Febrero"
+                :rules="[requiredRule]" />
             </VCol>
 
             <!-- 👉 Address Line 2 -->
             <VCol cols="12">
-              <AppTextField
-                v-model="billingAddress.addressLine2"
-                label="Dirección #2"
-                placeholder="Winston Churchill"
-              />
+              <AppTextField v-model="billingAddress.addressLine2" label="Dirección #2"
+                placeholder="Winston Churchill" />
             </VCol>
 
             <!-- 👉 Landmark -->
             <VCol cols="12" md="6">
-              <AppTextField
-                v-model="billingAddress.landmark"
-                label="Referencia"
-                placeholder="Hard Rock Cafe"
-              />
+              <AppTextField v-model="billingAddress.landmark" label="Referencia" placeholder="Hard Rock Cafe" />
             </VCol>
 
             <!-- 👉 City -->
             <VCol cols="12" md="6">
-              <AppTextField
-                v-model="billingAddress.city"
-                label="Ciudad"
-                placeholder="Santo Domingo"
-                :rules="[requiredRule]"
-              />
+              <AppTextField v-model="billingAddress.city" label="Ciudad" placeholder="Santo Domingo"
+                :rules="[requiredRule]" />
             </VCol>
 
             <!-- 👉 State -->
             <VCol cols="12" md="6">
-              <AppTextField
-                v-model="billingAddress.state"
-                label="Provincia"
-                placeholder="Distrito Nacional"
-                :rules="[requiredRule]"
-              />
+              <AppTextField v-model="billingAddress.state" label="Provincia" placeholder="Distrito Nacional"
+                :rules="[requiredRule]" />
             </VCol>
 
             <!-- 👉 Zip Code -->
             <VCol cols="12" md="6">
-              <AppTextField
-                v-model="billingAddress.zipCode"
-                label="Código Postal"
-                placeholder="10305"
-                type="number"
-                :rules="[requiredRule]"
-              />
+              <AppTextField v-model="billingAddress.zipCode" label="Código Postal" placeholder="10305" type="number"
+                :rules="[requiredRule]" />
             </VCol>
 
             <VCol cols="12">

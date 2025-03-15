@@ -6,6 +6,7 @@ import type { RouteLocationRaw } from 'vue-router/auto'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useDisplay } from 'vuetify'
 
+import UserProfile from '@/layouts/components/UserProfile.vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { onMounted, ref } from 'vue'
@@ -71,6 +72,7 @@ const menuItems: MenuItem[] = [
     listTitle: 'Auth Demo',
     listIcon: 'tabler-lock-open',
     navItems: [
+<<<<<<< HEAD
       { name: 'Personaliza tu Modelo en 3D 🚀', to: { name: 'main-pages-pricing' }, route: "faf" },
       { name: 'Visualiza en Realidad Aumentada 📱', to: { name: 'main-pages-payment' }, route: "faf" },
       { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' }, route: "faf" },
@@ -80,6 +82,33 @@ const menuItems: MenuItem[] = [
       { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
     ],
   },
+=======
+
+      { name: 'Login (Basic)', to: { name: 'pages-authentication-login-v1' }, route: "faf" },
+      { name: 'Login (Cover)', to: { name: 'pages-authentication-login-v2' }, route: "faf" },
+      { name: 'Register (Basic)', to: { name: 'pages-authentication-register-v1' }, route: "faf" },
+      { name: 'Register (Cover)', to: { name: 'pages-authentication-register-v2' }, route: "faf" },
+      { name: 'Register (Multi-steps)', to: { name: 'pages-authentication-register-multi-steps' }, route: "faf" },
+      { name: 'Forgot Password (Basic)', to: { name: 'pages-authentication-forgot-password-v1' }, route: "faf" },
+      { name: 'Forgot Password (Cover)', to: { name: 'pages-authentication-forgot-password-v2' }, route: "faf" },
+      { name: 'Reset Password (Basic)', to: { name: 'pages-authentication-reset-password-v1' }, route: "faf" },
+      { name: 'Reset Password (cover  )', to: { name: 'pages-authentication-reset-password-v2' }, route: "faf" },
+    ],
+  },
+  // {
+  //   listTitle: 'Other',
+  //   listIcon: 'tabler-photo',
+  //   navItems: [
+  //     { name: 'Under Maintenance', to: { name: 'pages-misc-under-maintenance' } },
+  //     { name: 'Coming Soon', to: { name: 'pages-misc-coming-soon' } },
+  //     { name: 'Not Authorized', to: { path: '/not-authorized' } },
+  //     { name: 'Verify Email (Basic)', to: { name: 'pages-authentication-verify-email-v1' } },
+  //     { name: 'Verify Email (Cover)', to: { name: 'pages-authentication-verify-email-v2' } },
+  //     { name: 'Two Steps (Basic)', to: { name: 'pages-authentication-two-steps-v1' } },
+  //     { name: 'Two Steps (Cover)', to: { name: 'pages-authentication-two-steps-v2' } },
+  //   ],
+  // },
+>>>>>>> model-checkout
 ]
 
 const isCurrentRoute = (to: RouteLocationRaw) => {
@@ -115,6 +144,8 @@ const setReverseRotationSequence = () => {
     setRotationSequence();
   }, 10000);
 };
+
+console.log(userData)
 </script>
 
 <template>
