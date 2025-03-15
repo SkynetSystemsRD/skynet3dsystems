@@ -14,6 +14,7 @@ defineEmits<{
 
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
+const paymentMethod = ref({})
 
 const createProject = async () => {
   try {
@@ -34,42 +35,34 @@ const createProject = async () => {
   }
 }
 
-const saveBillingDetails = (proyectId: string) => {
-  // console.log(proyectId)
-  // console.log(props.modelCheckoutData.addresses)
-  // try {
-  //   const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/billing-details/createBillingDetails`, {
-  //     projectId: projectId,
-  //     userId: userData.id,
-  //     fileName: model.fileName,
-  //     filePath: model.filePath,
-  //     size: model.size,
-  //     dimentions: {
-  //       x: model.dimentions.x,
-  //       y: model.dimentions.y,
-  //       z: model.dimentions.z
-  //     },
-  //     weight: model.weight,
-  //     price: model.price,
-  //     uuid: model.uuid,
-  //     octetStreamContent: model.octetStreamContent,
-  //   }, {
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //   });
+const saveBillingDetails = (proyectId: string, addressId: string) => {
+  try {
+    const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/billing-details/createBillingDetails`, {
+      projectId: proyectId,
+      addressId: addressId,
+      userId: userData.id,
+      deliverySpeed: props.modelCheckoutData.deliverySpeed,
+      note: props.modelCheckoutData.note,
+      totalAmount: props.modelCheckoutData.orderAmount,
+      promoCode: props.modelCheckoutData.promoCode,
+      paymentMethod: paymentMethod.value,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-  //   if (response.data.result) {
-  //     messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
-  //   } else {
-  //     console.error("El campo 'user' no está presente en la respuesta");
-  //     messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
-  //     isSnackbarScrollReverseVisible.value = true
-  //   }
-  // } catch (error) {
-  //   console.log('confirmOrder: ', error.response?.data?.message || error.message);
-  //   isSnackbarScrollReverseVisible.value = true
-  // }
+    if (response.data.result) {
+      messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+    } else {
+      console.error("El campo 'user' no está presente en la respuesta");
+      messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+      isSnackbarScrollReverseVisible.value = true
+    }
+  } catch (error) {
+    console.log('confirmOrder: ', error.response?.data?.message || error.message);
+    isSnackbarScrollReverseVisible.value = true
+  }
 }
 
 const confirmOrder = async () => {
@@ -79,43 +72,44 @@ const confirmOrder = async () => {
     (props.modelCheckoutData.paymentMethod.cash || props.modelCheckoutData.paymentMethod.card !== '' || props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0)
   ) {
     const projectId = await createProject()
-    saveBillingDetails(projectId)
+    const addressId = props.modelCheckoutData.addresses.find(a => a.value === props.modelCheckoutData.deliveryAddress)?.id;
+    saveBillingDetails(projectId, addressId)
 
-    // props.modelCheckoutData.modelItems.forEach(model => {
-    //   try {
-    //     const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/saveModels`, {
-    //       projectId: projectId,
-    //       userId: userData.id,
-    //       fileName: model.fileName,
-    //       filePath: model.filePath,
-    //       size: model.size,
-    //       dimentions: {
-    //         x: model.dimentions.x,
-    //         y: model.dimentions.y,
-    //         z: model.dimentions.z
-    //       },
-    //       weight: model.weight,
-    //       price: model.price,
-    //       uuid: model.uuid,
-    //       octetStreamContent: model.octetStreamContent,
-    //     }, {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     });
+    props.modelCheckoutData.modelItems.forEach(model => {
+      try {
+        const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/saveModels`, {
+          projectId: projectId,
+          userId: userData.id,
+          fileName: model.fileName,
+          filePath: model.filePath,
+          size: model.size,
+          dimentions: {
+            x: model.dimentions.x,
+            y: model.dimentions.y,
+            z: model.dimentions.z
+          },
+          weight: model.weight,
+          price: model.price,
+          uuid: model.uuid,
+          octetStreamContent: model.octetStreamContent,
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-    //     if (response.data.result) {
-    //       messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
-    //     } else {
-    //       console.error("El campo 'user' no está presente en la respuesta");
-    //       messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
-    //       isSnackbarScrollReverseVisible.value = true
-    //     }
-    //   } catch (error) {
-    //     console.log('confirmOrder: ', error.response?.data?.message || error.message);
-    //     isSnackbarScrollReverseVisible.value = true
-    //   }
-    // })
+        if (response.data.result) {
+          messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+        } else {
+          console.error("El campo 'user' no está presente en la respuesta");
+          messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+          isSnackbarScrollReverseVisible.value = true
+        }
+      } catch (error) {
+        console.log('confirmOrder: ', error.response?.data?.message || error.message);
+        isSnackbarScrollReverseVisible.value = true
+      }
+    })
   }
   else {
     messageInfo.value = '🚨 ¡Ups! Antes de confirmar, revisa que hayas seleccionado los modelos, la dirección y el método de pago. 🏡💳✅ ¡Completa estos datos y estarás listo para continuar! 🚀'
@@ -127,6 +121,8 @@ const selectedDeliveryAddress = computed(() => {
   if (props.modelCheckoutData.paymentMethod.cash) {
     // with cash
 
+    paymentMethod.value = { method: 'En efectivo' }
+
     return [{
       value: 1,
       title: 'En efectivo',
@@ -137,6 +133,8 @@ const selectedDeliveryAddress = computed(() => {
   else if (props.modelCheckoutData.paymentMethod.card !== '') {
     // with card
 
+    paymentMethod.value = { method: `Tarjeta Credito/Debito:${props.modelCheckoutData.paymentMethod.card}` }
+
     return [{
       value: 1,
       title: 'Tarjeta Credito/Debido',
@@ -146,6 +144,8 @@ const selectedDeliveryAddress = computed(() => {
   }
   else if (props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0) {
     // with transfer
+
+    paymentMethod.value = { method: `Transferencia Bancaria:${props.modelCheckoutData.paymentMethod.transfer.name}` }
 
     return [{
       value: 1,
