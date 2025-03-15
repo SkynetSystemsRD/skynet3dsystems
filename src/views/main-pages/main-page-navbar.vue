@@ -28,6 +28,7 @@ interface MenuItem {
   listIcon: string
   navItems: navItem[]
 }
+
 const { y } = useWindowScroll()
 
 const route = useRoute()
