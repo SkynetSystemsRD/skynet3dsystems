@@ -10,7 +10,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 
 import 'video.js/dist/video-js.css';
 import { onMounted, ref } from 'vue';
-import { VBtn } from 'vuetify/components';
+import { VBtn, VIcon } from 'vuetify/components';
 
 register();
 
@@ -530,6 +530,11 @@ onMounted(() => {
 <template>
   <VRow>
     <VCol cols="12" md="8">
+      <VBtn color="secondary" variant="text" :to="{ name: 'apps-all-projects-projects' }">
+        <VIcon icon="tabler-arrow-left"></VIcon> Todos mis Projectos
+      </VBtn>
+      <br>
+      <br>
       <VCard>
         <VCardItem :title="projectDetails.title" class="pb-6">
           <template #subtitle>
