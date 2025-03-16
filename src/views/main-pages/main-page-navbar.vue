@@ -152,14 +152,15 @@ console.log(userData)
       <div>
         <div class="d-flex flex-column gap-y-4 pa-4">
           <RouterLink
-            v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contáctanos ']"
-            :key="index"
-            :to="{ name: 'main-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
-            class="nav-link font-weight-medium"
-            :class="[props.activeId?.toLocaleLowerCase().replace('-', ' ') === item.toLocaleLowerCase() ? 'active-link' : '']"
-          >
-            {{ item }}
-          </RouterLink>
+              v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contáctanos', 'Projectos']"
+              :key="index" :to="{
+                name: item.toLowerCase() === 'projectos' ? 'apps-all-projects-projects' : 'main-pages-landing-page',
+                query: item.toLowerCase() === 'projectos' ? { from: 'main-pages' } : {},
+                hash: item.toLowerCase() === 'projectos' ? '' : `#${item.toLowerCase().replace(/\s+/g, '-')}`
+              }" class="nav-link font-weight-medium py-2 px-2 px-lg-4"
+              :class="[props.activeId?.toLocaleLowerCase().replace('-', ' ') === item.toLocaleLowerCase() ? 'active-link' : '']">
+              {{ item }}
+            </RouterLink>
 
           <div class="font-weight-medium cursor-pointer">
             <div
@@ -276,12 +277,13 @@ console.log(userData)
           <!-- landing page sections -->
           <div class="text-base align-center d-none d-md-flex">
             <RouterLink
-              v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contáctanos']"
-              :key="index"
-              :to="{ name: 'main-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
-              class="nav-link font-weight-medium py-2 px-2 px-lg-4"
-              :class="[props.activeId?.toLocaleLowerCase().replace('-', ' ') === item.toLocaleLowerCase() ? 'active-link' : '']"
-            >
+              v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contáctanos', 'Projectos']"
+              :key="index" :to="{
+                name: item.toLowerCase() === 'projectos' ? 'apps-all-projects-projects' : 'main-pages-landing-page',
+                query: item.toLowerCase() === 'projectos' ? { from: 'main-pages' } : {},
+                hash: item.toLowerCase() === 'projectos' ? '' : `#${item.toLowerCase().replace(/\s+/g, '-')}`
+              }" class="nav-link font-weight-medium py-2 px-2 px-lg-4"
+              :class="[props.activeId?.toLocaleLowerCase().replace('-', ' ') === item.toLocaleLowerCase() ? 'active-link' : '']">
               {{ item }}
             </RouterLink>
 
