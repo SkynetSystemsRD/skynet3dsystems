@@ -2,6 +2,7 @@
 import banreservas from '@images/logos/banreservas.png';
 import bhd from '@images/logos/bhd.png';
 import popular from '@images/logos/popular.png';
+import creditCard from './credit-card.vue';
 import type { ModelCheckoutData } from './types';
 
 const prop = defineProps<{
@@ -16,12 +17,16 @@ const emit = defineEmits<{
 
 const modelCheckoutPaymentDataLocal = ref(prop.modelCheckoutData)
 const paymentForm = ref(null);
+const showCardSimulator = ref(true)
+const showBack = ref(false)
+let symbolImage = ref('mastercard')
+const changesSaves = ref(false)
 
-
-const required = v => !!v || 'Campo requerido';
-const cardNumberRule = v => (v.length === 16) || (v.length === 19) || "Debe tener 16 dígitos";
-const expiryRule = v => /^(0[1-9]|1[0-2])\/\d{2}$/.test(v) || 'Formato MM/YY';
-const cvvRule = v => /^\d{3,4}$/.test(v) || 'Debe tener 3 o 4 dígitos';
+const required = value => !! value || 'Campo requerido'; 
+const cardNumberRule = value => (value.length === 19) || "Debe tener 16 dígitos";
+const validateCardType = () => (getCardType(cardFormData.value.cardNumber) !== 'unknown') || "Numero de Tarjeta Invalida";
+const expiryRule = value => /^(0[1-9]|1[0-2])\/\d{2}$/.test(value) || 'Formato MM/YY';
+const cvvRule = value => /^\d{3,4}$/.test(value) || 'Debe tener 3 o 4 dígitos';
 
 const selectedPaymentMethod = ref('card')
 
@@ -94,8 +99,10 @@ const validateForm = async () => {
   const { valid } = await paymentForm.value.validate();
   if (valid) {
     modelCheckoutPaymentDataLocal.value.paymentMethod.card = generateCardToken(cardFormData)
-    cardFormData.value.cardNumber = maskCardNumber(cardFormData.value.cardNumber)
+    // cardFormData.value.cardNumber = maskCardNumber(cardFormData.value.cardNumber)
     console.log('Formulario válido', modelCheckoutPaymentDataLocal.value.paymentMethod.card);
+    
+    changesSaves.value = true
   } else {
     console.log('Errores en el formulario');
   }
@@ -103,11 +110,11 @@ const validateForm = async () => {
 
 const resetForm = () => {
   cardFormData.value = {
-    cardNumber: '',
+    cardNumber: null,
     cardName: '',
     cardExpiry: '',
-    cardCvv: '', 
-    isCardSave: false,
+    cardCvv: null,
+    isCardSave: true,
   };
   modelCheckoutPaymentDataLocal.value.paymentMethod.card = ''
   paymentForm.value.resetValidation();
@@ -133,10 +140,12 @@ const paymentMethod = (method: string) => {
         accountNumber: 0,
         accountType: ''
       }
+      showCardSimulator.value = false
     break;
     case 'transfer': 
       modelCheckoutPaymentDataLocal.value.paymentMethod.cash = false
       modelCheckoutPaymentDataLocal.value.paymentMethod.card = ''
+      showCardSimulator.value = false
     break;
     case 'card':
       modelCheckoutPaymentDataLocal.value.paymentMethod.cash = false
@@ -147,6 +156,7 @@ const paymentMethod = (method: string) => {
         accountType: ''
       }
       validateForm()
+      showCardSimulator.value = true
     break;
   }
 }
@@ -185,6 +195,45 @@ const selectedBankAccount = (data: string) => {
   console.log('transfer info: ', modelCheckoutPaymentDataLocal.value.paymentMethod.transfer)
 }
 
+function formatCardNumber(cardNumber) {
+  // Remove non-numeric characters first
+  let formattedNumber = cardNumber.replace(/\D/g, ''); // Keep only digits
+  
+  // Limit the card number to 16 digits (standard length for most cards)
+  if (formattedNumber.length > 16) {
+    formattedNumber = formattedNumber.slice(0, 16);
+  }
+
+  // Add spaces after every 4 digits, if there are digits
+  if (formattedNumber.length > 0) {
+    formattedNumber = formattedNumber.replace(/(\d{4})(?=\d)/g, '$1 ');
+  }
+
+  return formattedNumber;
+}
+
+function getCardType(cardNumber: string) {
+  cardFormData.value.cardNumber = formatCardNumber(cardNumber)
+
+  const cardPatterns = [
+    { type: "visa", pattern: /^4/ },
+    { type: "mastercard", pattern: /^(5[1-5]|222[1-9]|22[3-9]\d|2[3-6]\d{2}|27[01]\d|2720)/ },
+    { type: "american express", pattern: /^3[47]/ },
+    { type: "discover", pattern: /^(60|62|64|65)/ },
+    { type: "jcb", pattern: /^35/ },
+    { type: "diners club", pattern: /^(30|36|38|39)/ },
+    { type: "unionPay", pattern: /^62/ }
+  ];
+
+  for (let card of cardPatterns) {
+    if (card.pattern.test(cardNumber)) {
+      return card.type;
+    }
+  }
+
+  return "unknown";
+}
+
 watch(
   () => [prop.currentStep, prop.modelCheckoutData],
   ([newStep, newAddress]) => {
@@ -192,7 +241,6 @@ watch(
     modelCheckoutPaymentDataLocal.value = newAddress;
   }
 );
-
 </script>
 
 <template>
@@ -252,10 +300,11 @@ watch(
             <VCol cols="12">
               <AppTextField
                 v-model="cardFormData.cardNumber"
+                @input="symbolImage = getCardType(cardFormData.cardNumber)"
                 type="text"
                 label="Número de Tarjeta"
                 placeholder="**** **** **** 7898"
-                :rules="[required, cardNumberRule]"
+                :rules="[required, cardNumberRule, validateCardType]"
               />
             </VCol>
 
@@ -284,6 +333,8 @@ watch(
                 placeholder="•••"
                 type="password" 
                 :rules="[required, cvvRule]"
+                :focus="showBack == true"
+                :blur="showBack == false"
               >
                 <template #append-inner>
                   <VTooltip text="Valor de Verificación de la Tarjeta" location="bottom">
@@ -302,7 +353,7 @@ watch(
               />
 
               <div class="mt-4">
-                <VBtn class="me-4" @click="validateForm">Guardar Cambios</VBtn>
+                <VBtn class="me-4" @click="validateForm">Guardar Cambios<VIcon v-if="changesSaves" icon="tabler-check" size="30"/></VBtn>
                 <VBtn variant="tonal" color="secondary" @click="resetForm">Borrar Todo</VBtn>
               </div>
             </VCol>
@@ -444,6 +495,36 @@ watch(
             <a href="#">Cambiar Direccion</a>
           </h6> -->
         </VCardText>
+      </VCard>
+
+      <br v-for="n in 5" :key="n" />
+
+      <VCard
+        v-if="showCardSimulator"
+        flat
+        variant="outlined"
+      >
+      <VCardText>
+        <!-- <div class="relative w-96 p-6 border rounded-lg shadow-md bg-gray-100">
+          <div class="flex items-center justify-center">
+            <VImg 
+              :src="emptyCard" 
+              max-height="200"
+              max-width="100%" 
+              class="object-contain"
+            />
+          </div>
+        </div> -->
+        <credit-card
+          :expireYear="cardFormData.cardExpiry.split('/')[1]"
+          :expireMonth="cardFormData.cardExpiry.split('/')[0]"
+          :cardNumber="cardFormData.cardNumber"
+          :name="cardFormData.cardName"
+          :cvv="cardFormData.cardCvv"
+          :showBack="showBack"
+          :symbolImage="'/images/' + symbolImage + '.png'"
+        />
+      </VCardText>
       </VCard>
     </VCol>
   </VRow>

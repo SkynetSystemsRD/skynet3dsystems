@@ -20,6 +20,7 @@ export type UserThemeConfig = LayoutConfig & ExplicitThemeConfig
 
 // SECTION Custom Input
 export interface CustomInputContent {
+  id: string
   title: string
   desc?: string
   value: string

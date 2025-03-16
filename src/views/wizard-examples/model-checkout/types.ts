@@ -5,6 +5,7 @@ export interface ModelItem {
   format: string
   size: number
   octetStreamContent: string
+  imageContent: string
   uuid: string
   dimentions: xyz;
   weight: number;
@@ -18,6 +19,7 @@ interface xyz {
 }
 
 export interface Addresses {
+  id: string
   title: string
   email: string
   desc: string

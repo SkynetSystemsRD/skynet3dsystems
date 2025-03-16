@@ -11,6 +11,8 @@ defineProps<{
 }>()
 
 const configStore = useLayoutConfigStore()
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
 </script>
 
 <template>

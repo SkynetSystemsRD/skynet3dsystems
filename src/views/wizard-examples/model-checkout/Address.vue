@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { CustomInputContent } from '@/@core/types'
+import axios from 'axios'
 import type { ModelCheckoutData } from './types'
 
 interface Props {
@@ -23,6 +24,7 @@ watch(() => props.modelCheckoutData, value => {
 })
 
 const selectedAddress = ref({
+  id: '',
   firstName: '',
   lastName: '',
   phone: '',
@@ -78,6 +80,9 @@ const totalPriceWithDeliveryCharges = computed(() => {
   return modelCheckoutAddressDataLocal.value.orderAmount + deliveryCharges
 })
 
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
+
 const updateAddressData = () => {
   modelCheckoutAddressDataLocal.value.deliveryCharges = resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.value.deliverySpeed].price
   emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
@@ -118,6 +123,7 @@ const editAddress = (item: CustomInputContent) => {
   const [addressLine1, city, state, country] = item.desc?.split(',')
 
   selectedAddress.value = {
+    id: item.id,
     firstName: firstName,
     lastName: lastName,
     phone: item.subtitle ?? "",
@@ -133,41 +139,95 @@ const editAddress = (item: CustomInputContent) => {
     addressType: item.value
   }
 
-  // console.log("selectedAddress: ", selectedAddress.value)
-
   isEditAddressDialogVisible.value = !isEditAddressDialogVisible.value
 }
+const deleteAddress = async (item: CustomInputContent) => {
+  try {
+    const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/addresses/deleteAddress`, {
+      data: { id: item.id }, // 🔹 Los datos deben ir dentro de "data"
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-const deleteAddress = (item: CustomInputContent) => {
-  modelCheckoutAddressDataLocal.value.addresses = modelCheckoutAddressDataLocal.value.addresses.filter(a => a.value !== item.value)
-  emit('update:checkout-data', modelCheckoutAddressDataLocal.value)
-}
+    if (response.data.address) {
+      console.log('Dirección eliminada con éxito!');
 
-const addNewAddress = (data: ModelCheckoutData) => {
-  const newAddress = data.addresses[0];
-  
-  const existingAddressIndex = modelCheckoutAddressDataLocal.value.addresses.findIndex(
-    (addr) => addr.value === newAddress.value
-  );
+      // 🔹 Filtrar correctamente eliminando la dirección de la lista
+      modelCheckoutAddressDataLocal.value.addresses =
+        modelCheckoutAddressDataLocal.value.addresses.filter(a => a.value !== item.value);
 
-  if (existingAddressIndex === -1) {
-    // Si no existe, agregar la nueva dirección
-    modelCheckoutAddressDataLocal.value.addresses.push({ ...newAddress });
-  } else {
-    // Si ya existe, verifica si ha cambiado
-    const existingAddress = modelCheckoutAddressDataLocal.value.addresses[existingAddressIndex];
-
-    if (JSON.stringify(existingAddress) !== JSON.stringify(newAddress)) {
-      // Actualiza la dirección si hay cambios
-      modelCheckoutAddressDataLocal.value.addresses[existingAddressIndex] = { ...newAddress };
+      // 🔹 Emitir el evento de actualización
+      emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
     } else {
-      // console.log('La dirección ya existe y no tiene cambios.');
-      return;
+      console.error("Error al eliminar la dirección");
+      return null;
     }
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    return null;
   }
-  console.log('newAddress:  ', modelCheckoutAddressDataLocal.value)  // Busca la dirección existente
-  // Emitir evento de actualización
-  emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
+};
+
+const addNewAddress = async (data: ModelCheckoutData) => {
+  try {
+    const newAddress = data.addresses[0];
+
+    modelCheckoutAddressDataLocal.value.addresses.forEach(address => {
+      address.title = address.title.replace(' (Predeterminado)', '');
+    });
+
+    const existingAddressIndex = modelCheckoutAddressDataLocal.value.addresses.findIndex(
+      (addr) => addr.value === newAddress.value
+    );
+
+    if (existingAddressIndex === -1) {
+      // Si no existe, agregar la nueva dirección
+      modelCheckoutAddressDataLocal.value.addresses.push({ ...newAddress });
+    } else {
+      // Si ya existe, verifica si ha cambiado
+      const existingAddress = modelCheckoutAddressDataLocal.value.addresses[existingAddressIndex];
+
+      if (JSON.stringify(existingAddress) !== JSON.stringify(newAddress)) {
+        // Actualiza la dirección si hay cambios
+        modelCheckoutAddressDataLocal.value.addresses[existingAddressIndex] = { ...newAddress };
+
+        // const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/address/updateAddress`, {
+        //   userId: id,
+        //   name: address.title.split(" ")[0],
+        //   lastName: address.title.split(" ")[1],
+        //   email: address.email,
+        //   phone: address.subtitle,
+        //   place: address.value,
+        //   street: address.desc.split(", ")[0],
+        //   city: address.desc.split(", ")[1],
+        //   state: address.desc.split(", ")[2],
+        //   country: address.desc.split(", ")[3],
+        //   // zipCode: model.uuid,
+        //   defaultAddress: address.title.includes('(Predeterminado)'),
+        // }, {
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        // });
+
+        // if (response.data.address) {
+        //   console.log('Direccion guardada con exito!')
+        // } else {
+        //   console.error("Error al guardar la direccion");
+        // }
+      } else {
+        // console.log('La dirección ya existe y no tiene cambios.');
+        return;
+      }
+    }
+    console.log('newAddress:  ', modelCheckoutAddressDataLocal.value)  // Busca la dirección existente
+
+    // Emitir evento de actualización
+    emit('update:checkout-data', modelCheckoutAddressDataLocal.value);
+  } catch (err) {
+    console.error(err)
+  }
 };
 
 const buttonAddNewAddress = () => {
@@ -195,21 +255,15 @@ const buttonAddNewAddress = () => {
 
 <template>
   <VRow>
-    <VCol
-      cols="12"
-      md="8"
-    >
+    <VCol cols="12" md="8">
       <!-- 👉 Address options -->
       <h6 class="text-h6 mb-4">
         Seleccione su direccion de preferencia
       </h6>
 
       <!-- 👉 Address custom input -->
-      <CustomRadios
-        v-model:selected-radio="modelCheckoutAddressDataLocal.deliveryAddress"
-        :radio-content="modelCheckoutAddressDataLocal.addresses"
-        :grid-column="{ cols: '12', sm: '6' }"
-      >
+      <CustomRadios v-model:selected-radio="modelCheckoutAddressDataLocal.deliveryAddress"
+        :radio-content="modelCheckoutAddressDataLocal.addresses" :grid-column="{ cols: '12', sm: '6' }">
         <template #default="{ item }">
           <div class="w-100" @click="changeAddress(item)">
             <div class="d-flex justify-space-between mb-3">
@@ -217,12 +271,7 @@ const buttonAddNewAddress = () => {
                 {{ item.title }}
               </h6>
 
-              <VChip
-                :color="resolveAddressBadgeColor[item.value]"
-                label
-                size="small"
-                class="text-capitalize"
-              >
+              <VChip :color="resolveAddressBadgeColor[item.value]" label size="small" class="text-capitalize">
                 {{ item.value }}
               </VChip>
             </div>
@@ -235,10 +284,7 @@ const buttonAddNewAddress = () => {
             </p>
             <VDivider />
             <div class="pt-2">
-              <a
-                class="me-4"
-                @click="editAddress(item)"
-              >Editar</a>
+              <a class="me-4" @click="editAddress(item)">Editar</a>
               <a @click="deleteAddress(item)">Eliminar</a>
             </div>
           </div>
@@ -246,11 +292,7 @@ const buttonAddNewAddress = () => {
       </CustomRadios>
 
       <!-- 👉 Add New Address -->
-      <VBtn
-        variant="tonal"
-        class="mt-4 mb-6"
-        @click="buttonAddNewAddress"
-      >
+      <VBtn variant="tonal" class="mt-4 mb-6" @click="buttonAddNewAddress">
         Agregar Nueva Direccion
       </VBtn>
 
@@ -260,27 +302,17 @@ const buttonAddNewAddress = () => {
       </h6>
 
       <!-- 👉 Delivery options custom input -->
-      <CustomRadiosWithIcon
-        v-model:selected-radio="modelCheckoutAddressDataLocal.deliverySpeed"
-        :radio-content="deliveryOptions"
-        :grid-column="{ cols: '12', sm: '4' }"
-      >
+      <CustomRadiosWithIcon v-model:selected-radio="modelCheckoutAddressDataLocal.deliverySpeed"
+        :radio-content="deliveryOptions" :grid-column="{ cols: '12', sm: '4' }">
         <template #default="{ item }">
           <div class="d-flex flex-column align-center gap-2 w-100" @click="changeDeliverySpeed(item)">
             <div class="d-flex justify-end w-100 mb-n3">
-              <VChip
-                :color="resolveDeliveryBadgeData[item.value].color"
-                size="small"
-                label
-              >
+              <VChip :color="resolveDeliveryBadgeData[item.value].color" size="small" label>
                 {{ resolveDeliveryBadgeData[item.value].text }}
               </VChip>
             </div>
 
-            <VIcon
-              :icon="item.icon.icono"
-              size="28"
-            />
+            <VIcon :icon="item.icon.icono" size="28" />
 
             <h6 class="text-h6">
               {{ item.title }}
@@ -293,14 +325,8 @@ const buttonAddNewAddress = () => {
       </CustomRadiosWithIcon>
     </VCol>
 
-    <VCol
-      cols="12"
-      md="4"
-    >
-      <VCard
-        flat
-        variant="outlined"
-      >
+    <VCol cols="12" md="4">
+      <VCard flat variant="outlined">
         <!-- 👉 Delivery estimate date -->
         <VCardText>
           <h6 class="text-h6 mb-4">
@@ -308,17 +334,9 @@ const buttonAddNewAddress = () => {
           </h6>
 
           <VList class="card-list">
-            <VListItem
-              v-for="product in modelCheckoutAddressDataLocal.modelItems"
-              :key="product.fileName"
-            >
+            <VListItem v-for="product in modelCheckoutAddressDataLocal.modelItems" :key="product.fileName">
               <template #prepend>
-                <img
-                  height="70"
-                  width="60"
-                  :src="product.imageContent"
-                  class="me-4"
-                >
+                <img height="70" width="60" :src="product.imageContent" class="me-4">
               </template>
 
               <div class="text-body-1">
@@ -344,21 +362,16 @@ const buttonAddNewAddress = () => {
           <div class="d-flex align-center justify-space-between">
             <span class="text-high-emphasis">Cargos de Envio</span>
             <div class="text-end">
-              <div
-                v-if="modelCheckoutAddressDataLocal.deliverySpeed === 'free'"
-                class="d-flex align-center"
-              >
+              <div v-if="modelCheckoutAddressDataLocal.deliverySpeed === 'free'" class="d-flex align-center">
                 <div class="text-decoration-line-through text-disabled me-2">
                   RD$200.00
                 </div>
-                <VChip
-                  size="small"
-                  color="success"
-                >
+                <VChip size="small" color="success">
                   Gratis
                 </VChip>
               </div>
-              <span v-else>RD${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed].price }}.00</span>
+              <span v-else>RD${{ resolveDeliveryBadgeData[modelCheckoutAddressDataLocal.deliverySpeed].price
+                }}.00</span>
             </div>
           </div>
         </VCardText>
@@ -374,21 +387,13 @@ const buttonAddNewAddress = () => {
         </VCardText>
       </VCard>
 
-      <VBtn
-        block
-        class="mt-4"
-        @click="nextStep"
-      >
+      <VBtn block class="mt-4" @click="nextStep">
         Realizar pedido
       </VBtn>
     </VCol>
   </VRow>
-  <AddEditAddressDialog 
-    :billingAddress="selectedAddress" 
-    v-model:is-dialog-visible="isEditAddressDialogVisible" 
-    :modelCheckoutData="modelCheckoutData"
-    @update:checkout-data="(data) => addNewAddress(data)"
-  />
+  <AddEditAddressDialog :billingAddress="selectedAddress" v-model:is-dialog-visible="isEditAddressDialogVisible"
+    :modelCheckoutData="modelCheckoutData" @update:checkout-data="(data) => addNewAddress(data)" />
 </template>
 
 <style lang="scss" scoped>

@@ -33,15 +33,9 @@ const translateMouse = computed(() => {
 </script>
 
 <template>
-  <div
-    id="inicio"
-    :style="{ background: 'rgb(var(--v-theme-surface))' }"
-  >
+  <div id="inicio" :style="{ background: 'rgb(var(--v-theme-surface))' }">
     <div id="landingHero">
-      <div
-        class="landing-hero"
-        :class="theme.current.value.dark ? 'landing-hero-dark-bg' : 'landing-hero-light-bg'"
-      >
+      <div class="landing-hero" :class="theme.current.value.dark ? 'landing-hero-dark-bg' : 'landing-hero-light-bg'">
         <VContainer>
           <div class="hero-text-box text-center px-6">
             <h1 class="hero-title mb-4">
@@ -52,22 +46,14 @@ const translateMouse = computed(() => {
             </h6>
             <div class="position-relative">
               <h6 class="position-absolute hero-btn-item d-md-flex d-none text-h6 text-medium-emphasis">
-                Únetenos 
-                <VImg
-                  :src="joinArrow"
-                  class="flip-in-rtl"
-                  width="54"
-                  height="31"
-                />
+                Únetenos
+                <VImg :src="joinArrow" class="flip-in-rtl" width="54" height="31" />
               </h6>
 
-              <VBtn
-                :size="$vuetify.display.smAndUp ? 'large' : 'default' "
-                :to="{ name: 'main-pages-landing-page', hash: `#technologies` }"
-                :active="false"
-              >
-              Explora nuestros servicios
-              <!-- AL DAR CLICK A ESTE BOTON HACER UN SCROLLDOWN AUTOMATICO EN LA PARTE DE LOS SERVICIOS COMO SON IM0PRESION, ESCANEO Y CORTE LASER -->
+              <VBtn :size="$vuetify.display.smAndUp ? 'large' : 'default'"
+                :to="{ name: 'main-pages-landing-page', hash: `#technologies` }" :active="false">
+                Explora nuestros servicios
+                <!-- AL DAR CLICK A ESTE BOTON HACER UN SCROLLDOWN AUTOMATICO EN LA PARTE DE LOS SERVICIOS COMO SON IM0PRESION, ESCANEO Y CORTE LASER -->
               </VBtn>
             </div>
           </div>
@@ -79,26 +65,12 @@ const translateMouse = computed(() => {
       <div class="position-relative">
         <div class="blank-section" />
         <div class="hero-animation-img position-absolute">
-          <RouterLink
-            :to="{ name: 'apps-all-projects-projects' }"
-            class="mega-menu-item"
-          >
-            <div
-              class="hero-dashboard-img position-relative"
-              :style="translateMouse"
-              data-allow-mismatch
-            >
-              <img
-                :src="main3dImg2"
-                alt="Hero Dashboard"
-                class="animation-img"
-              >
-              <img
-                :src="main3dImg1"
-                alt="hero elements"
-                class="hero-elements-img animation-img position-absolute"
-                style="transform: translateZ(1rem);"
-              >
+          <RouterLink :to="{ name: 'apps-all-projects-projects', query: { from: 'main-pages' } }"
+            class="mega-menu-item">
+            <div class="hero-dashboard-img position-relative" :style="translateMouse" data-allow-mismatch>
+              <img :src="main3dImg2" alt="Hero Dashboard" class="animation-img">
+              <img :src="main3dImg1" alt="hero elements" class="hero-elements-img animation-img position-absolute"
+                style="transform: translateZ(1rem);">
             </div>
           </RouterLink>
         </div>

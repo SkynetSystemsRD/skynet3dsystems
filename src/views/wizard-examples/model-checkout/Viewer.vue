@@ -19,48 +19,48 @@ interface Emit {
 const props = defineProps<Props>()
 const panelStatus = ref(1);
 const instructions = [
-    {
-      title: "👋 Manipulación del Modelo 3D",
-      topics: [
-      { 
-          title: "Mover la entorno", 
-          instruction1: "Mantén presionado el botón derecho del ratón",
-          instruction2: "y mueve el ratón para mover el entorno de la escena.",
-          icon: "tabler-direction"
-        },
-        { 
-          title: "Rotar la cámara", 
-          instruction1: "Mantén presionado el botón izquierdo del ratón",
-          instruction2: "y mueve el ratón para rotar el entorno de la escena.",
-          icon: "tabler-rotate"
-        },
-        { 
-          title: "Rotacion Manual/Automatica del modelo 3D", 
-          instruction1: "Seleccione el modelo que desea rotar luego presione el boton de rotar y el check",
-          instruction2: "de rotacion automatica, lo mismo para la rotacion manual.",
-          icon: "tabler-rotate-2"
-        },
-        { 
-          title: "Acercar/Lejar el Modelo", 
-          instruction1: "Usa la rueda del ratón para acercar o alejar el modelo.",
-          instruction2: "",
-          icon: "tabler-zoom"
-        },
-        { 
-          title: "Mover el Modelo", 
-          instruction1: "Seleccion con click izquierdo y mantén presionado el botón izquierdo del ratón y arrastra para ",
-          instruction2: "mover el modelo 3D.",
-          icon: "tabler-mouse"
-        },
-        { 
-          title: "Elimnar el Modelo", 
-          instruction1: "Vaya a la pestaña subir modelos 3D y elimine el modelo deseado",
-          // instruction2: "y presione el boton rojo con la X",
-          icon: "tabler-x"
-        }
-      ]
-    },
-  ]
+  {
+    title: "👋 Manipulación del Modelo 3D",
+    topics: [
+      {
+        title: "Mover la entorno",
+        instruction1: "Mantén presionado el botón derecho del ratón",
+        instruction2: "y mueve el ratón para mover el entorno de la escena.",
+        icon: "tabler-direction"
+      },
+      {
+        title: "Rotar la cámara",
+        instruction1: "Mantén presionado el botón izquierdo del ratón",
+        instruction2: "y mueve el ratón para rotar el entorno de la escena.",
+        icon: "tabler-rotate"
+      },
+      {
+        title: "Rotacion Manual/Automatica del modelo 3D",
+        instruction1: "Seleccione el modelo que desea rotar luego presione el boton de rotar y el check",
+        instruction2: "de rotacion automatica, lo mismo para la rotacion manual.",
+        icon: "tabler-rotate-2"
+      },
+      {
+        title: "Acercar/Lejar el Modelo",
+        instruction1: "Usa la rueda del ratón para acercar o alejar el modelo.",
+        instruction2: "",
+        icon: "tabler-zoom"
+      },
+      {
+        title: "Mover el Modelo",
+        instruction1: "Seleccion con click izquierdo y mantén presionado el botón izquierdo del ratón y arrastra para ",
+        instruction2: "mover el modelo 3D.",
+        icon: "tabler-mouse"
+      },
+      {
+        title: "Elimnar el Modelo",
+        instruction1: "Vaya a la pestaña subir modelos 3D y elimine el modelo deseado",
+        // instruction2: "y presione el boton rojo con la X",
+        icon: "tabler-x"
+      }
+    ]
+  },
+]
 
 const models_counts = ref(0);
 const rotateButtonColor = ref('primary')
@@ -83,16 +83,13 @@ const filament = ref([
 
 const emit = defineEmits<Emit>()
 
-let models = <{ id: number; uuid: string; parent_uuid: string | undefined}[]>([]);
-let id = 0
-
 const modelCheckoutAddressDataLocal = ref<ModelCheckoutData>(props.modelCheckoutData)
 
 watch(() => props.modelCheckoutData, (value) => {
   modelCheckoutAddressDataLocal.value = { ...value };
 
-  if (models_counts.value !== modelCheckoutAddressDataLocal.value.modelItems.length){
-    console.log('modelos actuales: ', modelCheckoutAddressDataLocal.value.modelItems.length) 
+  if (models_counts.value !== modelCheckoutAddressDataLocal.value.modelItems.length) {
+    console.log('modelos actuales: ', modelCheckoutAddressDataLocal.value.modelItems.length)
     console.log('modelo anteriores: ', models_counts.value)
     reload();
     initModels();
@@ -170,7 +167,7 @@ const reload = () => {
   if (container) {  // Verifica si el contenedor existe
     var content = "";
     container.innerHTML = content;  // Recarga el contenido del contenedor
-    
+
     // Esta línea es para ver el resultado en la consola, puedes eliminarla después
     console.log("Refreshed");
   } else {
@@ -204,7 +201,7 @@ const initModels = () => {
       console.log("Tamaño 0, reintentando...");
       setTimeout(resizeRenderer, 200); // Reintenta después de 100ms
       return;
-      
+
     }
     renderer.setSize(width, height);
     camera.aspect = width / height;
@@ -213,7 +210,7 @@ const initModels = () => {
 
   nextTick(() => {
     resizeRenderer();
-    window.addEventListener('resize', resizeRenderer);333
+    window.addEventListener('resize', resizeRenderer); 333
   });
 
   setTimeout(() => {
@@ -225,7 +222,7 @@ const initModels = () => {
 
   // Agrega un evento para detectar cambios en el control de la cámara
   controls.addEventListener('change', () => {
-    
+
   });
 
   // Luz ambiental para iluminación general suave
@@ -257,10 +254,10 @@ const initModels = () => {
 
   // Coordenadas de las cuatro esquinas de la base
   const corners = [
-      new THREE.Vector3(-110, 0, -110), // Esquina trasera izquierda
-      new THREE.Vector3(110, 0, -110),  // Esquina trasera derecha
-      new THREE.Vector3(110, 0, 110),   // Esquina frontal derecha
-      new THREE.Vector3(-110, 0, 110)   // Esquina frontal izquierda
+    new THREE.Vector3(-110, 0, -110), // Esquina trasera izquierda
+    new THREE.Vector3(110, 0, -110),  // Esquina trasera derecha
+    new THREE.Vector3(110, 0, 110),   // Esquina frontal derecha
+    new THREE.Vector3(-110, 0, 110)   // Esquina frontal izquierda
   ];
 
   // Crear líneas verticales de 270 mm de alto
@@ -268,20 +265,20 @@ const initModels = () => {
   const verticalLines: THREE.Line[] = [];
 
   corners.forEach(corner => {
-      const points = [corner, new THREE.Vector3(corner.x, height, corner.z)];
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      const line = new THREE.Line(geometry, lineMaterial);
-      scene.add(line);
-      verticalLines.push(line);
+    const points = [corner, new THREE.Vector3(corner.x, height, corner.z)];
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const line = new THREE.Line(geometry, lineMaterial);
+    scene.add(line);
+    verticalLines.push(line);
   });
 
   // Crear el marco superior conectando las cuatro líneas verticales
   const topFramePoints = [
-      verticalLines[0].geometry.attributes.position.array.slice(3, 6), // Top de la primera línea
-      verticalLines[1].geometry.attributes.position.array.slice(3, 6), // Top de la segunda línea
-      verticalLines[2].geometry.attributes.position.array.slice(3, 6), // Top de la tercera línea
-      verticalLines[3].geometry.attributes.position.array.slice(3, 6), // Top de la cuarta línea
-      verticalLines[0].geometry.attributes.position.array.slice(3, 6)  // Volver al inicio para cerrar
+    verticalLines[0].geometry.attributes.position.array.slice(3, 6), // Top de la primera línea
+    verticalLines[1].geometry.attributes.position.array.slice(3, 6), // Top de la segunda línea
+    verticalLines[2].geometry.attributes.position.array.slice(3, 6), // Top de la tercera línea
+    verticalLines[3].geometry.attributes.position.array.slice(3, 6), // Top de la cuarta línea
+    verticalLines[0].geometry.attributes.position.array.slice(3, 6)  // Volver al inicio para cerrar
   ].map(arr => new THREE.Vector3(arr[0], arr[1], arr[2]));
 
   const topFrameGeometry = new THREE.BufferGeometry().setFromPoints(topFramePoints);
@@ -309,7 +306,6 @@ const initModels = () => {
         loader.load(item.octetStreamContent, (gltf) => {
           addModelToScene(gltf.scene);
           // console.log("gltf: ", gltf.scene.uuid);
-          models.push({ id: id++, uuid: gltf.scene.uuid, parent_uuid: gltf.scene.parent.uuid });
 
           item.price = calculatePrintCost(gltf.scene, inFill.value, 1.7, 69.15);
           updateOrderAmount(); // Función para recalcular el total
@@ -321,7 +317,6 @@ const initModels = () => {
         loader.load(item.octetStreamContent, (obj) => {
           addModelToScene(obj);
           // console.log('obj: ', obj.uuid);
-          models.push({ id: id++, uuid: obj.uuid, parent_uuid: obj.parent.uuid });
 
           item.price = calculatePrintCost(obj, inFill.value, 1.7, 69.15);
           updateOrderAmount();
@@ -333,7 +328,6 @@ const initModels = () => {
         loader.load(item.octetStreamContent, (fbx) => {
           addModelToScene(fbx);
           // console.log('fbx: ', fbx.uuid);
-          models.push({ id: id++, uuid: fbx.uuid, parent_uuid: fbx.parent.uuid });
 
           item.price = calculatePrintCost(fbx, inFill.value, 1.7, 69.15);
           updateOrderAmount();
@@ -347,7 +341,6 @@ const initModels = () => {
           const mesh = new THREE.Mesh(geometry, material);
           addModelToScene(mesh);
           // console.log('stl: ', mesh.uuid);
-          models.push({ id: id++, uuid: mesh.uuid, parent_uuid: mesh.parent?.uuid });
 
           item.price = calculatePrintCost(mesh, inFill.value, 1.7, 69.15);
           updateOrderAmount();
@@ -363,8 +356,7 @@ const initModels = () => {
   function updateOrderAmount() {
     modelCheckoutAddressDataLocal.value.orderAmount = modelCheckoutAddressDataLocal.value.modelItems
       .reduce((total, model) => total + (model.price || 0), 0);
-    
-    console.log('Total Order Amount:', modelCheckoutAddressDataLocal.value.orderAmount);
+
     // Emitir el cambio para actualizar en los demás componentes
     emit("update:checkout-data", { ...modelCheckoutAddressDataLocal.value });
   }
@@ -378,7 +370,7 @@ const initModels = () => {
 
   function addModelToScene(model: THREE.Object3D) {
     model.scale.set(0.5, 0.5, 0.5);
-    
+
     // Asegurar que el modelo esté en la posición y=0 antes de calcular su altura
     model.position.set(0, 0, 0);
     scene.add(model);
@@ -407,32 +399,31 @@ const initModels = () => {
     const intersects = raycaster.intersectObjects(loadedModels, true);
 
     if (intersects.length > 0) {
-        // Restaurar el color del modelo previamente seleccionado
-        if (selectedModel) {
-            selectedModel.traverse((child) => {
-                if ((child as THREE.Mesh).isMesh) {
-                    ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0x555555); // Color original
-                }
-            });
-        }
-
-        selectedModel = intersects[0].object;
-        console.log("Modelo seleccionado:", selectedModel);
-
-        // Cambiar el color del modelo seleccionado
+      // Restaurar el color del modelo previamente seleccionado
+      if (selectedModel) {
         selectedModel.traverse((child) => {
-            if ((child as THREE.Mesh).isMesh) {
-                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xffff00); 
-            }
+          if ((child as THREE.Mesh).isMesh) {
+            ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0x555555); // Color original
+          }
         });
+      }
 
-        // Calcular la posición inicial del modelo
-        const intersection = new THREE.Vector3();
-        raycaster.ray.intersectPlane(plane, intersection);
-        offset.copy(intersection).sub(selectedModel.position);
+      selectedModel = intersects[0].object;
 
-        isDragging = true;
-        controls.enabled = false; // 🔴 Disable OrbitControls
+      // Cambiar el color del modelo seleccionado
+      selectedModel.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(0xffff00);
+        }
+      });
+
+      // Calcular la posición inicial del modelo
+      const intersection = new THREE.Vector3();
+      raycaster.ray.intersectPlane(plane, intersection);
+      offset.copy(intersection).sub(selectedModel.position);
+
+      isDragging = true;
+      controls.enabled = false; // 🔴 Disable OrbitControls
     }
   }
 
@@ -485,7 +476,7 @@ const initModels = () => {
 
     scene.remove(selectedModel);
     loadedModels = loadedModels.filter(model => model.uuid !== uuid);
-    
+
     // modelCheckoutAddressDataLocal.value.modelItems.forEach(model => {
     //   console.log("model: ", model)
     // });
@@ -501,11 +492,10 @@ const initModels = () => {
       }
     });
 
-    console.log("Modelo eliminado:", uuid);
     selectedModel = null;
   }
 
-  function rotatebutton (){
+  function rotatebutton() {
     if (!selectedModel)  // Si no hay un modelo seleccionado, no hacer nada 
     {
       isSnackbarVisible.value = true
@@ -516,7 +506,7 @@ const initModels = () => {
     // Cambiar el estado de rotación
     isRotating = !isRotating;
 
-    if (isRotating){
+    if (isRotating) {
       rotateButtonColor.value = 'outlined'
       rotateButtonText.value = 'Rotacion Activada'
     }
@@ -539,9 +529,9 @@ const initModels = () => {
     const box = new THREE.Box3().setFromObject(model);
     const size = new THREE.Vector3();
     box.getSize(size);
-    
+
     // Volumen estimado en cm³ (Aproximado usando la caja delimitadora)
-    const volumeCm3 = (size.x * scale) * (size.y * scale) * (size.z * scale) / 1000; 
+    const volumeCm3 = (size.x * scale) * (size.y * scale) * (size.z * scale) / 1000;
 
     // Ajustar por infill
     const effectiveVolume = volumeCm3 * (infill / 100);
@@ -593,40 +583,22 @@ onMounted(() => {
 <template>
   <section v-if="true">
     <VRow>
-      <VCol
-        cols="12"
-        md="12"
-      >
+      <VCol cols="12" md="12">
         <VCard class="invoice-preview-wrapper pa-6 pa-sm-12">
-          <VExpansionPanels
-            v-model="panelStatus"
-            variant="accordion"
-            class="expansion-panels-width-border"
-          >
-            <template
-              v-for="(section, index) in instructions"
-              :key="index"
-            >
-              <VExpansionPanel
-                elevation="0"
-                :value="index"
-                expand-icon="tabler-chevron-right"
-                collapse-icon="tabler-chevron-down"
-              >
+          <VExpansionPanels v-model="panelStatus" variant="accordion" class="expansion-panels-width-border">
+            <template v-for="(section, index) in instructions" :key="index">
+              <VExpansionPanel elevation="0" :value="index" expand-icon="tabler-chevron-right"
+                collapse-icon="tabler-chevron-down">
                 <template #title>
                   <div>
                     <h5 class="text-h5 mb-1">
                       {{ section.title }}
-                    </h5> 
+                    </h5>
                   </div>
                 </template>
                 <template #text>
                   <VList class="card-list">
-                    <VListItem
-                      v-for="(topic, id) in section.topics"
-                      :key="id"
-                      class="py-4"
-                    >
+                    <VListItem v-for="(topic, id) in section.topics" :key="id" class="py-4">
                       <!-- <template #prepend>
                         <VCheckbox
                           :model-value="topic.isCompleted"
@@ -634,11 +606,8 @@ onMounted(() => {
                         />
                       </template> -->
                       <VListItemTitle class="text-high-emphasis font-weight-medium">
-                        {{ id + 1 }} . {{ topic.title }} 
-                        <VIcon
-                          size="24"
-                          :icon="topic.icon"
-                        />
+                        {{ topic.title }}
+                        <VIcon size="24" :icon="topic.icon" />
                       </VListItemTitle>
                       <VListItemSubtitle>
                         <div class="text-body-2">
@@ -667,28 +636,15 @@ onMounted(() => {
             <v-row>
               <v-col>
                 <div style="display: flex; gap: 30px;">
-                  <VBtn
-                    rounded="pill"
-                    :color="rotateButtonColor"
-                    id="rotateButton"
-                  >
-                    <VTooltip
-                      location="top"
-                      transition="scale-transition"
-                      activator="parent"
-                    >
+                  <VBtn rounded="pill" :color="rotateButtonColor" id="rotateButton">
+                    <VTooltip location="top" transition="scale-transition" activator="parent">
                       <span>Boton para Rotar el Modelo</span>
                     </VTooltip>
                     <VIcon size="34" icon="tabler-arrows-move" />
                     {{ rotateButtonText }}
                   </VBtn>
-                  <VCheckbox
-                    v-model="checkboxString"
-                    true-value="Rotacion Automatica"
-                    false-value="Rotacion Manual"
-                    color="success"
-                    :label="`${checkboxString.toString()}`"
-                  />
+                  <VCheckbox v-model="checkboxString" true-value="Rotacion Automatica" false-value="Rotacion Manual"
+                    color="success" :label="`${checkboxString.toString()}`" />
                   <!-- <VBtn
                     rounded="pill"
                     id="removeButton"
@@ -704,28 +660,19 @@ onMounted(() => {
                     <VIcon size="34" icon="tabler-x" />
                     Eliminar
                   </VBtn> -->
-                  <VBtn
-                    rounded="pill"
-                    id="resetButton"
-                    color="success"
-                  >
-                    <VTooltip
-                      location="top"
-                      transition="scale-transition"
-                      activator="parent"
-                    >
+                  <VBtn rounded="pill" id="resetButton" color="success">
+                    <VTooltip location="top" transition="scale-transition" activator="parent">
                       <span>Boton para Reposicionar todos los Modelos</span>
                     </VTooltip>
                     <VIcon size="34" icon="tabler-x" />
                     Reposicionar
                   </VBtn>
-                  
+
                   <AppTextField v-model="inFill" label="Relleno" placeholder="50" type="number">
                     <template #append-inner>
-                      <VTooltip 
-                        text="El rellenado en impresión 3D es el soporte interno del objeto para dar estabilidad y reducir material. Se aplicará a todos estos modelos" 
-                        location="bottom"
-                      >
+                      <VTooltip
+                        text="El rellenado en impresión 3D es el soporte interno del objeto para dar estabilidad y reducir material. Se aplicará a todos estos modelos"
+                        location="bottom">
                         <template #activator="{ props }">
                           <VIcon v-bind="props" size="20" icon="tabler-help" />
                         </template>
@@ -741,18 +688,12 @@ onMounted(() => {
     </VRow>
   </section>
   <section v-else>
-    <VAlert
-      type="error"
-      variant="tonal"
-    >
+    <VAlert type="error" variant="tonal">
       <!-- Invoice with ID  {{ route.params.id }} not found! -->
     </VAlert>
   </section>
   <!-- Snackbar -->
-  <VSnackbar
-    v-model="isSnackbarVisible"
-    :timeout="5000"
-  >
+  <VSnackbar v-model="isSnackbarVisible" :timeout="5000">
     {{ InfoMessage }}
   </VSnackbar>
 </template>

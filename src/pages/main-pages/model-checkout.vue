@@ -11,8 +11,18 @@ import uploadModel from '@images/svg/3d-printer6.svg'
 import viewModel from '@images/svg/3d-printer9.svg'
 import customPayment from '@images/svg/payment.svg'
 import customTrending from '@images/svg/trending.svg'
+import axios from 'axios'
 
 import { useConfigStore } from '@core/stores/config'
+
+const router = useRouter()
+
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
+
+if (!userData) {
+  router.push({ path: '/pages/authentication/login-v1', query: { pending_to_go: '/main-pages/model-checkout' } });
+}
 
 definePage({
   meta: {
@@ -49,6 +59,48 @@ const modelCheckoutSteps = [
   },
 ]
 
+const getAddress = async () => {
+  const maxRetries = 5; // Maximum number of retries
+  const retryDelay = 1000; // Delay in milliseconds between retries
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      // Await the response from axios
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/addresses/getAddress`, {
+        userId: userData.id
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const address = response.data.address;
+
+      // Ensure response data is handled correctly
+      if (address) {
+        modelCheckoutData.value.addresses.push({
+          id: address._id,
+          title: `${address.name} ${address.lastName}`,  // Adjust the title as needed
+          email: address.email,  // Adjust the email
+          desc: `${address.street}, ${address.city}, ${address.state}, ${address.country}`,  // Adjust the description
+          subtitle: address.phone,  // Adjust subtitle
+          value: address.place  // Adjust the value
+        });
+        break; // Successfully got the address, so break out of the loop
+      }
+    } catch (error) {
+      console.log(`Error in getAddress (Attempt ${attempt}/${maxRetries}): `, error.response?.data?.message || error.message);
+
+      if (attempt < maxRetries) {
+        // Wait for a delay before retrying
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+      } else {
+        console.log('Max retries reached. Could not fetch the address.');
+      }
+    }
+  }
+};
+
 let modelCheckoutData = ref<ModelCheckoutData>({
   modelItems: [],
   promoCode: '',
@@ -57,20 +109,7 @@ let modelCheckoutData = ref<ModelCheckoutData>({
   deliveryAddress: 'Casa',
   deliverySpeed: 'free',
   deliveryCharges: 0,
-  addresses: [
-    // {
-    //   title: 'Juan Perez (Predeterminado)',
-    //   desc: 'Avenida Winston Churchill, Santo Domingo, DN, República Dominicana',
-    //   subtitle: '1234567890',
-    //   value: 'Casa',
-    // },
-    // {
-    //   title: 'Skynet 3D Systems',
-    //   desc: 'Avenida 27 de Febrero, Santo Domingo, DN, República Dominicana',
-    //   subtitle: '1234567890',
-    //   value: 'Trabajo',
-    // },
-  ],
+  addresses: [],
   paymentMethod: {
     cash: false,
     transfer: {
@@ -95,6 +134,15 @@ let modelCheckoutData = ref<ModelCheckoutData>({
 // }
 
 const currentStep = ref(0)
+
+// Use onMounted or another async lifecycle hook to fetch addresses
+onMounted(async () => {
+  if (userData) {
+    await getAddress();
+  }
+  console.log(modelCheckoutData.value.addresses)
+  // console.log(modelCheckoutData.value.addresses)
+});
 </script>
 
 <template>
@@ -105,61 +153,40 @@ const currentStep = ref(0)
         <VCard>
           <VCardText>
             <!-- 👉 Stepper -->
-            <AppStepper
-              v-model:current-step="currentStep"
-              class="model-checkout-stepper"
-              :items="modelCheckoutSteps"
-              :direction="$vuetify.display.mdAndUp ? 'horizontal' : 'vertical'"
-              align="center"
-            />
+            <AppStepper v-model:current-step="currentStep" class="model-checkout-stepper" :items="modelCheckoutSteps"
+              :direction="$vuetify.display.mdAndUp ? 'horizontal' : 'vertical'" align="center" />
           </VCardText>
           <VDivider />
           <VCardText>
             <!-- 👉 stepper content -->
-            <VWindow
-              v-model="currentStep"
-              class="disable-tab-transition"
-              :touch="false"
-            >
+            <VWindow v-model="currentStep" class="disable-tab-transition" :touch="false">
               <VWindowItem>
-                <CartContent
-                  v-model:current-step="currentStep"
-                  v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => { 
-                    modelCheckoutData = data 
+                <CartContent v-model:current-step="currentStep" v-model:model-checkout-data="modelCheckoutData"
+                  @update:checkout-data="(data) => {
+                    modelCheckoutData = data
                     console.log('CART: ', modelCheckoutData);
-                  }"
-                />
+                  }" />
               </VWindowItem>
               <VWindowItem>
-                <ViewerContent
-                  v-model:current-step="currentStep"
-                  v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => { 
-                    if (modelCheckoutData !== data) { 
-                      modelCheckoutData = data; 
+                <ViewerContent v-model:current-step="currentStep" v-model:model-checkout-data="modelCheckoutData"
+                  @update:checkout-data="(data) => {
+                    if (modelCheckoutData !== data) {
+                      modelCheckoutData = data;
                       console.log('VIEWER: ', modelCheckoutData)
                     }
-                  }"
-                />
+                  }" />
               </VWindowItem>
               <VWindowItem>
-                <PaymentContent
-                  v-model:current-step="currentStep"
-                  v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => { 
-                    modelCheckoutData = data 
-                    console.log('PAYMENT: ', modelCheckoutData) 
-                  }"
-                />
-                <AddressContent
-                  v-model:current-step="currentStep"
-                  v-model:model-checkout-data="modelCheckoutData"
-                  @update:checkout-data="(data) => { 
-                    modelCheckoutData = data 
-                    console.log('ADDRESS: ', modelCheckoutData) 
-                  }"
-                />
+                <PaymentContent v-model:current-step="currentStep" v-model:model-checkout-data="modelCheckoutData"
+                  @update:checkout-data="(data) => {
+                    modelCheckoutData = data
+                    console.log('PAYMENT: ', modelCheckoutData)
+                  }" />
+                <AddressContent v-model:current-step="currentStep" v-model:model-checkout-data="modelCheckoutData"
+                  @update:checkout-data="(data) => {
+                    modelCheckoutData = data
+                    console.log('ADDRESS: ', modelCheckoutData)
+                  }" />
               </VWindowItem>
               <VWindowItem>
                 <ConfirmationContent v-model:model-checkout-data="modelCheckoutData" />

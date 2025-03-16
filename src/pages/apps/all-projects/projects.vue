@@ -12,42 +12,47 @@ const academyCourseIllustration1 = useGenerateImageVariant(academyCourseIllustra
 const academyCourseIllustration2 = useGenerateImageVariant(academyCourseIllustration2Light, academyCourseIllustration2Dark)
 
 const searchQuery = ref('')
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
+
+const router = useRouter()
+const route = useRoute()
+const from = ref(route.query.from)
+
+const getPrice = () => {
+  if (!userData) {
+    // Redirect to the login page with a query parameter
+    router.push({
+      path: '/pages/authentication/login-v1',
+      query: { pending_to_go: '/main-pages/model-checkout' }  // Set your query parameter here
+    });
+  } else {
+    // Otherwise, proceed with the logic to get the price
+    console.log('User data exists, proceed to fetch price');
+    // router.push('/'); // Replace '/login' with the route you want
+  }
+}
 </script>
 
 <template>
   <div>
     <VCard class="mb-6">
       <VCardText class="py-12 position-relative">
-        <div
-          class="d-flex flex-column gap-y-4 mx-auto"
-          :class="$vuetify.display.mdAndUp ? 'w-50' : $vuetify.display.xs ? 'w-100' : 'w-75'"
-        >
-          <h4
-            class="text-h4 text-center text-wrap mx-auto"
-            :class="$vuetify.display.mdAndUp ? 'w-75' : 'w-100'"
-          >
+        <div class="d-flex flex-column gap-y-4 mx-auto"
+          :class="$vuetify.display.mdAndUp ? 'w-50' : $vuetify.display.xs ? 'w-100' : 'w-75'">
+          <h4 class="text-h4 text-center text-wrap mx-auto" :class="$vuetify.display.mdAndUp ? 'w-75' : 'w-100'">
             Servicios de fabricación digital
             <span class="text-primary text-no-wrap"> con tecnología avanzada.</span>
           </h4>
           <p class="text-center text-wrap text-body-1 mx-auto mb-0">
-            Skynet 3D Systems ofrece servicios de impresión 3D de alta calidad, escaneo 3D preciso y grabado y corte láser con tecnología de vanguardia para proyectos personalizados.
+            Skynet 3D Systems ofrece servicios de impresión 3D de alta calidad, escaneo 3D preciso y grabado y corte
+            láser con tecnología de vanguardia para proyectos personalizados.
           </p>
           <div class="d-flex justify-center align-center gap-4 flex-wrap">
-            <div
-              class="flex-grow-1"
-              style="max-inline-size: 350px;"
-            >
-              <AppTextField
-                v-model="searchQuery"
-                placeholder="Busca un proyecto"
-              />
+            <div class="flex-grow-1" style="max-inline-size: 350px;">
+              <AppTextField v-model="searchQuery" placeholder="Busca un proyecto" />
             </div>
-            <VBtn
-              color="primary"
-              density="comfortable"
-              icon="tabler-search"
-              class="rounded"
-            />
+            <VBtn color="primary" density="comfortable" icon="tabler-search" class="rounded" />
           </div>
         </div>
         <!-- <img
@@ -55,11 +60,7 @@ const searchQuery = ref('')
           class="illustration1 d-none d-md-block flip-in-rtl"
           height="180"
         > -->
-        <img
-          :src="academyCourseIllustration2"
-          class="illustration2 d-none d-md-block"
-          height="100"
-        >
+        <img :src="academyCourseIllustration2" class="illustration2 d-none d-md-block" height="100">
       </VCardText>
     </VCard>
 
@@ -126,94 +127,60 @@ const searchQuery = ref('')
       </VRow>
     </div> -->
 
-    <VCard>
+    <VCard v-if="!userData || from === 'main-pages'">
       <VCardText>
         <VRow>
-          <VCol
-            cols="12"
-            md="4"
-          >
+          <VCol cols="12" md="4">
             <div class="d-flex flex-column align-center gap-y-4 h-100 justify-center">
-              <VAvatar
-                variant="tonal"
-                size="52"
-                rounded
-                color="primary"
-              >
-                <VIcon
-                  icon="tabler-cube"
-                  size="36"
-                />
+              <VAvatar variant="tonal" size="52" rounded color="primary">
+                <VIcon icon="tabler-cube" size="36" />
               </VAvatar>
               <h4 class="text-h4 font-weight-medium">
                 Nuestros Servicios y mas...
               </h4>
               <p class="text-body-1 text-center mt-2 px-4">
-                Skynet 3D Systems ofrece servicios de <strong>impresión 3D</strong>, <strong>escaneo 3D</strong> y <strong>grabado/corte láser</strong> con alta precisión y calidad.
+                Skynet 3D Systems ofrece servicios de <strong>impresión 3D</strong>, <strong>escaneo 3D</strong> y
+                <strong>grabado/corte láser</strong> con alta precisión y calidad.
               </p>
               <p class="text-body-1 text-center mb-2 px-4">
                 ¡Contáctanos y transforma tu visión en realidad! 🔧✨
 
                 #Impresión3D #CorteLáser #Escaneo3D
               </p>
-              <VBtn>Solicitar Cotización</VBtn>
+              <VBtn @click="getPrice()">Solicitar Cotización</VBtn>
             </div>
           </VCol>
-          <VCol
-            cols="12"
-            md="4"
-            sm="6"
-          >
-            <VCard
-              flat
-              border
-            >
+          <VCol cols="12" md="4" sm="6">
+            <VCard flat border>
               <div class="px-2 pt-2">
-                <VideoPlayer
-                  :src="video1"
-                  :poster="poster1"
-                  controls
-                  plays-inline
-                  :height="$vuetify.display.mdAndUp ? 200 : 150"
-                  class="w-100 rounded"
-                />
+                <VideoPlayer :src="video1" :poster="poster1" controls plays-inline
+                  :height="$vuetify.display.mdAndUp ? 200 : 150" class="w-100 rounded" />
               </div>
               <VCardText>
                 <h5 class="text-h5 mb-2">
                   Escaneo 3D
                 </h5>
                 <p class="text-body-1 mb-0">
-                  Al igual que en otros campos tecnológicos, el escaneo 3D se adapta perfectamente a la precisión y detalle, 
+                  Al igual que en otros campos tecnológicos, el escaneo 3D se adapta perfectamente a la precisión y
+                  detalle,
                   permitiendo resultados de alta calidad en cada proyecto.
                 </p>
               </VCardText>
             </VCard>
           </VCol>
-          <VCol
-            cols="12"
-            md="4"
-            sm="6"
-          >
-            <VCard
-              flat
-              border
-            >
+          <VCol cols="12" md="4" sm="6">
+            <VCard flat border>
               <div class="px-2 pt-2">
-                <VideoPlayer
-                  :src="video2"
-                  :poster="poster2"
-                  controls
-                  plays-inline
-                  :height="$vuetify.display.mdAndUp ? 200 : 150"
-                  class="w-100 rounded"
-                />
+                <VideoPlayer :src="video2" :poster="poster2" controls plays-inline
+                  :height="$vuetify.display.mdAndUp ? 200 : 150" class="w-100 rounded" />
               </div>
               <VCardText>
                 <h5 class="text-h5 mb-2">
                   Impresión 3D
                 </h5>
                 <p class="text-body-1 mb-0">
-                  Y como también en otras áreas de la tecnología, la impresión 3D permite una creación detallada y precisa, 
+                  Y como también en otras áreas de la tecnología, la impresión 3D permite una creación detallada y
+                  precisa,
                   garantizando resultados de alta calidad en cada pieza.
                 </p>
               </VCardText>
