@@ -170,6 +170,16 @@ const getProjectsByUserId = async () => {
   }
 };
 
+const isThisMyPorject = (userId: string) => {
+  if (userData) {
+    if (userId === userData.id)
+      return true
+  }
+  else {
+    return false
+  }
+}
+
 function getRandomNumber(max: number) {
   return Math.floor(Math.random() * (max + 1));
 }
@@ -220,7 +230,7 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
                 <VCardText>
                   <h5 class="text-h5 mb-1">{{ projects.title }}</h5>
                   <p>{{ projects.description }}</p>
-                  <VChip v-if="projects.userId === userData.id" variant="tonal" size="small">
+                  <VChip v-if="isThisMyPorject(projects.userId)" variant="tonal" size="small">
                     Mi Proyecto
                   </VChip>
                   <!-- SE PUEDE USAR EL PROGRESS BAR EN UN FUTURO -->
