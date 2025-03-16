@@ -20,7 +20,8 @@ const label = ref('All Projects');
 const fullLoadProjects = ref(true)
 
 interface Project {
-  id: number;
+  id: string;
+  userId: string
   title: string;
   description: string;
   completed: boolean;
@@ -100,6 +101,7 @@ const getAllProjects = async () => {
         // Ensure all fields are present when pushing a new project
         projectsData.value.projects.push({
           id: p._id,
+          userId: p.userId,
           title: `Proyecto ${indexProject++}` || '',
           description: models.map(model => model.fileName).join(", ") || '',
           completed: 1 % 2 === 0,
@@ -145,6 +147,7 @@ const getProjectsByUserId = async () => {
         // Ensure all fields are present when pushing a new project
         projectsData.value.projects.push({
           id: p._id,
+          userId: p.userId,
           title: `Proyecto ${indexProject++}` || '',
           description: models[randomIndex].fileName || '',
           completed: 1 % 2 === 0,
@@ -217,6 +220,9 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
                 <VCardText>
                   <h5 class="text-h5 mb-1">{{ projects.title }}</h5>
                   <p>{{ projects.description }}</p>
+                  <VChip v-if="projects.userId === userData.id" variant="tonal" size="small">
+                    Mi Proyecto
+                  </VChip>
                   <!-- SE PUEDE USAR EL PROGRESS BAR EN UN FUTURO -->
                   <!-- <VProgressLinear :model-value="project.completed ? 100 : 0" rounded color="primary" height="8" class="mb-4" /> -->
                 </VCardText>
