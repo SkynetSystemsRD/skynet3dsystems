@@ -17,6 +17,7 @@ const sortBy = ref();
 const orderBy = ref();
 const hideCompleted = ref(true);
 const label = ref('All Projects');
+const fullLoadProjects = ref(true)
 
 interface Project {
   id: number;
@@ -107,9 +108,17 @@ const getAllProjects = async () => {
           projectImg: `data:image/png;base64,${models[randomIndex].fileImageContent}` || '',
         });
       }
+
+      setTimeout(() => {
+        fullLoadProjects.value = false
+      }, 700)
     }
   } catch (error) {
     console.log('Error in getAllProjects: ', error.response?.data?.message || error.message);
+
+    setTimeout(() => {
+      fullLoadProjects.value = false
+    }, 700)
   }
 };
 
@@ -144,9 +153,17 @@ const getProjectsByUserId = async () => {
           projectImg: `data:image/png;base64,${models[randomIndex].fileImageContent}` || '',
         });
       }
+
+      setTimeout(() => {
+        fullLoadProjects.value = false
+      }, 700)
     }
   } catch (error) {
     console.log('Error in getProjectsByUserId: ', error.response?.data?.message || error.message);
+
+    setTimeout(() => {
+      fullLoadProjects.value = false
+    }, 700)
   }
 };
 
@@ -208,6 +225,9 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
           </VCol>
         </VRow>
       </div>
+
+      <VProgressLinear v-if="fullLoadProjects" indeterminate color="primary" />
+      <br>
 
       <VPagination v-model="page" :length="Math.ceil(totalProjects / itemsPerPage)" active-color="primary"
         first-icon="tabler-chevrons-left" last-icon="tabler-chevrons-right" show-first-last-page />
