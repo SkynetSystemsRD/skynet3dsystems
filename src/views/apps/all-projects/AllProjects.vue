@@ -147,6 +147,7 @@ const getProjectsByUserId = async () => {
         // Ensure all fields are present when pushing a new project
         projectsData.value.projects.push({
           id: p._id,
+          userId: p.userId,
           title: `Proyecto ${indexProject++}` || '',
           description: models[randomIndex].fileName || '',
           completed: 1 % 2 === 0,
