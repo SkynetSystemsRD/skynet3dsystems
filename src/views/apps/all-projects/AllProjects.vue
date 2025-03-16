@@ -94,7 +94,7 @@ const getAllProjects = async () => {
 
       for (const p of projects) {
         const models = await getModelsByProjectId(p._id)
-        const randomIndex = getRandomNumber(models.length)
+        const randomIndex = getRandomNumber(projects.length)
 
         // Ensure all fields are present when pushing a new project
         projectsData.value.projects.push({
