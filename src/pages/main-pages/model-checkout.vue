@@ -48,7 +48,7 @@ const modelCheckoutSteps = [
     enabled: false
   },
   {
-    title: 'Formas de Pago',
+    title: 'Formas de Pago y Envio',
     icon: customPayment,
     enabled: false
   },
