@@ -56,6 +56,7 @@ interface projectDetails {
 
 const route = useRoute()
 const projectId = ref(route.query.projectId)
+const projectNumber = ref(route.query.projectNumber)
 
 const panelStatus = ref(0);
 const selectedElement = ref('image')
@@ -98,7 +99,7 @@ const instructions = [
 ]
 
 const projectDetails = ref<projectDetails>({
-  title: "Modelo 3D Cubo XYZ Test",
+  title: `Projecto ${projectNumber.value}`,
   about: "Este proyecto muestra un Cubo XYZ en formato GLTF, utilizado para calibrar y verificar la orientación de los ejes en entornos 3D. Permite analizar la alineación, escala y rotación del modelo en un visor interactivo.",
   client: "John Doe",
   modelCheckoutCartDataLocal: [
@@ -538,8 +539,14 @@ onMounted(() => {
           </template>
           <template #append>
             <div class="d-flex gap-4 align-center">
-              <VChip variant="tonal" color="error" size="small">
-                Formato del Modelo: {{ projectDetails.format }}
+              <VChip variant="tonal" color="info" size="small">
+                {{ projectDetails.modelCheckoutCartDataLocal.length > 1 ?
+                  'Formatos de los Modelos: ' :
+                  'Formato del Modelo: ' }}
+              </VChip>
+              <VChip variant="tonal" size="small">
+                {{[...new Set(projectDetails.modelCheckoutCartDataLocal.map(model =>
+                  model.format.toUpperCase()))].join(", ")}}
               </VChip>
               <!-- <VIcon
                 size="24"

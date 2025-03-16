@@ -100,7 +100,7 @@ const getAllProjects = async () => {
         projectsData.value.projects.push({
           id: p._id,
           title: `Proyecto ${indexProject++}` || '',
-          description: models[randomIndex].fileName || '',
+          description: models.map(model => model.fileName).join(", ") || '',
           completed: 1 % 2 === 0,
           instructor: '',
           rating: (Math.random() * (5 - 4) + 4).toFixed(1),
@@ -135,7 +135,7 @@ const getProjectsByUserId = async () => {
 
         // Ensure all fields are present when pushing a new project
         projectsData.value.projects.push({
-          id: models[randomIndex]._id,
+          id: p._id,
           title: `Proyecto ${indexProject++}` || '',
           description: models[randomIndex].fileName || '',
           completed: 1 % 2 === 0,
@@ -185,7 +185,8 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
 
           </RouterLink> -->
           <VCol v-for="projects in paginatedProjects" :key="projects.id" cols="12" md="4" sm="6">
-            <RouterLink :to="{ name: 'apps-all-projects-project-details', query: { projectId: projects.id } }">
+            <RouterLink
+              :to="{ name: 'apps-all-projects-project-details', query: { projectId: projects.id, projectNumber: projects.title.split(' ')[1] } }">
               <VCard flat border>
                 <VImg :src="projects.projectImg" class="cursor-pointer" />
                 <VCardText>
