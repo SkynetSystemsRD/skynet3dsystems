@@ -185,7 +185,7 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
 
           </RouterLink> -->
           <VCol v-for="projects in paginatedProjects" :key="projects.id" cols="12" md="4" sm="6">
-            <RouterLink :to="{ name: 'apps-all-projects-project-details' }">
+            <RouterLink :to="{ name: 'apps-all-projects-project-details', query: { projectId: projects.id } }">
               <VCard flat border>
                 <VImg :src="projects.projectImg" class="cursor-pointer" />
                 <VCardText>
