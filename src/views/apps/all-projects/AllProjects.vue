@@ -57,14 +57,6 @@ const userData = storedData ? JSON.parse(storedData) : null;
 const totalProjects = computed(() => projectsData.value.total);
 const messageInfo = ref('Proyectos de nuestros clientes ya realizados')
 
-
-if (from.value === 'main-pages') {
-  messageInfo.value = 'Proyectos de nuestros clientes ya realizados'
-}
-else if (userData && from.value === 'my-projects') {
-  messageInfo.value = 'Tus Projectos'
-}
-
 const getModelsByProjectId = async (projectId: string) => {
   try {
     // Await the response from axios
@@ -84,15 +76,42 @@ const getModelsByProjectId = async (projectId: string) => {
   }
 }
 
-// [{
-//   id: 1,
-//   title: `Proyecto ${1}`,
-//   description: "Descripción del proyecto.",
-//   completed: 1 % 2 === 0,
-//   instructor: "Instructor X",
-//   rating: (Math.random() * (5 - 4) + 4).toFixed(1),
-//   projectImg: academyCourseIllustration2Dark,
-// }],
+const getAllProjects = async () => {
+  try {
+    // Await the response from axios
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/projects/getAllProjects`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+    const projects = response.data.projects
+    console.log(response.data)
+    if (response.data.result) {
+      projectsData.value.total = projects.length
+      let indexProject = 1
+
+      for (const p of projects) {
+        const models = await getModelsByProjectId(p._id)
+        const randomIndex = getRandomNumber(models.length)
+
+        // Ensure all fields are present when pushing a new project
+        projectsData.value.projects.push({
+          id: models[randomIndex]._id,
+          title: `Proyecto ${indexProject++}` || '',
+          description: models[randomIndex].fileName || '',
+          completed: 1 % 2 === 0,
+          instructor: '',
+          rating: (Math.random() * (5 - 4) + 4).toFixed(1),
+          projectImg: `data:image/png;base64,${models[randomIndex].fileImageContent}` || '',
+        });
+      }
+    }
+  } catch (error) {
+    console.log('Error in getAllProjects: ', error.response?.data?.message || error.message);
+  }
+};
 
 const getProjectsByUserId = async () => {
   try {
@@ -135,8 +154,14 @@ function getRandomNumber(max: number) {
   return Math.floor(Math.random() * (max + 1));
 }
 
-getProjectsByUserId()
-console.log(projectsData.value)
+if (!userData || from.value === 'main-pages') {
+  messageInfo.value = 'Proyectos de nuestros clientes ya realizados'
+  getAllProjects()
+}
+else if (userData && from.value === 'my-projects') {
+  messageInfo.value = 'Tus Projectos'
+  getProjectsByUserId()
+}
 
 watch([hideCompleted, label, () => props.searchQuery], () => {
   page.value = 1;
@@ -148,7 +173,7 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
     <VCardText>
       <div class="d-flex justify-space-between align-center flex-wrap gap-4 mb-6">
         <div>
-          <h5 class="text-h5"> {{ messageInfo }} </h5>
+          <h5 class="text-h5"> {{ messageInfo }} 🚀</h5>
           <div class="text-body-1">{{ totalProjects }} proyectos</div>
         </div>
         <!-- <VSwitch v-model="hideCompleted" label="Hide Completed" /> -->

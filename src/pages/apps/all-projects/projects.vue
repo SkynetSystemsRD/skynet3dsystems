@@ -14,6 +14,9 @@ const academyCourseIllustration2 = useGenerateImageVariant(academyCourseIllustra
 const searchQuery = ref('')
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
+
+const route = useRoute()
+const from = ref(route.query.from)
 </script>
 
 <template>
@@ -109,7 +112,7 @@ const userData = storedData ? JSON.parse(storedData) : null;
       </VRow>
     </div> -->
 
-    <VCard v-if="!userData">
+    <VCard v-if="!userData || from === 'main-pages'">
       <VCardText>
         <VRow>
           <VCol cols="12" md="4">
