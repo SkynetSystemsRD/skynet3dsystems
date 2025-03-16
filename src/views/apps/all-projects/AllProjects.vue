@@ -158,7 +158,15 @@ if (from.value === 'main-pages') {
   messageInfo.value = 'Proyectos de nuestros clientes ya realizados'
   getAllProjects()
 }
+else if (from.value === 'project-details') {
+  messageInfo.value = 'Proyectos de nuestros clientes ya realizados'
+  getAllProjects()
+}
 else if (userData && from.value === 'my-projects') {
+  messageInfo.value = 'Tus Projectos'
+  getProjectsByUserId()
+}
+else if (userData && from.value === 'project-details') {
   messageInfo.value = 'Tus Projectos'
   getProjectsByUserId()
 }
