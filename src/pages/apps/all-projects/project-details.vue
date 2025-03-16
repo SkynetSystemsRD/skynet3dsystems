@@ -532,7 +532,7 @@ onMounted(() => {
     <VCol cols="12" md="8">
       <VBtn color="secondary" variant="text"
         :to="{ name: 'apps-all-projects-projects', query: { from: 'project-details' } }">
-        <VIcon icon="tabler-arrow-left"></VIcon> Todos mis Projectos
+        <VIcon icon="tabler-arrow-left"></VIcon> Projectos
       </VBtn>
       <br>
       <br>
