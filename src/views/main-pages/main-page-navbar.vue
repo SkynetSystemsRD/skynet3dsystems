@@ -65,7 +65,7 @@ const menuItems: MenuItem[] = [
       // { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' }, route: "faf" },
       // { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' }, route: "faf" },
       { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' }, route: "/main-pages/model-checkout" },
-      // { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
+      { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
       // { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
     ],
   },
@@ -145,9 +145,11 @@ console.log(userData)
         <div class="d-flex flex-column gap-y-4 pa-4">
           <RouterLink
             v-for="(item, index) in ['Inicio', 'Servicios', 'Equipo', 'Preguntas', 'Contáctanos', 'Projectos']"
-            :key="index"
-            :to="item.toLowerCase() === 'projectos' ? { name: 'apps-all-projects-projects' } : { name: 'main-pages-landing-page', hash: `#${item.toLowerCase().replace(' ', '-')}` }"
-            class="nav-link font-weight-medium"
+            :key="index" :to="{
+              name: item.toLowerCase() === 'projectos' ? 'apps-all-projects-projects' : 'main-pages-landing-page',
+              query: item.toLowerCase() === 'projectos' ? { from: 'main-pages' } : {},
+              hash: item.toLowerCase() === 'projectos' ? '' : `#${item.toLowerCase().replace(/\s+/g, '-')}`
+            }" class="nav-link font-weight-medium py-2 px-2 px-lg-4"
             :class="[props.activeId?.toLocaleLowerCase().replace('-', ' ') === item.toLocaleLowerCase() ? 'active-link' : '']">
             {{ item }}
           </RouterLink>
