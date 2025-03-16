@@ -131,7 +131,7 @@ const getProjectsByUserId = async () => {
 
       for (const p of project) {
         const models = await getModelsByProjectId(p._id)
-        const randomIndex = getRandomNumber(models.length)
+        const randomIndex = getRandomNumber(models.length - 1)
 
         // Ensure all fields are present when pushing a new project
         projectsData.value.projects.push({
@@ -154,7 +154,7 @@ function getRandomNumber(max: number) {
   return Math.floor(Math.random() * (max + 1));
 }
 
-if (!userData || from.value === 'main-pages') {
+if (from.value === 'main-pages') {
   messageInfo.value = 'Proyectos de nuestros clientes ya realizados'
   getAllProjects()
 }

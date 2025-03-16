@@ -15,8 +15,23 @@ const searchQuery = ref('')
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
 
+const router = useRouter()
 const route = useRoute()
 const from = ref(route.query.from)
+
+const getPrice = () => {
+  if (!userData) {
+    // Redirect to the login page with a query parameter
+    router.push({
+      path: '/pages/authentication/login-v1',
+      query: { pending_to_go: '/main-pages/model-checkout' }  // Set your query parameter here
+    });
+  } else {
+    // Otherwise, proceed with the logic to get the price
+    console.log('User data exists, proceed to fetch price');
+    // router.push('/'); // Replace '/login' with the route you want
+  }
+}
 </script>
 
 <template>
@@ -132,7 +147,7 @@ const from = ref(route.query.from)
 
                 #Impresión3D #CorteLáser #Escaneo3D
               </p>
-              <VBtn>Solicitar Cotización</VBtn>
+              <VBtn @click="getPrice()">Solicitar Cotización</VBtn>
             </div>
           </VCol>
           <VCol cols="12" md="4" sm="6">
