@@ -60,31 +60,44 @@ const modelCheckoutSteps = [
 ]
 
 const getAddress = async () => {
-  try {
-    // Await the response from axios
-    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/addresses/getAddress`, {
-      userId: userData.id
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+  const maxRetries = 5; // Maximum number of retries
+  const retryDelay = 1000; // Delay in milliseconds between retries
 
-    const address = response.data.address
-
-    // Ensure response data is handled correctly
-    if (address) {
-      modelCheckoutData.value.addresses.push({
-        id: address._id,
-        title: `${address.name} ${address.lastName}`,  // Adjust the title as needed
-        email: address.email,  // Adjust the email
-        desc: `${address.street}, ${address.city}, ${address.state}, ${address.country}`,  // Adjust the description
-        subtitle: address.phone,  // Adjust subtitle
-        value: address.place  // Adjust the value
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      // Await the response from axios
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/addresses/getAddress`, {
+        userId: userData.id
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
+
+      const address = response.data.address;
+
+      // Ensure response data is handled correctly
+      if (address) {
+        modelCheckoutData.value.addresses.push({
+          id: address._id,
+          title: `${address.name} ${address.lastName}`,  // Adjust the title as needed
+          email: address.email,  // Adjust the email
+          desc: `${address.street}, ${address.city}, ${address.state}, ${address.country}`,  // Adjust the description
+          subtitle: address.phone,  // Adjust subtitle
+          value: address.place  // Adjust the value
+        });
+        break; // Successfully got the address, so break out of the loop
+      }
+    } catch (error) {
+      console.log(`Error in getAddress (Attempt ${attempt}/${maxRetries}): `, error.response?.data?.message || error.message);
+
+      if (attempt < maxRetries) {
+        // Wait for a delay before retrying
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+      } else {
+        console.log('Max retries reached. Could not fetch the address.');
+      }
     }
-  } catch (error) {
-    console.log('Error in getAddress: ', error.response?.data?.message || error.message);
   }
 };
 

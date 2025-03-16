@@ -80,7 +80,7 @@ const confirmOrder = async () => {
         const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/saveModels`, {
           projectId: projectId,
           userId: userData.id,
-          fileName: model.fileName,
+          fileName: model.fileName.split('.')[0],
           filePath: model.filePath,
           size: model.size,
           dimentions: {
@@ -88,9 +88,11 @@ const confirmOrder = async () => {
             y: model.dimentions.y,
             z: model.dimentions.z
           },
+          format: model.format.toLowerCase(),
           weight: model.weight,
           price: model.price,
           uuid: model.uuid,
+          imageContent: model.imageContent,
           octetStreamContent: model.octetStreamContent,
         }, {
           headers: {

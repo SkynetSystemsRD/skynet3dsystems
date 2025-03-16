@@ -119,6 +119,7 @@ function handleFileChange(files: File[]) {
 
         // Luz ambiental para iluminación general suave
         const hlight = new THREE.AmbientLight(0x404040, 1);  // Luz más suave
+        hlight.position.set(50, 50, 50);
         scene.add(hlight);
 
         // Luz direccional ejes positivos
@@ -150,15 +151,27 @@ function handleFileChange(files: File[]) {
             loader = new GLTFLoader();
             loader.load(content, (gltf) => {
               const model = gltf.scene.children[0];
-              model.scale.set(1.2, 1.2, 1.2);  // Ajusta la escala del modelo
-              model.position.set(0, 0, 0);  // Centra el modelo
               scene.add(gltf.scene);
+
+              // Obtener los límites del modelo
+              const box = new THREE.Box3().setFromObject(model);
+              const center = box.getCenter(new THREE.Vector3());
+              const size = box.getSize(new THREE.Vector3());
+
+              // Centrar el modelo
+              model.position.sub(center);
+
+              // Ajustar la cámara para que esté más cerca con un ángulo
+              const maxDim = Math.max(size.x, size.y, size.z);
+              camera.position.set(maxDim * 0.7, maxDim * 0.7, maxDim * 0.7);  // Cámara más cerca
+              camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+              // Hacer una rotación ligera para mostrar una mejor perspectiva
+              scene.rotation.y = Math.PI / 4;  // Rotar la escena para una vista 3D interesante
 
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
 
-              // Download or display the image
-              // console.log('file format: gltf')
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
@@ -177,20 +190,32 @@ function handleFileChange(files: File[]) {
                 uuid: 'uuid', // dar el valor correspondiente
                 price: 0
               });
-
             });
             break;
           case 'obj':
             loader = new OBJLoader();
             loader.load(content, (obj) => {
-              obj.scale.set(1.2, 1.2, 1.2);   // Ajusta la escala del modelo
-              obj.position.set(0, 0, 0);  // Centra el modelo.
               scene.add(obj);
+
+              // Obtener los límites del modelo
+              const box = new THREE.Box3().setFromObject(obj);
+              const center = box.getCenter(new THREE.Vector3());
+              const size = box.getSize(new THREE.Vector3());
+
+              // Centrar el modelo
+              obj.position.sub(center);
+
+              // Ajustar la cámara
+              const maxDim = Math.max(size.x, size.y, size.z);
+              camera.position.set(maxDim * 0.7, maxDim * 0.7, maxDim * 0.7);  // Cámara más cerca
+              camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+              // Rotar ligeramente la escena
+              scene.rotation.y = Math.PI / 4;
+
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
 
-              // Download or display the image
-              // console.log('file format: obj')
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
@@ -214,15 +239,27 @@ function handleFileChange(files: File[]) {
           case 'fbx':
             loader = new FBXLoader();
             loader.load(content, (fbx) => {
-              fbx.scale.set(1.2, 1.2, 1.2);   // Ajusta la escala del modelo
-              fbx.position.set(0, 0, 0);  // Centra el modelo
               scene.add(fbx);
+
+              // Obtener los límites del modelo
+              const box = new THREE.Box3().setFromObject(fbx);
+              const center = box.getCenter(new THREE.Vector3());
+              const size = box.getSize(new THREE.Vector3());
+
+              // Centrar el modelo
+              fbx.position.sub(center);
+
+              // Ajustar la cámara
+              const maxDim = Math.max(size.x, size.y, size.z);
+              camera.position.set(maxDim * 0.7, maxDim * 0.7, maxDim * 0.7);  // Cámara más cerca
+              camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+              // Rotar la escena para una vista más llamativa
+              scene.rotation.y = Math.PI / 4;
 
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
 
-              // Download or display the image
-              // console.log('file format: fbx')
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
@@ -248,14 +285,27 @@ function handleFileChange(files: File[]) {
             loader.load(content, (geometry) => {
               const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
               const mesh = new THREE.Mesh(geometry, material);
-              mesh.scale.set(1.2, 1.2, 1.2);   // Ajusta la escala del modelo
-              mesh.position.set(0, 0, 0);  // Centra el modelo
               scene.add(mesh);
+
+              // Obtener los límites del modelo
+              const box = new THREE.Box3().setFromObject(mesh);
+              const center = box.getCenter(new THREE.Vector3());
+              const size = box.getSize(new THREE.Vector3());
+
+              // Centrar el modelo
+              mesh.position.sub(center);
+
+              // Ajustar la cámara
+              const maxDim = Math.max(size.x, size.y, size.z);
+              camera.position.set(maxDim * 0.7, maxDim * 0.7, maxDim * 0.7);  // Cámara más cerca
+              camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+              // Rotar la escena para una vista más atractiva
+              scene.rotation.y = Math.PI / 4;
+
               renderer.render(scene, camera);
               imageData = renderer.domElement.toDataURL("image/png");
 
-              // Download or display the image
-              // console.log('file format: stl')
               modelCheckoutCartDataLocal.value.modelItems.push({
                 id: last_id++,
                 fileName: file.name,
@@ -280,7 +330,6 @@ function handleFileChange(files: File[]) {
           default:
             console.error('Unsupported model format');
         }
-
         emit('update:checkout-data', { ...modelCheckoutCartDataLocal.value });
       });
     }
