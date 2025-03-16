@@ -532,9 +532,9 @@ onMounted(() => {
       <VCard>
         <VCardItem :title="projectDetails.title" class="pb-6">
           <template #subtitle>
-            <div class="text-body-1">
+            <!-- <div class="text-body-1">
               Cliente <span class="text-h6 d-inline-block">{{ projectDetails?.client }}</span>
-            </div>
+            </div> -->
           </template>
           <template #append>
             <div class="d-flex gap-4 align-center">
