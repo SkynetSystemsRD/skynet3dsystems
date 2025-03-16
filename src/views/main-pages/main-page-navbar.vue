@@ -65,7 +65,7 @@ const menuItems: MenuItem[] = [
       // { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' }, route: "faf" },
       // { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' }, route: "faf" },
       { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' }, route: "/main-pages/model-checkout" },
-      // { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
+      { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
       // { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
     ],
   },
