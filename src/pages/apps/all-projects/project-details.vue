@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import main3dImage1 from '@images/projects/image-project1.png';
-import main3dImage2 from '@images/projects/image-project2.png';
-import main3dImage3 from '@images/projects/image-project3.png';
-import main3dImage4 from '@images/projects/image-project4.png';
-import main3dImage5 from '@images/projects/image-project5.png';
-import main3dImage6 from '@images/projects/image-project6.png';
+import axios from 'axios';
 import { register } from 'swiper/element/bundle';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -59,104 +54,108 @@ interface projectDetails {
   images: image[];
 }
 
+const route = useRoute()
+const projectId = ref(route.query.projectId)
+const projectNumber = ref(route.query.projectNumber)
+
 const panelStatus = ref(0);
 const selectedElement = ref('image')
 const instructions = [
   {
     title: "👋 Manipulación del Modelo 3D",
     topics: [
-      { 
-        title: "Rotar la cámara", 
-        instruction1: "Mantén presionado el botón izquierdo del ratón y mueve el ratón ",
-        instruction2: "y mueva el ratón para rotar el entorno de la escena.",
+      {
+        title: "Mover la entorno",
+        instruction1: "Mantén presionado el botón derecho del ratón",
+        instruction2: "y mueve el ratón para mover el entorno de la escena.",
+        icon: "tabler-direction"
+      },
+      {
+        title: "Rotar la cámara",
+        instruction1: "Mantén presionado el botón izquierdo del ratón",
+        instruction2: "y mueve el ratón para rotar el entorno de la escena.",
         icon: "tabler-rotate"
       },
-      // { 
-      //   title: "Rotacion Manual/Automatica del modelo 3D", 
+      // {
+      //   title: "Rotacion Manual/Automatica del modelo 3D",
       //   instruction1: "Seleccione el modelo que desea rotar luego presione el boton de rotar y el check",
       //   instruction2: "de rotacion automatica, lo mismo para la rotacion manual.",
       //   icon: "tabler-rotate-2"
       // },
-      { 
-        title: "Acercar/Lejar el Modelo", 
+      {
+        title: "Acercar/Lejar el Modelo",
         instruction1: "Usa la rueda del ratón para acercar o alejar el modelo.",
         instruction2: "",
         icon: "tabler-zoom"
       },
-      { 
-        title: "Mover el Modelo", 
+      {
+        title: "Mover el Modelo",
         instruction1: "Seleccion con click izquierdo y mantén presionado el botón izquierdo del ratón y arrastra para ",
         instruction2: "mover el modelo 3D.",
         icon: "tabler-mouse"
       },
-    //   { 
-    //     title: "Elimnar el Modelo", 
-    //     instruction1: "Seleccion con click izquierdo el modelo 3D que desea eliminar",
-    //     instruction2: "y presione el boton rojo con la X",
-    //     icon: "tabler-x"
-    //   }
     ]
   }
 ]
 
 const projectDetails = ref<projectDetails>({
-  title: "Modelo 3D Cubo XYZ Test",
+  title: `Projecto ${projectNumber.value}`,
   about: "Este proyecto muestra un Cubo XYZ en formato GLTF, utilizado para calibrar y verificar la orientación de los ejes en entornos 3D. Permite analizar la alineación, escala y rotación del modelo en un visor interactivo.",
   client: "John Doe",
   modelCheckoutCartDataLocal: [
-    { 
-      id: 1,
-      format: getFileExtention('/xyzCalibration_cube.gltf'),
-      filePath: '/xyzCalibration_cube.gltf',
-      fileName: 'xyzCalibration_cube.gltf',
-      size: 235654,
-      octetStreamContent: '',
-      uuid: '',
-      dimentions: {
-        x: 42,
-        y: 42,
-        z: 42
-      }, 
-      weight: 250
-    },
-    { 
-      id: 2,
-      format: getFileExtention('/xyzCalibration_cube.gltf'),
-      filePath: '/xyzCalibration_cube.gltf',
-      fileName: 'xyzCalibration_cube.gltf',
-      size: 235654,
-      octetStreamContent: '',
-      uuid: '',
-      dimentions: {
-        x: 42,
-        y: 42,
-        z: 42
-      }, 
-      weight: 250
-    },
-    { 
-      id: 3,
-      format: getFileExtention('/xyzCalibration_cube.gltf'),
-      filePath: '/xyzCalibration_cube.gltf',
-      fileName: 'xyzCalibration_cube.gltf',
-      size: 235654,
-      octetStreamContent: '',
-      uuid: '',
-      dimentions: {
-        x: 42,
-        y: 42,
-        z: 42
-      }, 
-      weight: 250
-    }
+    // {
+    //   id: 1,
+    //   format: getFileExtention('/xyzCalibration_cube.gltf'),
+    //   filePath: '/xyzCalibration_cube.gltf',
+    //   fileName: 'xyzCalibration_cube.gltf',
+    //   size: 235654,
+    //   octetStreamContent: '',
+    //   uuid: '',
+    //   dimentions: {
+    //     x: 42,
+    //     y: 42,
+    //     z: 42
+    //   },
+    //   weight: 250
+    // },
+    // {
+    //   id: 2,
+    //   format: getFileExtention('/xyzCalibration_cube.gltf'),
+    //   filePath: '/xyzCalibration_cube.gltf',
+    //   fileName: 'xyzCalibration_cube.gltf',
+    //   size: 235654,
+    //   octetStreamContent: '',
+    //   uuid: '',
+    //   dimentions: {
+    //     x: 42,
+    //     y: 42,
+    //     z: 42
+    //   },
+    //   weight: 250
+    // },
+    // {
+    //   id: 3,
+    //   format: getFileExtention('/xyzCalibration_cube.gltf'),
+    //   filePath: '/xyzCalibration_cube.gltf',
+    //   fileName: 'xyzCalibration_cube.gltf',
+    //   size: 235654,
+    //   octetStreamContent: '',
+    //   uuid: '',
+    //   dimentions: {
+    //     x: 42,
+    //     y: 42,
+    //     z: 42
+    //   },
+    //   weight: 250
+    // }
   ],
   fileName: '',
   format: '',
   dimentions: [{
-      x: 0,
-      y: 0,
-      z: 0
-    },
+    x: 0,
+    y: 0,
+    z: 0
+  },
   ],
   weight: 0,
   materials: "PLA, ABS, PETG, Resina, etc.",
@@ -164,23 +163,111 @@ const projectDetails = ref<projectDetails>({
   time: "4h 30m",
   description: "Este proyecto presenta un Cubo XYZ en formato GLTF, diseñado para la calibración y verificación de los ejes en entornos 3D. Facilita la evaluación de la alineación, escala y rotación del modelo mediante un visor interactivo, asegurando una correcta orientación en el espacio tridimensional.",
   images: [
-    { alt: "1", imagePath: main3dImage1, fileExtention: "png" },
-    { alt: "2", imagePath: main3dImage2, fileExtention: "png" },
-    { alt: "3", imagePath: main3dImage3, fileExtention: "png" },
-    { alt: "4", imagePath: main3dImage4, fileExtention: "png" },
-    { alt: "5", imagePath: main3dImage5, fileExtention: "png" },
-    { alt: "6", imagePath: main3dImage6, fileExtention: "png" },
+    // { alt: "1", imagePath: main3dImage1, fileExtention: "png" },
+    // { alt: "2", imagePath: main3dImage2, fileExtention: "png" },
+    // { alt: "3", imagePath: main3dImage3, fileExtention: "png" },
+    // { alt: "4", imagePath: main3dImage4, fileExtention: "png" },
+    // { alt: "5", imagePath: main3dImage5, fileExtention: "png" },
+    // { alt: "6", imagePath: main3dImage6, fileExtention: "png" },
   ]
 });
 
 const selectOption = (option: string) => {
   selectedElement.value = option;
 
-  if (selectedElement.value == 'model'){
+  if (selectedElement.value == 'model') {
     reload()
     initModels()
   }
 }
+
+const storedData = localStorage.getItem('userData');
+const userData = storedData ? JSON.parse(storedData) : null;
+
+const getModelsByProjectId = async (projectId: string) => {
+  try {
+    // Await the response from axios
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/getModelsByProjectId`, {
+      projectId: projectId
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const models = response.data.models
+    return models
+  } catch (error) {
+    console.log('Error in getModelsByProjectId: ', error.response?.data?.message || error.message);
+    return null
+  }
+}
+
+const getProjectById = async () => {
+  try {
+
+    console.log(projectId.value)
+    // Await the response from axios
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/projects/getProjectById`, {
+      projectId: projectId.value
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const project = response.data.project
+    if (response.data.result) {
+
+      const models = await getModelsByProjectId(project._id)
+      let index = 1;
+
+      for (const m of models) {
+        projectDetails.value.images.push({
+          alt: (index).toString(),
+          imagePath: `data:image/png;base64,${m.fileImageContent}` || '',
+          fileExtention: "png"
+        })
+
+        projectDetails.value.modelCheckoutCartDataLocal.push({
+          id: index,
+          format: m.format,
+          filePath: `data:application/octet-stream;base64,${m.fileModelContent}`,
+          fileName: m.fileName,
+          size: m.size,
+          octetStreamContent: `data:application/octet-stream;base64,${m.fileModelContent}`,
+          uuid: m.uuid,
+          dimentions: {
+            x: m.dimentions.x,
+            y: m.dimentions.y,
+            z: m.dimentions.z
+          },
+          weight: m.weight
+        })
+
+        index++
+      }
+    }
+  } catch (error) {
+    console.log('Error in getProjectById: ', error.response?.data?.message || error.message);
+  }
+};
+
+// {
+//       id: 1,
+//       format: getFileExtention('/xyzCalibration_cube.gltf'),
+//       filePath: '/xyzCalibration_cube.gltf',
+//       fileName: 'xyzCalibration_cube.gltf',
+//       size: 235654,
+//       octetStreamContent: '',
+//       uuid: '',
+//       dimentions: {
+//         x: 42,
+//         y: 42,
+//         z: 42
+//       },
+//       weight: 250
+//     },
 
 function reload() {
   var container = document.getElementById("model-viewer");
@@ -188,7 +275,7 @@ function reload() {
   if (container) {  // Verifica si el contenedor existe
     var content = "";
     container.innerHTML = content;  // Recarga el contenido del contenedor
-    
+
     // Esta línea es para ver el resultado en la consola, puedes eliminarla después
     console.log("Refreshed");
   } else {
@@ -229,7 +316,7 @@ const initModels = () => {
       console.log("Tamaño 0, reintentando...");
       setTimeout(resizeRenderer, 200); // Reintenta después de 100ms
       return;
-      
+
     }
     renderer.setSize(width, height);
     camera.aspect = width / height;
@@ -244,7 +331,7 @@ const initModels = () => {
 
   nextTick(() => {
     resizeRenderer();
-    window.addEventListener('resize', resizeRenderer);333
+    window.addEventListener('resize', resizeRenderer); 333
   });
 
   setTimeout(() => {
@@ -256,7 +343,7 @@ const initModels = () => {
 
   // Agrega un evento para detectar cambios en el control de la cámara
   controls.addEventListener('change', () => {
-    
+
   });
 
   // Luz ambiental para iluminación general suave
@@ -279,7 +366,7 @@ const initModels = () => {
   let selectedModel: THREE.Object3D | null = null;
   let isDragging = false;
   let isRotating = false;  // Variable para controlar si el modelo seleccionado debe rotar
-  
+
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   const offset = new THREE.Vector3();
@@ -289,7 +376,9 @@ const initModels = () => {
     let loader: any;
     let fileType = item.fileName.split('.').pop()?.toLowerCase();
 
-    switch (fileType) {
+    console.log(item.format)
+
+    switch (item.format) {
       case 'glb':
       case 'gltf':
         loader = new GLTFLoader();
@@ -341,7 +430,7 @@ const initModels = () => {
 
   const originalColors = new Map<THREE.Object3D, THREE.Color>(); // Guardar colores originales
 
-  
+
   function selectAndDragModel(event: MouseEvent) {
     if (event.button !== 0) return; // Solo clic izquierdo
 
@@ -355,15 +444,15 @@ const initModels = () => {
     if (intersects.length > 0) {
       // Restaurar el color del modelo previamente seleccionado
       if (selectedModel) {
-          selectedModel.traverse((child) => {
-              if ((child as THREE.Mesh).isMesh) {
-                  const mesh = child as THREE.Mesh;
-                  const material = mesh.material as THREE.MeshStandardMaterial;
-                  if (originalColors.has(mesh)) {
-                      material.color.copy(originalColors.get(mesh)!); // Restaurar color original
-                  }
-              }
-          });
+        selectedModel.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            const material = mesh.material as THREE.MeshStandardMaterial;
+            if (originalColors.has(mesh)) {
+              material.color.copy(originalColors.get(mesh)!); // Restaurar color original
+            }
+          }
+        });
       }
 
       selectedModel = intersects[0].object;
@@ -371,16 +460,16 @@ const initModels = () => {
 
       // Guardar el color original antes de cambiarlo
       selectedModel.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-              const mesh = child as THREE.Mesh;
-              const material = mesh.material as THREE.MeshStandardMaterial;
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          const material = mesh.material as THREE.MeshStandardMaterial;
 
-              if (!originalColors.has(mesh)) {
-                  originalColors.set(mesh, material.color.clone()); // Guardar el color original
-              }
-
-              material.color.set(0xffff00); // Cambiar a amarillo
+          if (!originalColors.has(mesh)) {
+            originalColors.set(mesh, material.color.clone()); // Guardar el color original
           }
+
+          material.color.set(0xffff00); // Cambiar a amarillo
+        }
       });
 
       // Calcular la posición inicial del modelo
@@ -408,7 +497,7 @@ const initModels = () => {
 
     raycaster.setFromCamera(mouse, camera);
     const intersection = new THREE.Vector3();
-    
+
     if (raycaster.ray.intersectPlane(plane, intersection)) {
       selectedModel.position.copy(intersection.sub(offset));
     }
@@ -431,6 +520,8 @@ const initModels = () => {
   animate();
 }
 
+getProjectById()
+
 onMounted(() => {
   initModels();
 });
@@ -438,28 +529,24 @@ onMounted(() => {
 
 <template>
   <VRow>
-    <VCol
-      cols="12"
-      md="8"
-    >
+    <VCol cols="12" md="8">
       <VCard>
-        <VCardItem
-          :title="projectDetails.title"
-          class="pb-6"
-        >
+        <VCardItem :title="projectDetails.title" class="pb-6">
           <template #subtitle>
-            <div class="text-body-1">
+            <!-- <div class="text-body-1">
               Cliente <span class="text-h6 d-inline-block">{{ projectDetails?.client }}</span>
-            </div>
+            </div> -->
           </template>
           <template #append>
             <div class="d-flex gap-4 align-center">
-              <VChip
-                variant="tonal"
-                color="error"
-                size="small"
-              >
-                Formato del Modelo: {{ projectDetails.format }}
+              <VChip variant="tonal" color="info" size="small">
+                {{ projectDetails.modelCheckoutCartDataLocal.length > 1 ?
+                  'Formatos de los Modelos: ' :
+                  'Formato del Modelo: ' }}
+              </VChip>
+              <VChip variant="tonal" size="small">
+                {{[...new Set(projectDetails.modelCheckoutCartDataLocal.map(model =>
+                  model.format.toUpperCase()))].join(", ")}}
               </VChip>
               <!-- <VIcon
                 size="24"
@@ -475,48 +562,23 @@ onMounted(() => {
           </template>
         </VCardItem>
         <VCardText>
-          <VCard
-            flat
-            border
-          >
-            <swiper-container
-              id="swiperContainer"
-              v-show="selectedElement === 'image'"
-              class="mySwiper w-100 rounded"
-              thumbs-swiper=".mySwiper2"
-              loop="true"
-              space-between="10"
-              navigation="false" 
-              centered-slides="true"
-              events-prefix="swiper-"
-            >
-              <swiper-slide
-                v-for="swiperImg in projectDetails?.images"
-                :key="swiperImg.alt"
-              >
-                <VImg v-if="selectedElement === 'image'" id="image-viewer" :src="swiperImg.imagePath" cover class="swiper-img1" />
+          <VCard flat border>
+            <swiper-container id="swiperContainer" v-show="selectedElement === 'image'" class="mySwiper w-100 rounded"
+              thumbs-swiper=".mySwiper2" loop="true" space-between="10" navigation="false" centered-slides="true"
+              events-prefix="swiper-">
+              <swiper-slide v-for="swiperImg in projectDetails?.images" :key="swiperImg.alt">
+                <VImg v-if="selectedElement === 'image'" id="image-viewer" :src="swiperImg.imagePath" cover
+                  class="swiper-img1" />
               </swiper-slide>
             </swiper-container>
             <div v-show="selectedElement === 'model'" class="px-2 pt-2">
               <div id="model-viewer" class="w-100 rounded" style=" block-size: 600px;inline-size: 800px;"></div>
             </div>
-            <swiper-container
-              class="mySwiper2"
-              loop="true"
-              free-mode="false"
-              events-prefix="swiper-"
-              slides-per-view="4"
-            >
-              <swiper-slide
-              v-for="(swiperImg) in projectDetails?.images"
-              :key="swiperImg.alt"
-              @click="selectOption('image')"
-              >
-                <VImg
-                  :src="swiperImg.imagePath"
-                  cover
-                  class="swiper-img2"
-                />
+            <swiper-container class="mySwiper2" loop="true" free-mode="false" events-prefix="swiper-"
+              slides-per-view="4">
+              <swiper-slide v-for="(swiperImg) in projectDetails?.images" :key="swiperImg.alt"
+                @click="selectOption('image')">
+                <VImg :src="swiperImg.imagePath" cover class="swiper-img2" />
               </swiper-slide>
             </swiper-container>
 
@@ -546,32 +608,25 @@ onMounted(() => {
                   <VList class="card-list text-medium-emphasis">
                     <VListItem>
                       <template #prepend>
-                        <VIcon
-                          icon="tabler-atom"
-                          size="20"
-                        />
+                        <VIcon icon="tabler-atom" size="20" />
                       </template>
                       <VListItemTitle>Materiales: {{ projectDetails?.materials }}</VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
-                        <VIcon
-                          icon="tabler-cube"
-                          size="20"
-                        />
+                        <VIcon icon="tabler-cube" size="20" />
                       </template>
-                      <VListItemTitle>Dimensiones: Altura: {{ projectDetails.dimentions[0].z }}mm, Ancho: {{ projectDetails?.dimentions[0].x }}mm, Profundidad: {{ projectDetails?.dimentions[0].y }}mm</VListItemTitle>
+                      <VListItemTitle>Dimensiones: Altura: {{ projectDetails.dimentions[0].z }}mm, Ancho: {{
+                        projectDetails?.dimentions[0].x }}mm, Profundidad: {{ projectDetails?.dimentions[0].y }}mm
+                      </VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
-                        <VIcon
-                          icon="tabler-weight"
-                          size="20"
-                        />
+                        <VIcon icon="tabler-weight" size="20" />
                       </template>
                       <VListItemTitle>
-                        Peso: {{ projectDetails?.weight >= 1000 
-                          ? (projectDetails.weight / 1000).toFixed(2) + ' KG' 
+                        Peso: {{ projectDetails?.weight >= 1000
+                          ? (projectDetails.weight / 1000).toFixed(2) + ' KG'
                           : projectDetails.weight + ' G' }}
                       </VListItemTitle>
                     </VListItem>
@@ -590,19 +645,13 @@ onMounted(() => {
                   <VList class="card-list text-medium-emphasis">
                     <VListItem>
                       <template #prepend>
-                        <VIcon
-                          icon="tabler-number"
-                          size="20"
-                        />
+                        <VIcon icon="tabler-number" size="20" />
                       </template>
                       <VListItemTitle>Numero de impresiones: {{ projectDetails?.totalPrints }}</VListItemTitle>
                     </VListItem>
                     <VListItem>
                       <template #prepend>
-                        <VIcon
-                          icon="tabler-clock"
-                          size="20"
-                        />
+                        <VIcon icon="tabler-clock" size="20" />
                       </template>
                       <VListItemTitle>Tiempo Impresión: {{ projectDetails?.time }}</VListItemTitle>
                     </VListItem>
@@ -642,40 +691,22 @@ onMounted(() => {
       </VCard>
     </VCol>
 
-    <VCol
-      cols="12"
-      md="4"
-    >
+    <VCol cols="12" md="4">
       <div class="course-content">
-        <VExpansionPanels
-          v-model="panelStatus"
-          variant="accordion"
-          class="expansion-panels-width-border"
-        >
-          <template
-            v-for="(section, index) in instructions"
-            :key="index"
-          >
-            <VExpansionPanel
-              elevation="0"
-              :value="index"
-              expand-icon="tabler-chevron-right"
-              collapse-icon="tabler-chevron-down"
-            >
+        <VExpansionPanels v-model="panelStatus" variant="accordion" class="expansion-panels-width-border">
+          <template v-for="(section, index) in instructions" :key="index">
+            <VExpansionPanel elevation="0" :value="index" expand-icon="tabler-chevron-right"
+              collapse-icon="tabler-chevron-down">
               <template #title>
                 <div>
                   <h5 class="text-h5 mb-1">
                     {{ section.title }}
-                  </h5> 
+                  </h5>
                 </div>
               </template>
               <template #text>
                 <VList class="card-list">
-                  <VListItem
-                    v-for="(topic, id) in section.topics"
-                    :key="id"
-                    class="py-4"
-                  >
+                  <VListItem v-for="(topic, id) in section.topics" :key="id" class="py-4">
                     <!-- <template #prepend>
                       <VCheckbox
                         :model-value="topic.isCompleted"
@@ -683,11 +714,8 @@ onMounted(() => {
                       />
                     </template> -->
                     <VListItemTitle class="text-high-emphasis font-weight-medium">
-                      {{ id + 1 }} . {{ topic.title }} 
-                      <VIcon
-                        size="24"
-                        :icon="topic.icon"
-                      />
+                      {{ id + 1 }} . {{ topic.title }}
+                      <VIcon size="24" :icon="topic.icon" />
                     </VListItemTitle>
                     <VListItemSubtitle>
                       <div class="text-body-2">
@@ -804,7 +832,9 @@ body .v-layout .v-application__wrap {
   .swiper-svg2 {
     block-size: 65px;
     inline-size: 265px;
-    margin-inline-start: -40px; /* Mueve 20px a la izquierda */
+    margin-inline-start: -40px;
+
+    /* Mueve 20px a la izquierda */
   }
 }
 </style>

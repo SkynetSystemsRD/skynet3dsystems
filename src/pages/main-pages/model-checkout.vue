@@ -137,7 +137,9 @@ const currentStep = ref(0)
 
 // Use onMounted or another async lifecycle hook to fetch addresses
 onMounted(async () => {
-  await getAddress();
+  if (userData) {
+    await getAddress();
+  }
   console.log(modelCheckoutData.value.addresses)
   // console.log(modelCheckoutData.value.addresses)
 });
