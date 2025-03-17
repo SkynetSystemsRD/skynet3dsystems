@@ -57,6 +57,7 @@ interface projectDetails {
 const route = useRoute()
 const projectId = ref(route.query.projectId)
 const projectNumber = ref(route.query.projectNumber)
+const fullLoadProjects = ref(true)
 
 const panelStatus = ref(0);
 const selectedElement = ref('image')
@@ -218,7 +219,6 @@ const getProjectById = async () => {
 
     const project = response.data.project
     if (response.data.result) {
-
       const models = await getModelsByProjectId(project._id)
       let index = 1;
 
@@ -247,6 +247,11 @@ const getProjectById = async () => {
 
         index++
       }
+
+      setTimeout(() => {
+        fullLoadProjects.value = false
+      }, 700);
+
     }
   } catch (error) {
     console.log('Error in getProjectById: ', error.response?.data?.message || error.message);
@@ -587,6 +592,9 @@ onMounted(() => {
                 <VImg :src="swiperImg.imagePath" cover class="swiper-img2" />
               </swiper-slide>
             </swiper-container>
+
+            <VProgressLinear v-if="fullLoadProjects" indeterminate color="primary" />
+            <br>
 
             <div style="display: flex; justify-content: end;">
               <VBtn @click="selectOption('model')">
