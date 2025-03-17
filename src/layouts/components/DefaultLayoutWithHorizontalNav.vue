@@ -28,16 +28,10 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'; /* PartiallyE
         class="mega-menu-item"
         to="/pages/authentication/login-v1"
       >
-        <VBtn
-          v-if="$vuetify.display.lgAndUp"
-          prepend-icon="tabler-login"
-          variant="elevated"
-          color="primary"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Iniciar Sección
-        </VBtn>
+        <VBtn 
+          variant="tonal"
+          icon="tabler-user-plus"
+        />
       </RouterLink>
 
       <!-- <NavSearchBar trigger-btn-class="ms-lg-n3" />
