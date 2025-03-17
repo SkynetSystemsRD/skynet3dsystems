@@ -284,7 +284,7 @@ console.log(userData)
               <div class="app-logo">
                 <VNodeRenderer :nodes="themeConfig.app.logo" :class="rotatingClass" />
                 <h1 class="app-logo-title">
-                  {{ screenWidth < 450 ? 'Skynet 3D' : themeConfig.app.title }}
+                  {{ screenWidth < 400 ? 'Skynet 3D' : themeConfig.app.title }}
                 </h1>
               </div>
             </RouterLink>
