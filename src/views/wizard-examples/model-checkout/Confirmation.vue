@@ -19,6 +19,7 @@ const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
 const paymentMethod = ref({})
 const orderId = ref('')
+const confirmed = ref(false)
 
 const createProject = async () => {
   try {
@@ -108,6 +109,7 @@ const confirmOrder = async () => {
 
           if (response.data.result) {
             emit("confirm:checkout-data");
+            confirmed.value = true
             messageInfo.value = 'Muchas gracias, pedido confirmado 😇';
             isSnackbarScrollReverseVisible.value = true;
           } else {
@@ -366,7 +368,7 @@ watch(() => props.modelCheckoutData, (value) => {
 
         <br>
 
-        <VBtn @click="confirmOrder">
+        <VBtn v-if="!confirmed" @click="confirmOrder">
           Confirmar Pedido
         </VBtn>
       </VCol>
