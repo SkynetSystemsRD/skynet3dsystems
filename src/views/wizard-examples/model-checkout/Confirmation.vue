@@ -7,14 +7,18 @@ const props = defineProps<{
   modelCheckoutData: ModelCheckoutData
 }>()
 
-defineEmits<{
+interface Emit {
   (e: 'update:currentStep', value: number): void
   (e: 'update:checkout-data', value: ModelCheckoutData): void
-}>()
+  (e: 'confirm:checkout-data', value: Boolean): void
+}
+
+const emit = defineEmits<Emit>()
 
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
 const paymentMethod = ref({})
+const orderId = ref('')
 
 const createProject = async () => {
   try {
@@ -71,64 +75,61 @@ const confirmOrder = async () => {
     props.modelCheckoutData.addresses.length > 0 &&
     (props.modelCheckoutData.paymentMethod.cash || props.modelCheckoutData.paymentMethod.card !== '' || props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0)
   ) {
-    const projectId = await createProject()
-    const addressId = props.modelCheckoutData.addresses.find(a => a.value === props.modelCheckoutData.deliveryAddress)?.id;
-    let confirmed = false
-    saveBillingDetails(projectId, addressId)
-    console.log(addressId)
+    try {
+      const projectId = orderId.value = await createProject();
+      const addressId = props.modelCheckoutData.addresses.find(a => a.value === props.modelCheckoutData.deliveryAddress)?.id;
 
-    props.modelCheckoutData.modelItems.forEach(model => {
-      try {
-        const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/saveModels`, {
-          projectId: projectId,
-          userId: userData.id,
-          fileName: model.fileName.split('.')[0],
-          filePath: model.filePath,
-          size: model.size,
-          dimentions: {
-            x: model.dimentions.x,
-            y: model.dimentions.y,
-            z: model.dimentions.z
-          },
-          format: model.format.toLowerCase(),
-          weight: model.weight,
-          price: model.price,
-          uuid: model.uuid,
-          imageContent: model.imageContent,
-          octetStreamContent: model.octetStreamContent,
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+      await saveBillingDetails(projectId, addressId);
 
-        if (response.data.result) {
-          confirmed = true
-        } else {
-          console.error("El campo 'user' no está presente en la respuesta");
-          messageInfo.value = '¡Uy! Algo salió mal 😵‍💫 Pero no te preocupes, estamos en ello 🛠️✨'
-          isSnackbarScrollReverseVisible.value = true
+      for (const model of props.modelCheckoutData.modelItems) {
+        try {
+          const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/saveModels`, {
+            projectId: projectId,
+            userId: userData.id,
+            fileName: model.fileName.split('.')[0],
+            filePath: model.filePath,
+            size: model.size,
+            dimentions: {
+              x: model.dimentions.x,
+              y: model.dimentions.y,
+              z: model.dimentions.z
+            },
+            format: model.format.toLowerCase(),
+            weight: model.weight,
+            price: model.price,
+            uuid: model.uuid,
+            imageContent: model.imageContent,
+            octetStreamContent: model.octetStreamContent,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (response.data.result) {
+            emit("confirm:checkout-data", true);
+            messageInfo.value = 'Muchas gracias, pedido confirmado 😇';
+            isSnackbarScrollReverseVisible.value = true;
+          } else {
+            console.error("El campo 'user' no está presente en la respuesta");
+            messageInfo.value = '¡Uy! Algo salió mal 😵‍💫 Pero no te preocupes, estamos en ello 🛠️✨';
+            isSnackbarScrollReverseVisible.value = true;
+          }
+        } catch (error) {
+          console.log('confirmOrder: ', error.response?.data?.message || error.message);
+          isSnackbarScrollReverseVisible.value = true;
         }
-      } catch (error) {
-        console.log('confirmOrder: ', error.response?.data?.message || error.message);
-        isSnackbarScrollReverseVisible.value = true
       }
-    })
-
-    if (confirmed) {
-      messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
-      isSnackbarScrollReverseVisible.value = true
-    } else {
-      console.error("El campo 'user' no está presente en la respuesta");
-      messageInfo.value = '¡Uy! Algo salió mal 😵‍💫 Pero no te preocupes, estamos en ello 🛠️✨'
-      isSnackbarScrollReverseVisible.value = true
+    } catch (error) {
+      console.log('Error en confirmOrder: ', error.message);
+      messageInfo.value = '🚨 Ocurrió un error inesperado al confirmar el pedido.';
+      isSnackbarScrollReverseVisible.value = true;
     }
+  } else {
+    messageInfo.value = '🚨 ¡Ups! Antes de confirmar, revisa que hayas seleccionado los modelos, la dirección y el método de pago. 🏡💳✅ ¡Completa estos datos y estarás listo para continuar! 🚀';
+    isSnackbarScrollReverseVisible.value = true;
   }
-  else {
-    messageInfo.value = '🚨 ¡Ups! Antes de confirmar, revisa que hayas seleccionado los modelos, la dirección y el método de pago. 🏡💳✅ ¡Completa estos datos y estarás listo para continuar! 🚀'
-    isSnackbarScrollReverseVisible.value = true
-  }
-}
+};
 
 const selectedDeliveryAddress = computed(() => {
   if (props.modelCheckoutData.paymentMethod.cash) {
@@ -186,7 +187,7 @@ const resolveDeliveryMethod = computed(() => {
     return { method: 'Envio Estándar', desc: 'Normalmente en 24h' }
 })
 // Thank You! 😇
-const messageInfo = ref('Ahora Verifica tu Pedido 👍')
+let messageInfo = ref('Ahora Verifica tu Pedido 👍')
 const isSnackbarScrollReverseVisible = ref(false)
 
 watch(() => props.modelCheckoutData, (value) => {
@@ -201,7 +202,7 @@ watch(() => props.modelCheckoutData, (value) => {
         {{ messageInfo }}
       </h4>
       <p>
-        Tu numero de orden es <span class="text-body-1 font-weight-medium text-high-emphasis">#1536548131</span>,
+        Tu numero de orden es <span class="text-body-1 font-weight-medium text-high-emphasis">#{{ orderId }}</span>,
         verificala tus modelos antes de confirmarla
       </p>
       <p class="mb-0">
