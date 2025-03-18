@@ -187,7 +187,7 @@ onMounted(async () => {
                   }" />
               </VWindowItem>
               <VWindowItem>
-                <ConfirmationContent v-model:model-checkout-data="modelCheckoutData" @confirm:checkout-data="(data) => {
+                <ConfirmationContent v-model:model-checkout-data="modelCheckoutData" @confirm:checkout-data="() => {
                   confirmed = true
                   console.log('CONFIRM: ', modelCheckoutData)
                 }" />

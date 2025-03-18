@@ -10,7 +10,7 @@ const props = defineProps<{
 interface Emit {
   (e: 'update:currentStep', value: number): void
   (e: 'update:checkout-data', value: ModelCheckoutData): void
-  (e: 'confirm:checkout-data', value: Boolean): void
+  (e: 'confirm:checkout-data'): void
 }
 
 const emit = defineEmits<Emit>()
@@ -107,7 +107,7 @@ const confirmOrder = async () => {
           });
 
           if (response.data.result) {
-            emit("confirm:checkout-data", true);
+            emit("confirm:checkout-data");
             messageInfo.value = 'Muchas gracias, pedido confirmado 😇';
             isSnackbarScrollReverseVisible.value = true;
           } else {
