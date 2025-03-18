@@ -42,9 +42,9 @@ const saveBillingDetails = (proyectId: string, addressId: string) => {
       addressId: addressId,
       userId: userData.id,
       deliverySpeed: props.modelCheckoutData.deliverySpeed,
-      note: props.modelCheckoutData.note,
+      note: props.modelCheckoutData.note || 'N/A',
       totalAmount: props.modelCheckoutData.orderAmount,
-      promoCode: props.modelCheckoutData.promoCode,
+      promoCode: props.modelCheckoutData.promoCode || 'N/A',
       paymentMethod: paymentMethod.value,
     }, {
       headers: {
@@ -73,7 +73,9 @@ const confirmOrder = async () => {
   ) {
     const projectId = await createProject()
     const addressId = props.modelCheckoutData.addresses.find(a => a.value === props.modelCheckoutData.deliveryAddress)?.id;
+    let confirmed = false
     saveBillingDetails(projectId, addressId)
+    console.log(addressId)
 
     props.modelCheckoutData.modelItems.forEach(model => {
       try {
@@ -101,8 +103,7 @@ const confirmOrder = async () => {
         });
 
         if (response.data.result) {
-          messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
-          isSnackbarScrollReverseVisible.value = true
+          confirmed = true
         } else {
           console.error("El campo 'user' no está presente en la respuesta");
           messageInfo.value = '¡Uy! Algo salió mal 😵‍💫 Pero no te preocupes, estamos en ello 🛠️✨'
@@ -113,6 +114,15 @@ const confirmOrder = async () => {
         isSnackbarScrollReverseVisible.value = true
       }
     })
+
+    if (confirmed) {
+      messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
+      isSnackbarScrollReverseVisible.value = true
+    } else {
+      console.error("El campo 'user' no está presente en la respuesta");
+      messageInfo.value = '¡Uy! Algo salió mal 😵‍💫 Pero no te preocupes, estamos en ello 🛠️✨'
+      isSnackbarScrollReverseVisible.value = true
+    }
   }
   else {
     messageInfo.value = '🚨 ¡Ups! Antes de confirmar, revisa que hayas seleccionado los modelos, la dirección y el método de pago. 🏡💳✅ ¡Completa estos datos y estarás listo para continuar! 🚀'
