@@ -217,7 +217,7 @@ watch(() => props.modelCheckoutData, (value) => {
         si el correo electrónico fue enviado allí.</p>
       <div class="d-flex align-center gap-2 justify-center">
         <VIcon size="20" icon="tabler-clock" class="text-high-emphasis" />
-        <span>Fecha del Pedido 25/05/2020 12:35pm</span>
+        <span>Fecha del Pedido: {{ new Date().toLocaleString('es-DO') }}</span>
       </div>
     </div>
 
