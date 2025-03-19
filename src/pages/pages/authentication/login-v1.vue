@@ -10,6 +10,7 @@ import { jwtDecode } from 'jwt-decode'
 const router = useRouter()
 const route = useRoute()
 const pending_to_go = ref(route.query.pending_to_go)
+const loggingIn = ref(false)
 
 definePage({
   meta: {
@@ -54,18 +55,23 @@ const login = async () => {
     });
 
     if (response.data && response.data.validLogin) {
+      loggingIn.value = true
       localStorage.setItem('userData', JSON.stringify(jwtDecode(response.data.token)));
       
       if (pending_to_go.value !== undefined){
         await router.push(pending_to_go.value)
       }
       else await router.push('/main-pages/landing-page')
+
+      loggingIn.value = false
     } else {
       console.error("El campo 'user' no está presente en la respuesta");
+      loggingIn.value = false
       isSnackbarScrollReverseVisible.value = true
     }
   } catch (error) {
     console.log('validateForm: ', error.response?.data?.message || error.message);
+    loggingIn.value = false
     isSnackbarScrollReverseVisible.value = true
   }
 }
@@ -158,6 +164,8 @@ const login = async () => {
 
                 <!-- login button -->
                 <VBtn
+                  :loading="loggingIn"
+                  :disabled="loggingIn"
                   block
                   type="submit"
                 >
