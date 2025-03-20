@@ -435,7 +435,6 @@ const initModels = () => {
 
   const originalColors = new Map<THREE.Object3D, THREE.Color>(); // Guardar colores originales
 
-
   function selectAndDragModel(event: MouseEvent) {
     if (event.button !== 0) return; // Solo clic izquierdo
 
