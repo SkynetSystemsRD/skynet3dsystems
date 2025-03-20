@@ -97,7 +97,7 @@ const instructions = [
 ]
 
 const projectDetails = ref<projectDetails>({
-  title: `Projecto ${projectNumber.value || ''}`,
+  title: ``,
   about: "Este proyecto muestra un Cubo XYZ en formato GLTF, utilizado para calibrar y verificar la orientación de los ejes en entornos 3D. Permite analizar la alineación, escala y rotación del modelo en un visor interactivo.",
   client: "John Doe",
   modelCheckoutCartDataLocal: [
@@ -602,8 +602,11 @@ onMounted(() => {
               <p class="text-body-1">
                 {{ projectDetails?.about }}
               </p> -->
-              <VBtn :loading="loadings" :disabled="loadings" color="primary" icon="tabler-cloud-upload"
-                @click="uploadImage" />
+              <VBtn :loading="loadings" :disabled="loadings" color="secondary" @click="uploadImage">
+                Sube tu Imagen
+                <VIcon end icon="tabler-cloud-upload" />
+              </VBtn>
+
               <VDivider class="my-6" />
 
               <h5 class="text-h5 mb-4">
