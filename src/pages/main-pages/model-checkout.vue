@@ -134,13 +134,11 @@ let modelCheckoutData = ref<ModelCheckoutData>({
 // }
 
 const currentStep = ref(0)
+const confirmed = ref(false)
 
 // Use onMounted or another async lifecycle hook to fetch addresses
 onMounted(async () => {
-  if (userData) {
-    await getAddress();
-  }
-  console.log(modelCheckoutData.value.addresses)
+  await getAddress();
   // console.log(modelCheckoutData.value.addresses)
 });
 </script>
@@ -151,7 +149,7 @@ onMounted(async () => {
     <VContainer>
       <div class="model-checkout-card">
         <VCard>
-          <VCardText>
+          <VCardText v-if="!confirmed">
             <!-- 👉 Stepper -->
             <AppStepper v-model:current-step="currentStep" class="model-checkout-stepper" :items="modelCheckoutSteps"
               :direction="$vuetify.display.mdAndUp ? 'horizontal' : 'vertical'" align="center" />
@@ -189,7 +187,10 @@ onMounted(async () => {
                   }" />
               </VWindowItem>
               <VWindowItem>
-                <ConfirmationContent v-model:model-checkout-data="modelCheckoutData" />
+                <ConfirmationContent v-model:model-checkout-data="modelCheckoutData" @confirm:checkout-data="() => {
+                  confirmed = true
+                  console.log('CONFIRM: ', modelCheckoutData)
+                }" />
               </VWindowItem>
             </VWindow>
           </VCardText>
