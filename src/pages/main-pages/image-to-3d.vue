@@ -51,8 +51,11 @@ interface projectDetails {
 }
 
 const scene = new THREE.Scene();
+const fileUploadMessage = ref('Sube Tu Imagen')
+const fileUploadIcon = ref('tabler-cloud-upload')
 const route = useRoute()
 const canvas = ref(null);
+const file = ref('')
 const fileInput = ref(null);
 const projectId = ref(route.query.projectId)
 const projectNumber = ref(route.query.projectNumber)
@@ -171,14 +174,14 @@ const projectDetails = ref<projectDetails>({
   ]
 });
 
-const selectOption = (option: string) => {
-  selectedElement.value = option;
+// const selectOption = (option: string) => {
+//   selectedElement.value = option;
 
-  if (selectedElement.value == 'model') {
-    reload()
-    initModels()
-  }
-}
+//   if (selectedElement.value == 'model') {
+//     reload()
+//     initModels()
+//   }
+// }
 
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
@@ -269,6 +272,9 @@ const userData = storedData ? JSON.parse(storedData) : null;
 //     },
 
 function reload() {
+  fileUploadMessage.value = 'Sube Tu Imagen'
+  fileUploadIcon.value = 'tabler-cloud-upload'
+
   var container = document.getElementById("model-viewer");
 
   if (container) {  // Verifica si el contenedor existe
@@ -290,10 +296,11 @@ function getFileExtention(filename: string): string {
 const uploadImage = (event) => {
   loadings.value = true
 
-  const file = event.target.files[0];
-  if (!file) return;
+  file.value = event.target.files[0];
+  if (!file.value) return;
 
-  loadings.value = true;
+  fileUploadMessage.value = 'Eliminar el Mdodelo'
+  fileUploadIcon.value = 'tabler-x'
 
   const reader = new FileReader();
   reader.onload = (e) => {
@@ -304,11 +311,11 @@ const uploadImage = (event) => {
     };
     img.src = e.target.result;
   };
-  reader.readAsDataURL(file);
+  reader.readAsDataURL(file.value);
 
   setTimeout(() => {
     loadings.value = false
-  }, 700);
+  }, 1000);
 }
 
 function generateGLTFFromImage(image) {
@@ -672,9 +679,10 @@ onMounted(() => {
               <p class="text-body-1">
                 {{ projectDetails?.about }}
               </p> -->
-              <VBtn :loading="loadings" :disabled="loadings" color="secondary" @click="triggerFileInput">
-                Sube tu Imagen
-                <VIcon end icon="tabler-cloud-upload" />
+              <VBtn :loading="loadings" :disabled="loadings" color="secondary"
+                @click="fileUploadMessage === 'Sube Tu Imagen' ? triggerFileInput() : reload()">
+                {{ fileUploadMessage }}
+                <VIcon end :icon="fileUploadIcon" />
               </VBtn>
 
               <!-- Input de archivo oculto -->
@@ -690,12 +698,12 @@ onMounted(() => {
               <div class="d-flex gap-x-12 gap-y-5 flex-wrap">
                 <div>
                   <VList class="card-list text-medium-emphasis">
-                    <VListItem>
+                    <!-- <VListItem>
                       <template #prepend>
                         <VIcon icon="tabler-atom" size="20" />
                       </template>
                       <VListItemTitle>Materiales: {{ projectDetails?.materials }}</VListItemTitle>
-                    </VListItem>
+                    </VListItem> -->
                     <VListItem>
                       <template #prepend>
                         <VIcon icon="tabler-cube" size="20" />
@@ -704,7 +712,7 @@ onMounted(() => {
                         projectDetails?.dimentions[0].x }}mm, Profundidad: {{ projectDetails?.dimentions[0].y }}mm
                       </VListItemTitle>
                     </VListItem>
-                    <VListItem>
+                    <!-- <VListItem>
                       <template #prepend>
                         <VIcon icon="tabler-weight" size="20" />
                       </template>
@@ -713,7 +721,7 @@ onMounted(() => {
                           ? (projectDetails.weight / 1000).toFixed(2) + ' KG'
                           : projectDetails.weight + ' G' }}
                       </VListItemTitle>
-                    </VListItem>
+                    </VListItem> -->
                     <!-- <VListItem>
                       <template #prepend>
                         <VIcon
@@ -727,18 +735,18 @@ onMounted(() => {
 
                 <div>
                   <VList class="card-list text-medium-emphasis">
-                    <VListItem>
+                    <!-- <VListItem>
                       <template #prepend>
                         <VIcon icon="tabler-number" size="20" />
                       </template>
                       <VListItemTitle>Numero de impresiones: {{ projectDetails?.totalPrints }}</VListItemTitle>
-                    </VListItem>
-                    <VListItem>
+                    </VListItem> -->
+                    <!-- <VListItem>
                       <template #prepend>
                         <VIcon icon="tabler-clock" size="20" />
                       </template>
                       <VListItemTitle>Tiempo Impresión: {{ projectDetails?.time }}</VListItemTitle>
-                    </VListItem>
+                    </VListItem> -->
                   </VList>
                 </div>
               </div>
@@ -818,6 +826,10 @@ onMounted(() => {
           </template>
         </VExpansionPanels>
       </div>
+
+      <VDivider class="my-6" />
+
+      <VImg :src="file" />
     </VCol>
   </VRow>
 </template>
