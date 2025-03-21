@@ -2,13 +2,11 @@
 import { register } from 'swiper/element/bundle';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 
 import 'video.js/dist/video-js.css';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
 register();
 
@@ -52,7 +50,10 @@ interface projectDetails {
   images: image[];
 }
 
+const scene = new THREE.Scene();
 const route = useRoute()
+const canvas = ref(null);
+const fileInput = ref(null);
 const projectId = ref(route.query.projectId)
 const projectNumber = ref(route.query.projectNumber)
 const loadings = ref(false)
@@ -101,21 +102,21 @@ const projectDetails = ref<projectDetails>({
   about: "Este proyecto muestra un Cubo XYZ en formato GLTF, utilizado para calibrar y verificar la orientación de los ejes en entornos 3D. Permite analizar la alineación, escala y rotación del modelo en un visor interactivo.",
   client: "John Doe",
   modelCheckoutCartDataLocal: [
-    // {
-    //   id: 1,
-    //   format: getFileExtention('/xyzCalibration_cube.gltf'),
-    //   filePath: '/xyzCalibration_cube.gltf',
-    //   fileName: 'xyzCalibration_cube.gltf',
-    //   size: 235654,
-    //   octetStreamContent: '',
-    //   uuid: '',
-    //   dimentions: {
-    //     x: 42,
-    //     y: 42,
-    //     z: 42
-    //   },
-    //   weight: 250
-    // },
+    {
+      id: 1,
+      format: getFileExtention('/xyzCalibration_cube.gltf'),
+      filePath: '/xyzCalibration_cube.gltf',
+      fileName: 'xyzCalibration_cube.gltf',
+      size: 235654,
+      octetStreamContent: '',
+      uuid: '',
+      dimentions: {
+        x: 42,
+        y: 42,
+        z: 42
+      },
+      weight: 250
+    },
     // {
     //   id: 2,
     //   format: getFileExtention('/xyzCalibration_cube.gltf'),
@@ -286,15 +287,87 @@ function getFileExtention(filename: string): string {
   return parts.length > 1 ? parts[parts.length - 1] : '';  // Returns the extension or an empty string if no extension
 }
 
-const uploadImage = () => {
+const uploadImage = (event) => {
   loadings.value = true
+
+  const file = event.target.files[0];
+  if (!file) return;
+
+  loadings.value = true;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      loadings.value = false;
+      generateGLTFFromImage(img)
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+
   setTimeout(() => {
     loadings.value = false
   }, 700);
 }
 
-const initModels = () => {
-  const scene = new THREE.Scene();
+function generateGLTFFromImage(image) {
+  if (!image) {
+    alert("Por favor, sube una imagen primero.");
+    return;
+  }
+
+  const ctx = canvas.value.getContext("2d");
+  canvas.value.width = image.width;
+  canvas.value.height = image.height;
+
+  ctx.drawImage(image, 0, 0);
+
+  const imageData = ctx.getImageData(0, 0, image.width, image.height).data;
+  const geometry = new THREE.PlaneGeometry(image.width, image.height, image.width, image.height);
+
+  // Calcular el centro de la geometría
+  const centerX = image.width / 2;
+  const centerY = image.height / 2;
+
+  // Aplicar altura en base a los valores de gris y centralizar la malla
+  for (let i = 0; i < geometry.attributes.position.count; i++) {
+    const x = i % image.width;
+    const y = Math.floor(i / image.width);
+    const index = (y * image.width + x) * 4;
+
+    // Convertir a escala de grises y ajustar la altura
+    const grayscale = imageData[index] / 255;
+    const zHeight = grayscale * 10;
+
+    // Aplicar un desplazamiento para centrar la geometría
+    geometry.attributes.position.setXYZ(i, x - centerX, centerY - y, zHeight);
+  }
+
+  geometry.computeVertexNormals();
+
+  // Crear material y malla para la geometría
+  const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
+  const mesh = new THREE.Mesh(geometry, material);
+
+  // Exportar el modelo como GLTF (esto será un objeto JSON para GLTF)
+  const exporter = new GLTFExporter();
+  exporter.parse(mesh, (result) => {
+    const jsonString = JSON.stringify(result);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+
+    // Convertir Blob a Base64
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result.split(",")[1]; // Extraer solo la parte base64
+      initModel({ format: 'gltf', octetStreamContent: base64String });
+    };
+
+    reader.readAsDataURL(blob);
+  });
+}
+
+const initModel = (modelItem) => {
   scene.background = new THREE.Color(0xdddddd);
 
   const camera = new THREE.PerspectiveCamera(75, 1000 / 600, 0.1, 1000);
@@ -307,7 +380,6 @@ const initModels = () => {
   // Redimensiona el renderizador según el tamaño del contenedor
   function resizeRenderer() {
     const container = document.getElementById('model-viewer');
-    const imageViewer = document.getElementById('image-viewer');
 
     if (!container) {
       console.log("not container");
@@ -326,12 +398,6 @@ const initModels = () => {
     renderer.setSize(width, height);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-
-    // Ajustar tamaño de la imagen
-    if (imageViewer) {
-      imageViewer.style.width = `${width}px`;
-      imageViewer.style.height = `${height}px`;
-    }
   }
 
   nextTick(() => {
@@ -370,7 +436,6 @@ const initModels = () => {
   let loadedModels: THREE.Object3D[] = [];
   let selectedModel: THREE.Object3D | null = null;
   let isDragging = false;
-  let isRotating = false;  // Variable para controlar si el modelo seleccionado debe rotar
 
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
@@ -378,49 +443,49 @@ const initModels = () => {
   const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
   function loadModel(item: any) {
-    let loader: any;
-    let fileType = item.fileName.split('.').pop()?.toLowerCase();
+    if (item.format !== 'gltf' && item.format !== 'glb') {
+      console.error('Only GLTF or GLB format is supported.');
+      return;
+    }
 
-    console.log(item.format)
+    // Check if the base64 string contains the 'data:' prefix and remove it if present
+    let base64Decoded = item.octetStreamContent;
+    const base64Prefix = 'data:application/octet-stream;base64,';
 
-    switch (item.format) {
-      case 'glb':
-      case 'gltf':
-        loader = new GLTFLoader();
-        loader.load(item.filePath, (gltf) => {
-          addModelToScene(gltf.scene);
-          console.log("gltf: ", gltf.scene.uuid)
-        });
-        break;
+    // Remove the prefix if it exists
+    if (base64Decoded.indexOf(base64Prefix) === 0) {
+      base64Decoded = base64Decoded.substring(base64Prefix.length);
+    }
 
-      case 'obj':
-        loader = new OBJLoader();
-        loader.load(item.filePath, (obj) => {
-          addModelToScene(obj);
-          console.log('obj: ', obj.uuid)
-        });
-        break;
+    try {
+      // Decode base64 string into binary
+      const decoded = atob(base64Decoded); // Decode base64 to binary string
+      const buffer = new ArrayBuffer(decoded.length);
+      const view = new Uint8Array(buffer);
 
-      case 'fbx':
-        loader = new FBXLoader();
-        loader.load(item.filePath, (fbx) => {
-          addModelToScene(fbx);
-          console.log('fbx: ', fbx.uuid)
-        });
-        break;
+      // Copy the decoded data into the buffer
+      for (let i = 0; i < decoded.length; i++) {
+        view[i] = decoded.charCodeAt(i);
+      }
 
-      case 'stl':
-        loader = new STLLoader();
-        loader.load(item.filePath, (geometry) => {
-          const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
-          const mesh = new THREE.Mesh(geometry, material);
-          addModelToScene(mesh);
-          console.log('stl: ', mesh.uuid)
-        });
-        break;
+      // Create a Blob from the buffer
+      const blob = new Blob([buffer], { type: 'application/octet-stream' });
 
-      default:
-        console.error('Unsupported model format');
+      // Generate a URL for the Blob
+      const url = URL.createObjectURL(blob);
+
+      // GLTF Loader
+      const loader = new GLTFLoader();
+      loader.load(url, (gltf) => {
+        addModelToScene(gltf.scene);
+        console.log('gltf: ', gltf.scene.uuid);
+      });
+
+      // Optionally, revoke the object URL after loading the model
+      URL.revokeObjectURL(url);
+
+    } catch (error) {
+      console.error('Error decoding base64 string: ', error);
     }
   }
 
@@ -431,7 +496,8 @@ const initModels = () => {
     loadedModels.push(model);
   }
 
-  projectDetails.value.modelCheckoutCartDataLocal.forEach(loadModel);
+  loadModel(modelItem)
+  // projectDetails.value.modelCheckoutCartDataLocal.forEach(loadModel);
 
   const originalColors = new Map<THREE.Object3D, THREE.Color>(); // Guardar colores originales
 
@@ -524,10 +590,14 @@ const initModels = () => {
   animate();
 }
 
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
 // getProjectById()
 
 onMounted(() => {
-  initModels();
+  // initModels();
 });
 </script>
 
@@ -602,10 +672,15 @@ onMounted(() => {
               <p class="text-body-1">
                 {{ projectDetails?.about }}
               </p> -->
-              <VBtn :loading="loadings" :disabled="loadings" color="secondary" @click="uploadImage">
+              <VBtn :loading="loadings" :disabled="loadings" color="secondary" @click="triggerFileInput">
                 Sube tu Imagen
                 <VIcon end icon="tabler-cloud-upload" />
               </VBtn>
+
+              <!-- Input de archivo oculto -->
+              <input type="file" ref="fileInput" accept="image/*" @change="uploadImage" style="display: none;" />
+
+              <canvas ref="canvas" style="display: none;"></canvas>
 
               <VDivider class="my-6" />
 
