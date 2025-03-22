@@ -275,6 +275,7 @@ const userData = storedData ? JSON.parse(storedData) : null;
 function reload() {
   fileUploadMessage.value = 'Sube Tu Imagen'
   fileUploadIcon.value = 'tabler-cloud-upload'
+  file.value = ''
 
   var container = document.getElementById("model-viewer");
 
@@ -501,6 +502,7 @@ const initModel = (modelItem) => {
   }
 
   function addModelToScene(model: THREE.Object3D) {
+
     // Calcular el Bounding Box del modelo
     const box = new THREE.Box3().setFromObject(model);
     const center = new THREE.Vector3();
@@ -513,7 +515,7 @@ const initModel = (modelItem) => {
     const size = new THREE.Vector3();
     box.getSize(size);
     const maxDim = Math.max(size.x, size.y, size.z);
-    const scaleFactor = 100 / maxDim; // 🚀 Lo llevamos al límite 🚀
+    const scaleFactor = 80 / maxDim; // 🚀 Lo llevamos al límite 🚀
 
     model.scale.set(scaleFactor, scaleFactor, scaleFactor);
     model.position.set(0, 0, 0);
