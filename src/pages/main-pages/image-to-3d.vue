@@ -53,6 +53,7 @@ interface projectDetails {
 const scene = new THREE.Scene();
 const fileUploadMessage = ref('Sube Tu Imagen')
 const fileUploadIcon = ref('tabler-cloud-upload')
+const fileUploadFormat = ref('')
 const route = useRoute()
 const canvas = ref(null);
 const file = ref('')
@@ -294,29 +295,32 @@ function getFileExtention(filename: string): string {
 }
 
 const uploadImage = (event) => {
-  loadings.value = true
+  loadings.value = true;
 
   file.value = event.target.files[0];
   if (!file.value) return;
 
-  fileUploadMessage.value = 'Eliminar el Mdodelo'
-  fileUploadIcon.value = 'tabler-x'
+  fileUploadMessage.value = "Eliminar el Modelo";
+  fileUploadIcon.value = "tabler-x";
 
   const reader = new FileReader();
   reader.onload = (e) => {
     const img = new Image();
     img.onload = () => {
       loadings.value = false;
-      generateGLTFFromImage(img)
+      generateGLTFFromImage(img);
     };
     img.src = e.target.result;
   };
   reader.readAsDataURL(file.value);
 
+  // 🔹 Obtener la extensión real del archivo 🔹
+  fileUploadFormat.value = file.value.name.split(".").pop().toUpperCase();
+
   setTimeout(() => {
-    loadings.value = false
+    loadings.value = false;
   }, 1000);
-}
+};
 
 function generateGLTFFromImage(image) {
   if (!image) {
@@ -497,10 +501,31 @@ const initModel = (modelItem) => {
   }
 
   function addModelToScene(model: THREE.Object3D) {
-    model.scale.set(0.5, 0.5, 0.5);
+    // Calcular el Bounding Box del modelo
+    const box = new THREE.Box3().setFromObject(model);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+
+    // Ajustar la posición para que el centro del modelo esté en (0, 0, 0)
+    model.position.sub(center);
+
+    // Escalar el modelo para que sea **gigante**
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scaleFactor = 100 / maxDim; // 🚀 Lo llevamos al límite 🚀
+
+    model.scale.set(scaleFactor, scaleFactor, scaleFactor);
     model.position.set(0, 0, 0);
+
+    // Agregar el modelo a la escena
     scene.add(model);
     loadedModels.push(model);
+
+    // 🔹 Poner la cámara pegada al modelo 🔹
+    const distance = maxDim * 0.1; // 🔥 EXTREMADAMENTE CERCA 🔥
+    camera.position.set(0, 0, distance); // Directo en el eje Z
+    camera.lookAt(0, 0, 0); // Apuntar al modelo
   }
 
   loadModel(modelItem)
@@ -710,6 +735,13 @@ onMounted(() => {
                       </template>
                       <VListItemTitle>Dimensiones: Altura: {{ projectDetails.dimentions[0].z }}mm, Ancho: {{
                         projectDetails?.dimentions[0].x }}mm, Profundidad: {{ projectDetails?.dimentions[0].y }}mm
+                      </VListItemTitle>
+                    </VListItem>
+                    <VListItem>
+                      <template #prepend>
+                        <VIcon icon="tabler-photo" size="20" />
+                      </template>
+                      <VListItemTitle>Formato de su imagen: {{ fileUploadFormat }}
                       </VListItemTitle>
                     </VListItem>
                     <!-- <VListItem>
