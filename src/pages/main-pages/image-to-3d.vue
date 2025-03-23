@@ -409,6 +409,16 @@ function generateGLTFFromImage(image) {
   });
 }
 
+const download = () => {
+  if (!fileContent)
+    return;
+}
+
+const quote = () => {
+  if (!fileContent)
+    return;
+}
+
 const initModel = (modelItem) => {
   scene.background = new THREE.Color(0xdddddd);
 
@@ -736,11 +746,24 @@ onMounted(() => {
               <p class="text-body-1">
                 {{ projectDetails?.about }}
               </p> -->
-              <VBtn :loading="loadings" :disabled="loadings" color="secondary"
-                @click="fileUploadMessage === 'Sube Tu Imagen' ? triggerFileInput() : reload()">
-                {{ fileUploadMessage }}
-                <VIcon end :icon="fileUploadIcon" />
-              </VBtn>
+              <div class="d-flex justify-space-between align-center">
+                <div>
+                  <VBtn variant="outlined" :loading="loadings" :disabled="loadings" color="secondary" class="ma-2"
+                    @click="fileUploadMessage === 'Sube Tu Imagen' ? triggerFileInput() : reload()">
+                    {{ fileUploadMessage }}
+                    <VIcon end :icon="fileUploadIcon" />
+                  </VBtn>
+
+                  <VBtn variant="outlined" class="ma-2" @click="quote">
+                    Cotizar Modelo
+                  </VBtn>
+                </div>
+
+                <VBtn variant="outlined" class="ma-2" @click="download">
+                  Descargar
+                  <VIcon end icon="tabler-download" />
+                </VBtn>
+              </div>
 
               <!-- Input de archivo oculto -->
               <input type="file" ref="fileInput" accept="image/*" @change="uploadImage" style="display: none;" />
