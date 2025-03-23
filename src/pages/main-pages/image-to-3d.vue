@@ -395,7 +395,7 @@ const saveGLTFToServer = async (event, fileName = "TuModeloDeSkynet3DSystems.glt
   }
 };
 
-function generateGLTFFromImage(image) {
+function generateGLTFFromImage(image, isRelief = true) {
   if (!image) {
     alert("Por favor, sube una imagen primero.");
     return;
@@ -408,6 +408,8 @@ function generateGLTFFromImage(image) {
   ctx.drawImage(image, 0, 0);
 
   const imageData = ctx.getImageData(0, 0, image.width, image.height).data;
+  console.log(image.width, image.height, image.width, image.height)
+
   const geometry = new THREE.PlaneGeometry(image.width, image.height, image.width, image.height);
 
   // Calcular el centro de la geometría
@@ -422,7 +424,12 @@ function generateGLTFFromImage(image) {
 
     // Convertir a escala de grises y ajustar la altura
     const grayscale = imageData[index] / 255;
-    const zHeight = grayscale * 10;
+    let zHeight = grayscale * 10;
+
+    // Si es con relieve, incrementar la altura
+    if (isRelief) {
+      zHeight = grayscale * -10; // Aumentar el relieve (más grosor)
+    }
 
     // Aplicar un desplazamiento para centrar la geometría
     geometry.attributes.position.setXYZ(i, x - centerX, centerY - y, zHeight);
