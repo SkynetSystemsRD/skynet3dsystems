@@ -54,6 +54,7 @@ const scene = new THREE.Scene();
 const fileUploadMessage = ref('Sube Tu Imagen')
 const fileUploadIcon = ref('tabler-cloud-upload')
 const fileUploadFormat = ref('')
+const fileModelContent = ref('')
 const route = useRoute()
 const canvas = ref(null);
 const fileContent = ref('')
@@ -63,6 +64,7 @@ const projectNumber = ref(route.query.projectNumber)
 const loadings = ref(false)
 const panelStatus = ref(0);
 const selectedElement = ref('image')
+const isDownloading = ref(false)
 const instructions = [
   {
     title: "👋 Manipulación del Modelo 3D",
@@ -301,6 +303,7 @@ function reload() {
   fileUploadIcon.value = 'tabler-cloud-upload'
   fileUploadFormat.value = ''
   fileContent.value = ''
+  fileModelContent.value = ''
   clearScene()
 
   var container = document.getElementById("model-viewer");
@@ -353,6 +356,45 @@ const uploadImage = (event) => {
   console.log(fileContent.value)
 };
 
+const saveGLTFToServer = async (event, fileName = "TuModeloDeSkynet3DSystems.gltf") => {
+  event?.preventDefault(); // Evitar la acción predeterminada si es un botón
+
+  if (!fileModelContent.value) return;
+
+  isDownloading.value = true;
+
+  try {
+    // Convertir Base64 a binario
+    const base64Data = fileModelContent.value.replace(/^data:model\/gltf\+json;base64,/, "");
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "model/gltf+json" });
+
+    // Enviar el archivo al servidor
+    const formData = new FormData();
+    formData.append("file", blob, fileName);
+
+    const response = await fetch("/upload_gltf", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      console.log("GLTF guardado correctamente en el servidor.");
+    } else {
+      console.error("Error al guardar el archivo en el servidor.");
+    }
+  } catch (error) {
+    console.error("Error al guardar GLTF:", error);
+  } finally {
+    isDownloading.value = false;
+  }
+};
+
 function generateGLTFFromImage(image) {
   if (!image) {
     alert("Por favor, sube una imagen primero.");
@@ -402,6 +444,7 @@ function generateGLTFFromImage(image) {
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64String = reader.result.split(",")[1]; // Extraer solo la parte base64
+      fileModelContent.value = base64String;
       initModel({ format: 'gltf', octetStreamContent: base64String });
     };
 
@@ -409,13 +452,80 @@ function generateGLTFFromImage(image) {
   });
 }
 
-const download = () => {
-  if (!fileContent)
-    return;
-}
+const download = async (event, fileName = "TuModeloDeSkynet3DSystems.gltf") => {
+  event?.preventDefault(); // Prevent default action if triggered by a button click
+
+  if (!fileModelContent.value) return;
+
+  isDownloading.value = true;
+
+  try {
+    // Convert Base64 to binary
+    const base64Data = fileModelContent.value.replace(/^data:model\/gltf\+json;base64,/, "");
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "model/gltf+json" });
+    const fileURL = URL.createObjectURL(blob);
+
+    // Load the GLTF model
+    const loader = new GLTFLoader();
+    loader.load(
+      fileURL,
+      (gltf) => {
+        const scene = gltf.scene;
+
+        // 🔹 Scale down by 50%
+        scene.scale.set(0.1, 0.1, 0.1);
+
+        // 🔹 Flip the model on X-axis to mirror it
+        scene.scale.x *= -1;
+
+        // 🔹 Fix normals if needed
+        scene.traverse((child) => {
+          if (child.isMesh) {
+            child.geometry.computeVertexNormals();
+            child.material.side = THREE.FrontSide; // Ensure correct face rendering
+          }
+        });
+
+        // Export the modified model
+        const exporter = new GLTFExporter();
+        exporter.parse(
+          scene,
+          (gltfData) => {
+            const gltfBlob = new Blob([JSON.stringify(gltfData)], { type: "model/gltf+json" });
+
+            // Create a downloadable link
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(gltfBlob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          },
+          { binary: false } // Export as JSON GLTF
+        );
+
+        isDownloading.value = false;
+      },
+      undefined,
+      (error) => {
+        console.error("Error loading GLTF:", error);
+        isDownloading.value = false;
+      }
+    );
+  } catch (error) {
+    console.error("Download failed:", error);
+    isDownloading.value = false;
+  }
+};
 
 const quote = () => {
-  if (!fileContent)
+  if (!fileModelContent.value)
     return;
 }
 
@@ -759,7 +869,8 @@ onMounted(() => {
                   </VBtn>
                 </div>
 
-                <VBtn variant="outlined" class="ma-2" @click="download">
+                <VBtn :loading="isDownloading" :disabled="isDownloading" variant="outlined" class="ma-2"
+                  @click="download($event)">
                   Descargar
                   <VIcon end icon="tabler-download" />
                 </VBtn>
