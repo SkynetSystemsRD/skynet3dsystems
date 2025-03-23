@@ -56,7 +56,7 @@ const fileUploadIcon = ref('tabler-cloud-upload')
 const fileUploadFormat = ref('')
 const route = useRoute()
 const canvas = ref(null);
-const file = ref('')
+const fileContent = ref('')
 const fileInput = ref(null);
 const projectId = ref(route.query.projectId)
 const projectNumber = ref(route.query.projectNumber)
@@ -106,21 +106,21 @@ const projectDetails = ref<projectDetails>({
   about: "Este proyecto muestra un Cubo XYZ en formato GLTF, utilizado para calibrar y verificar la orientación de los ejes en entornos 3D. Permite analizar la alineación, escala y rotación del modelo en un visor interactivo.",
   client: "John Doe",
   modelCheckoutCartDataLocal: [
-    {
-      id: 1,
-      format: getFileExtention('/xyzCalibration_cube.gltf'),
-      filePath: '/xyzCalibration_cube.gltf',
-      fileName: 'xyzCalibration_cube.gltf',
-      size: 235654,
-      octetStreamContent: '',
-      uuid: '',
-      dimentions: {
-        x: 42,
-        y: 42,
-        z: 42
-      },
-      weight: 250
-    },
+    // {
+    //   id: 1,
+    //   format: getFileExtention('/xyzCalibration_cube.gltf'),
+    //   filePath: '/xyzCalibration_cube.gltf',
+    //   fileName: 'xyzCalibration_cube.gltf',
+    //   size: 235654,
+    //   octetStreamContent: '',
+    //   uuid: '',
+    //   dimentions: {
+    //     x: 42,
+    //     y: 42,
+    //     z: 42
+    //   },
+    //   weight: 250
+    // },
     // {
     //   id: 2,
     //   format: getFileExtention('/xyzCalibration_cube.gltf'),
@@ -272,9 +272,36 @@ const userData = storedData ? JSON.parse(storedData) : null;
 //       weight: 250
 //     },
 
+function clearScene() {
+  // Remove all children from the scene
+  while (scene.children.length > 0) {
+    let child = scene.children[0];
+
+    // Dispose of geometries
+    if (child.geometry) {
+      child.geometry.dispose();
+    }
+
+    // Dispose of materials
+    if (child.material) {
+      if (Array.isArray(child.material)) {
+        child.material.forEach(material => material.dispose());
+      } else {
+        child.material.dispose();
+      }
+    }
+
+    // Remove from the scene
+    scene.remove(child);
+  }
+}
+
 function reload() {
   fileUploadMessage.value = 'Sube Tu Imagen'
   fileUploadIcon.value = 'tabler-cloud-upload'
+  fileUploadFormat.value = ''
+  fileContent.value = ''
+  clearScene()
 
   var container = document.getElementById("model-viewer");
 
@@ -297,14 +324,16 @@ function getFileExtention(filename: string): string {
 const uploadImage = (event) => {
   loadings.value = true;
 
-  file.value = event.target.files[0];
-  if (!file.value) return;
+  const file = event.target.files[0];
+  console.log(file)
+  if (!file) return;
 
   fileUploadMessage.value = "Eliminar el Modelo";
   fileUploadIcon.value = "tabler-x";
 
   const reader = new FileReader();
   reader.onload = (e) => {
+    fileContent.value = e.target?.result;
     const img = new Image();
     img.onload = () => {
       loadings.value = false;
@@ -312,14 +341,16 @@ const uploadImage = (event) => {
     };
     img.src = e.target.result;
   };
-  reader.readAsDataURL(file.value);
+  reader.readAsDataURL(file);
 
   // 🔹 Obtener la extensión real del archivo 🔹
-  fileUploadFormat.value = file.value.name.split(".").pop().toUpperCase();
+  fileUploadFormat.value = file.name.split(".").pop().toUpperCase();
 
   setTimeout(() => {
     loadings.value = false;
   }, 1000);
+
+  console.log(fileContent.value)
 };
 
 function generateGLTFFromImage(image) {
@@ -651,8 +682,9 @@ onMounted(() => {
                   'Formato del Modelo: ' }}
               </VChip>
               <VChip variant="tonal" size="small">
-                {{[...new Set(projectDetails.modelCheckoutCartDataLocal.map(model =>
-                  model.format.toUpperCase()))].join(", ")}}
+                <!-- {{[...new Set(projectDetails.modelCheckoutCartDataLocal.map(model =>
+                  model.format.toUpperCase()))].join(", ")}} -->
+                GLTF
               </VChip>
               <!-- <VIcon
                 size="24"
@@ -861,7 +893,7 @@ onMounted(() => {
 
       <VDivider class="my-6" />
 
-      <VImg :src="file" />
+      <VImg :src="fileContent" rounded="lg" />
     </VCol>
   </VRow>
 </template>
