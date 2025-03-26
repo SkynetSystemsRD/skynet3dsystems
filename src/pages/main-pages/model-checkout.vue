@@ -27,7 +27,7 @@ if (!userData) {
   router.push({ path: '/pages/authentication/login-v1', query: { pending_to_go: '/main-pages/model-checkout' } });
 }
 else if (from === 'image-to-3d') {
-  console.log(localStorage.getItem('octetData'))
+  console.log(sessionStorage.getItem('octetData'))
 }
 
 definePage({
