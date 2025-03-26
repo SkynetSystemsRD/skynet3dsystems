@@ -8,6 +8,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import 'video.js/dist/video-js.css';
 import { ref } from 'vue';
 
+const router = useRouter()
+
 register();
 
 interface ModelItem {
@@ -531,9 +533,15 @@ const download = async (event, fileName = "TuModeloDeSkynet3DSystems.gltf") => {
   }
 };
 
-const quote = () => {
+const quote = async () => {
   if (!fileModelContent.value)
     return;
+
+  localStorage.setItem('octetData', fileModelContent.value);
+  await router.push({
+    path: '/main-pages/model-checkout',
+    query: { from: 'image-to-3d' }  // Set your query parameter here
+  });
 }
 
 const initModel = (modelItem) => {
