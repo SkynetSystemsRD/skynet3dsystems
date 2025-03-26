@@ -16,12 +16,18 @@ import axios from 'axios'
 import { useConfigStore } from '@core/stores/config'
 
 const router = useRouter()
+const route = useRoute();
+const from = route.query.from;
 
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
+const octetData = ref('');
 
 if (!userData) {
   router.push({ path: '/pages/authentication/login-v1', query: { pending_to_go: '/main-pages/model-checkout' } });
+}
+else if (from === 'image-to-3d') {
+  console.log(localStorage.getItem('octetData'))
 }
 
 definePage({
