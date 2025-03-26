@@ -54,15 +54,17 @@ const scene = new THREE.Scene();
 const fileUploadMessage = ref('Sube Tu Imagen')
 const fileUploadIcon = ref('tabler-cloud-upload')
 const fileUploadFormat = ref('')
+const fileModelContent = ref('')
 const route = useRoute()
 const canvas = ref(null);
-const file = ref('')
+const fileContent = ref('')
 const fileInput = ref(null);
 const projectId = ref(route.query.projectId)
 const projectNumber = ref(route.query.projectNumber)
 const loadings = ref(false)
 const panelStatus = ref(0);
 const selectedElement = ref('image')
+const isDownloading = ref(false)
 const instructions = [
   {
     title: "👋 Manipulación del Modelo 3D",
@@ -106,21 +108,21 @@ const projectDetails = ref<projectDetails>({
   about: "Este proyecto muestra un Cubo XYZ en formato GLTF, utilizado para calibrar y verificar la orientación de los ejes en entornos 3D. Permite analizar la alineación, escala y rotación del modelo en un visor interactivo.",
   client: "John Doe",
   modelCheckoutCartDataLocal: [
-    {
-      id: 1,
-      format: getFileExtention('/xyzCalibration_cube.gltf'),
-      filePath: '/xyzCalibration_cube.gltf',
-      fileName: 'xyzCalibration_cube.gltf',
-      size: 235654,
-      octetStreamContent: '',
-      uuid: '',
-      dimentions: {
-        x: 42,
-        y: 42,
-        z: 42
-      },
-      weight: 250
-    },
+    // {
+    //   id: 1,
+    //   format: getFileExtention('/xyzCalibration_cube.gltf'),
+    //   filePath: '/xyzCalibration_cube.gltf',
+    //   fileName: 'xyzCalibration_cube.gltf',
+    //   size: 235654,
+    //   octetStreamContent: '',
+    //   uuid: '',
+    //   dimentions: {
+    //     x: 42,
+    //     y: 42,
+    //     z: 42
+    //   },
+    //   weight: 250
+    // },
     // {
     //   id: 2,
     //   format: getFileExtention('/xyzCalibration_cube.gltf'),
@@ -272,10 +274,37 @@ const userData = storedData ? JSON.parse(storedData) : null;
 //       weight: 250
 //     },
 
+function clearScene() {
+  // Remove all children from the scene
+  while (scene.children.length > 0) {
+    let child = scene.children[0];
+
+    // Dispose of geometries
+    if (child.geometry) {
+      child.geometry.dispose();
+    }
+
+    // Dispose of materials
+    if (child.material) {
+      if (Array.isArray(child.material)) {
+        child.material.forEach(material => material.dispose());
+      } else {
+        child.material.dispose();
+      }
+    }
+
+    // Remove from the scene
+    scene.remove(child);
+  }
+}
+
 function reload() {
   fileUploadMessage.value = 'Sube Tu Imagen'
   fileUploadIcon.value = 'tabler-cloud-upload'
-  file.value = ''
+  fileUploadFormat.value = ''
+  fileContent.value = ''
+  fileModelContent.value = ''
+  clearScene()
 
   var container = document.getElementById("model-viewer");
 
@@ -298,14 +327,16 @@ function getFileExtention(filename: string): string {
 const uploadImage = (event) => {
   loadings.value = true;
 
-  file.value = event.target.files[0];
-  if (!file.value) return;
+  const file = event.target.files[0];
+  console.log(file)
+  if (!file) return;
 
   fileUploadMessage.value = "Eliminar el Modelo";
   fileUploadIcon.value = "tabler-x";
 
   const reader = new FileReader();
   reader.onload = (e) => {
+    fileContent.value = e.target?.result;
     const img = new Image();
     img.onload = () => {
       loadings.value = false;
@@ -313,17 +344,58 @@ const uploadImage = (event) => {
     };
     img.src = e.target.result;
   };
-  reader.readAsDataURL(file.value);
+  reader.readAsDataURL(file);
 
   // 🔹 Obtener la extensión real del archivo 🔹
-  fileUploadFormat.value = file.value.name.split(".").pop().toUpperCase();
+  fileUploadFormat.value = file.name.split(".").pop().toUpperCase();
 
   setTimeout(() => {
     loadings.value = false;
   }, 1000);
+
+  console.log(fileContent.value)
 };
 
-function generateGLTFFromImage(image) {
+const saveGLTFToServer = async (event, fileName = "TuModeloDeSkynet3DSystems.gltf") => {
+  event?.preventDefault(); // Evitar la acción predeterminada si es un botón
+
+  if (!fileModelContent.value) return;
+
+  isDownloading.value = true;
+
+  try {
+    // Convertir Base64 a binario
+    const base64Data = fileModelContent.value.replace(/^data:model\/gltf\+json;base64,/, "");
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "model/gltf+json" });
+
+    // Enviar el archivo al servidor
+    const formData = new FormData();
+    formData.append("file", blob, fileName);
+
+    const response = await fetch("/upload_gltf", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      console.log("GLTF guardado correctamente en el servidor.");
+    } else {
+      console.error("Error al guardar el archivo en el servidor.");
+    }
+  } catch (error) {
+    console.error("Error al guardar GLTF:", error);
+  } finally {
+    isDownloading.value = false;
+  }
+};
+
+function generateGLTFFromImage(image, isRelief = true) {
   if (!image) {
     alert("Por favor, sube una imagen primero.");
     return;
@@ -336,6 +408,8 @@ function generateGLTFFromImage(image) {
   ctx.drawImage(image, 0, 0);
 
   const imageData = ctx.getImageData(0, 0, image.width, image.height).data;
+  console.log(image.width, image.height, image.width, image.height)
+
   const geometry = new THREE.PlaneGeometry(image.width, image.height, image.width, image.height);
 
   // Calcular el centro de la geometría
@@ -350,7 +424,12 @@ function generateGLTFFromImage(image) {
 
     // Convertir a escala de grises y ajustar la altura
     const grayscale = imageData[index] / 255;
-    const zHeight = grayscale * 10;
+    let zHeight = grayscale * 10;
+
+    // Si es con relieve, incrementar la altura
+    if (isRelief) {
+      zHeight = grayscale * -10; // Aumentar el relieve (más grosor)
+    }
 
     // Aplicar un desplazamiento para centrar la geometría
     geometry.attributes.position.setXYZ(i, x - centerX, centerY - y, zHeight);
@@ -372,11 +451,89 @@ function generateGLTFFromImage(image) {
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64String = reader.result.split(",")[1]; // Extraer solo la parte base64
+      fileModelContent.value = base64String;
       initModel({ format: 'gltf', octetStreamContent: base64String });
     };
 
     reader.readAsDataURL(blob);
   });
+}
+
+const download = async (event, fileName = "TuModeloDeSkynet3DSystems.gltf") => {
+  event?.preventDefault(); // Prevent default action if triggered by a button click
+
+  if (!fileModelContent.value) return;
+
+  isDownloading.value = true;
+
+  try {
+    // Convert Base64 to binary
+    const base64Data = fileModelContent.value.replace(/^data:model\/gltf\+json;base64,/, "");
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "model/gltf+json" });
+    const fileURL = URL.createObjectURL(blob);
+
+    // Load the GLTF model
+    const loader = new GLTFLoader();
+    loader.load(
+      fileURL,
+      (gltf) => {
+        const scene = gltf.scene;
+
+        // 🔹 Scale down by 50%
+        scene.scale.set(0.1, 0.1, 0.1);
+
+        // 🔹 Flip the model on X-axis to mirror it
+        scene.scale.x *= -1;
+
+        // 🔹 Fix normals if needed
+        scene.traverse((child) => {
+          if (child.isMesh) {
+            child.geometry.computeVertexNormals();
+            child.material.side = THREE.FrontSide; // Ensure correct face rendering
+          }
+        });
+
+        // Export the modified model
+        const exporter = new GLTFExporter();
+        exporter.parse(
+          scene,
+          (gltfData) => {
+            const gltfBlob = new Blob([JSON.stringify(gltfData)], { type: "model/gltf+json" });
+
+            // Create a downloadable link
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(gltfBlob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          },
+          { binary: false } // Export as JSON GLTF
+        );
+
+        isDownloading.value = false;
+      },
+      undefined,
+      (error) => {
+        console.error("Error loading GLTF:", error);
+        isDownloading.value = false;
+      }
+    );
+  } catch (error) {
+    console.error("Download failed:", error);
+    isDownloading.value = false;
+  }
+};
+
+const quote = () => {
+  if (!fileModelContent.value)
+    return;
 }
 
 const initModel = (modelItem) => {
@@ -653,8 +810,9 @@ onMounted(() => {
                   'Formato del Modelo: ' }}
               </VChip>
               <VChip variant="tonal" size="small">
-                {{[...new Set(projectDetails.modelCheckoutCartDataLocal.map(model =>
-                  model.format.toUpperCase()))].join(", ")}}
+                <!-- {{[...new Set(projectDetails.modelCheckoutCartDataLocal.map(model =>
+                  model.format.toUpperCase()))].join(", ")}} -->
+                GLTF
               </VChip>
               <!-- <VIcon
                 size="24"
@@ -706,11 +864,25 @@ onMounted(() => {
               <p class="text-body-1">
                 {{ projectDetails?.about }}
               </p> -->
-              <VBtn :loading="loadings" :disabled="loadings" color="secondary"
-                @click="fileUploadMessage === 'Sube Tu Imagen' ? triggerFileInput() : reload()">
-                {{ fileUploadMessage }}
-                <VIcon end :icon="fileUploadIcon" />
-              </VBtn>
+              <div class="d-flex justify-space-between align-center">
+                <div>
+                  <VBtn variant="outlined" :loading="loadings" :disabled="loadings" color="secondary" class="ma-2"
+                    @click="fileUploadMessage === 'Sube Tu Imagen' ? triggerFileInput() : reload()">
+                    {{ fileUploadMessage }}
+                    <VIcon end :icon="fileUploadIcon" />
+                  </VBtn>
+
+                  <VBtn variant="outlined" class="ma-2" @click="quote">
+                    Cotizar Modelo
+                  </VBtn>
+                </div>
+
+                <VBtn :loading="isDownloading" :disabled="isDownloading" variant="outlined" class="ma-2"
+                  @click="download($event)">
+                  Descargar
+                  <VIcon end icon="tabler-download" />
+                </VBtn>
+              </div>
 
               <!-- Input de archivo oculto -->
               <input type="file" ref="fileInput" accept="image/*" @change="uploadImage" style="display: none;" />
@@ -863,7 +1035,7 @@ onMounted(() => {
 
       <VDivider class="my-6" />
 
-      <VImg :src="file" />
+      <VImg :src="fileContent" rounded="lg" />
     </VCol>
   </VRow>
 </template>
