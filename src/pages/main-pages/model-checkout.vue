@@ -45,12 +45,12 @@ else if (from === 'image-to-3d') {
   getData('octetData', (data) => {
     modelCheckoutData.value.modelItems.push({
       id: 1,
-      fileName: 'TuModeloSkynet3DSystems',
+      fileName: 'TuModeloSkynet3DSystems.gltf',
       filePath: '/TuModeloSkynet3DSystems.gltf',
       format: 'gltf'.toUpperCase(),
       isSupported: 'gltf',
       size: 500,
-      imageContent: data,
+      imageContent: '',
       octetStreamContent: data,
       dimentions: {
         x: 1,
@@ -61,7 +61,10 @@ else if (from === 'image-to-3d') {
       uuid: 'uuid', // dar el valor correspondiente
       price: 0
     });
-    console.log('Retrieved Data:', data);
+  });
+
+  getData('imageData', (data) => {
+    modelCheckoutData.value.modelItems[0].imageContent = data
   });
 }
 
