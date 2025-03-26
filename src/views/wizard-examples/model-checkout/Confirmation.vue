@@ -21,6 +21,18 @@ const paymentMethod = ref({})
 const orderId = ref('')
 const confirmed = ref(false)
 
+const clearAllData = () => {
+  const dbRequest = indexedDB.open('OctetDB', 1);
+
+  dbRequest.onsuccess = function (event) {
+    const db = event.target.result;
+    const transaction = db.transaction('dataStore', 'readwrite');
+    const store = transaction.objectStore('dataStore');
+
+    store.clear();
+  };
+};
+
 const createProject = async () => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/projects/createProject`, {
@@ -111,6 +123,7 @@ const confirmOrder = async () => {
             emit("confirm:checkout-data");
             confirmed.value = true
             messageInfo.value = 'Muchas gracias, pedido confirmado 😇';
+            clearAllData();
             isSnackbarScrollReverseVisible.value = true;
           } else {
             console.error("El campo 'user' no está presente en la respuesta");
