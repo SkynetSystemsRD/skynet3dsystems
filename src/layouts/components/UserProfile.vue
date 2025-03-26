@@ -16,7 +16,7 @@ const logout = async () => {
   localStorage.removeItem('userData');
 
   // Redirect to login page
-  await router.push('/main-pages/landing-page');
+  await router.push('/pages/authentication/login-v1');
 
   // ℹ️ We had to remove abilities in then block because if we don't, nav menu items mutation is visible while redirecting user to login page
   // Remove "userAbilities" from cookie
