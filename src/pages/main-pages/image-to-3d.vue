@@ -531,9 +531,12 @@ const download = async (event, fileName = "TuModeloDeSkynet3DSystems.gltf") => {
   }
 };
 
-const quote = () => {
+const quote = async () => {
   if (!fileModelContent.value)
     return;
+
+  localStorage.setItem('octetData', fileModelContent.value);
+  await router.push()
 }
 
 const initModel = (modelItem) => {
