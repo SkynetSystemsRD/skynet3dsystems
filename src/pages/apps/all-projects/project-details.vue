@@ -597,7 +597,7 @@ onMounted(() => {
             <br>
 
             <div style="display: flex; justify-content: end;">
-              <VBtn @click="selectOption('model')">
+              <VBtn variant="outlined" color="secondary" @click="selectOption('model')">
                 <div style="display: flex; gap: 10px;">
                   <VIcon icon="tabler-cube" size="20" />
                   Ver 3D
