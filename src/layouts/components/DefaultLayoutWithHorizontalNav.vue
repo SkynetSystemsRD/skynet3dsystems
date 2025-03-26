@@ -30,9 +30,7 @@ console.log(userData)
       <VSpacer />
 
       <RouterLink v-if="!userData" class="mega-menu-item" to="/pages/authentication/login-v1">
-        <VBtn prepend-icon="tabler-login" variant="elevated" color="primary" target="_blank" rel="noopener noreferrer">
-          Iniciar Sección
-        </VBtn>
+        <VBtn variant="tonal" icon="tabler-user-plus" />
       </RouterLink>
 
       <UserProfile v-else />

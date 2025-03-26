@@ -16,22 +16,15 @@ interface Emit {
   (e: 'update:currentStep', value: number): void
   (e: 'update:checkout-data', value: ModelCheckoutData): void
 }
+
 const message = ref('')
-
 const loadingCodePromo = ref(false)
-
 const props = defineProps<Props>()
-
 const emit = defineEmits<Emit>()
-
 const models_counts = ref(0);
-
 const loading = ref(false)
-
 const showNote = ref(false)
-
 const noteMessage = ref('Añadir una nota')
-
 const modelCheckoutCartDataLocal = ref({ ...props.modelCheckoutData });
 
 watch(() => props.modelCheckoutData, (newData) => {

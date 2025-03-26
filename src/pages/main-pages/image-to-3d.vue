@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import axios from 'axios';
 import { register } from 'swiper/element/bundle';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 
 import 'video.js/dist/video-js.css';
-import { onMounted, ref } from 'vue';
-import { VBtn, VIcon } from 'vuetify/components';
+import { ref } from 'vue';
+
+const router = useRouter()
 
 register();
 
@@ -54,13 +52,21 @@ interface projectDetails {
   images: image[];
 }
 
+const scene = new THREE.Scene();
+const fileUploadMessage = ref('Sube Tu Imagen')
+const fileUploadIcon = ref('tabler-cloud-upload')
+const fileUploadFormat = ref('')
+const fileModelContent = ref('')
 const route = useRoute()
+const canvas = ref(null);
+const fileContent = ref('')
+const fileInput = ref(null);
 const projectId = ref(route.query.projectId)
 const projectNumber = ref(route.query.projectNumber)
-const fullLoadProjects = ref(true)
-
+const loadings = ref(false)
 const panelStatus = ref(0);
 const selectedElement = ref('image')
+const isDownloading = ref(false)
 const instructions = [
   {
     title: "👋 Manipulación del Modelo 3D",
@@ -100,7 +106,7 @@ const instructions = [
 ]
 
 const projectDetails = ref<projectDetails>({
-  title: `Projecto ${projectNumber.value}`,
+  title: ``,
   about: "Este proyecto muestra un Cubo XYZ en formato GLTF, utilizado para calibrar y verificar la orientación de los ejes en entornos 3D. Permite analizar la alineación, escala y rotación del modelo en un visor interactivo.",
   client: "John Doe",
   modelCheckoutCartDataLocal: [
@@ -173,90 +179,86 @@ const projectDetails = ref<projectDetails>({
   ]
 });
 
-const selectOption = (option: string) => {
-  selectedElement.value = option;
+// const selectOption = (option: string) => {
+//   selectedElement.value = option;
 
-  if (selectedElement.value == 'model') {
-    reload()
-    initModels()
-  }
-}
+//   if (selectedElement.value == 'model') {
+//     reload()
+//     initModels()
+//   }
+// }
 
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
 
-const getModelsByProjectId = async (projectId: string) => {
-  try {
-    // Await the response from axios
-    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/getModelsByProjectId`, {
-      projectId: projectId
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+// const getModelsByProjectId = async (projectId: string) => {
+//   try {
+//     // Await the response from axios
+//     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/getModelsByProjectId`, {
+//       projectId: projectId
+//     }, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     });
 
-    const models = response.data.models
-    return models
-  } catch (error) {
-    console.log('Error in getModelsByProjectId: ', error.response?.data?.message || error.message);
-    return null
-  }
-}
+//     const models = response.data.models
+//     return models
+//   } catch (error) {
+//     console.log('Error in getModelsByProjectId: ', error.response?.data?.message || error.message);
+//     return null
+//   }
+// }
 
-const getProjectById = async () => {
-  try {
+// const getProjectById = async () => {
+//   try {
 
-    console.log(projectId.value)
-    // Await the response from axios
-    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/projects/getProjectById`, {
-      projectId: projectId.value
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+//     console.log(projectId.value)
+//     // Await the response from axios
+//     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/projects/getProjectById`, {
+//       projectId: projectId.value
+//     }, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     });
 
-    const project = response.data.project
-    if (response.data.result) {
-      const models = await getModelsByProjectId(project._id)
-      let index = 1;
+//     const project = response.data.project
+//     if (response.data.result) {
 
-      for (const m of models) {
-        projectDetails.value.images.push({
-          alt: (index).toString(),
-          imagePath: `data:image/png;base64,${m.fileImageContent}` || '',
-          fileExtention: "png"
-        })
+//       const models = await getModelsByProjectId(project._id)
+//       let index = 1;
 
-        projectDetails.value.modelCheckoutCartDataLocal.push({
-          id: index,
-          format: m.format,
-          filePath: `data:application/octet-stream;base64,${m.fileModelContent}`,
-          fileName: m.fileName,
-          size: m.size,
-          octetStreamContent: `data:application/octet-stream;base64,${m.fileModelContent}`,
-          uuid: m.uuid,
-          dimentions: {
-            x: m.dimentions.x,
-            y: m.dimentions.y,
-            z: m.dimentions.z
-          },
-          weight: m.weight
-        })
+//       for (const m of models) {
+//         projectDetails.value.images.push({
+//           alt: (index).toString(),
+//           imagePath: `data:image/png;base64,${m.fileImageContent}` || '',
+//           fileExtention: "png"
+//         })
 
-        index++
-      }
+//         projectDetails.value.modelCheckoutCartDataLocal.push({
+//           id: index,
+//           format: m.format,
+//           filePath: `data:application/octet-stream;base64,${m.fileModelContent}`,
+//           fileName: m.fileName,
+//           size: m.size,
+//           octetStreamContent: `data:application/octet-stream;base64,${m.fileModelContent}`,
+//           uuid: m.uuid,
+//           dimentions: {
+//             x: m.dimentions.x,
+//             y: m.dimentions.y,
+//             z: m.dimentions.z
+//           },
+//           weight: m.weight
+//         })
 
-      setTimeout(() => {
-        fullLoadProjects.value = false
-      }, 700);
-
-    }
-  } catch (error) {
-    console.log('Error in getProjectById: ', error.response?.data?.message || error.message);
-  }
-};
+//         index++
+//       }
+//     }
+//   } catch (error) {
+//     console.log('Error in getProjectById: ', error.response?.data?.message || error.message);
+//   }
+// };
 
 // {
 //       id: 1,
@@ -274,7 +276,38 @@ const getProjectById = async () => {
 //       weight: 250
 //     },
 
+function clearScene() {
+  // Remove all children from the scene
+  while (scene.children.length > 0) {
+    let child = scene.children[0];
+
+    // Dispose of geometries
+    if (child.geometry) {
+      child.geometry.dispose();
+    }
+
+    // Dispose of materials
+    if (child.material) {
+      if (Array.isArray(child.material)) {
+        child.material.forEach(material => material.dispose());
+      } else {
+        child.material.dispose();
+      }
+    }
+
+    // Remove from the scene
+    scene.remove(child);
+  }
+}
+
 function reload() {
+  fileUploadMessage.value = 'Sube Tu Imagen'
+  fileUploadIcon.value = 'tabler-cloud-upload'
+  fileUploadFormat.value = ''
+  fileContent.value = ''
+  fileModelContent.value = ''
+  clearScene()
+
   var container = document.getElementById("model-viewer");
 
   if (container) {  // Verifica si el contenedor existe
@@ -293,8 +326,246 @@ function getFileExtention(filename: string): string {
   return parts.length > 1 ? parts[parts.length - 1] : '';  // Returns the extension or an empty string if no extension
 }
 
-const initModels = () => {
-  const scene = new THREE.Scene();
+const uploadImage = (event) => {
+  loadings.value = true;
+
+  const file = event.target.files[0];
+  console.log(file)
+  if (!file) return;
+
+  fileUploadMessage.value = "Eliminar el Modelo";
+  fileUploadIcon.value = "tabler-x";
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    fileContent.value = e.target?.result;
+    const img = new Image();
+    img.onload = () => {
+      loadings.value = false;
+      generateGLTFFromImage(img);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+
+  // 🔹 Obtener la extensión real del archivo 🔹
+  fileUploadFormat.value = file.name.split(".").pop().toUpperCase();
+
+  setTimeout(() => {
+    loadings.value = false;
+  }, 1000);
+
+  console.log(fileContent.value)
+};
+
+const saveGLTFToServer = async (event, fileName = "TuModeloDeSkynet3DSystems.gltf") => {
+  event?.preventDefault(); // Evitar la acción predeterminada si es un botón
+
+  if (!fileModelContent.value) return;
+
+  isDownloading.value = true;
+
+  try {
+    // Convertir Base64 a binario
+    const base64Data = fileModelContent.value.replace(/^data:model\/gltf\+json;base64,/, "");
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "model/gltf+json" });
+
+    // Enviar el archivo al servidor
+    const formData = new FormData();
+    formData.append("file", blob, fileName);
+
+    const response = await fetch("/upload_gltf", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      console.log("GLTF guardado correctamente en el servidor.");
+    } else {
+      console.error("Error al guardar el archivo en el servidor.");
+    }
+  } catch (error) {
+    console.error("Error al guardar GLTF:", error);
+  } finally {
+    isDownloading.value = false;
+  }
+};
+
+function generateGLTFFromImage(image, isRelief = true) {
+  if (!image) {
+    alert("Por favor, sube una imagen primero.");
+    return;
+  }
+
+  const ctx = canvas.value.getContext("2d");
+  canvas.value.width = image.width;
+  canvas.value.height = image.height;
+
+  ctx.drawImage(image, 0, 0);
+
+  const imageData = ctx.getImageData(0, 0, image.width, image.height).data;
+  console.log(image.width, image.height, image.width, image.height)
+
+  const geometry = new THREE.PlaneGeometry(image.width, image.height, image.width, image.height);
+
+  // Calcular el centro de la geometría
+  const centerX = image.width / 2;
+  const centerY = image.height / 2;
+
+  // Aplicar altura en base a los valores de gris y centralizar la malla
+  for (let i = 0; i < geometry.attributes.position.count; i++) {
+    const x = i % image.width;
+    const y = Math.floor(i / image.width);
+    const index = (y * image.width + x) * 4;
+
+    // Convertir a escala de grises y ajustar la altura
+    const grayscale = imageData[index] / 255;
+    let zHeight = grayscale * 10;
+
+    // Si es con relieve, incrementar la altura
+    if (isRelief) {
+      zHeight = grayscale * -10; // Aumentar el relieve (más grosor)
+    }
+
+    // Aplicar un desplazamiento para centrar la geometría
+    geometry.attributes.position.setXYZ(i, x - centerX, centerY - y, zHeight);
+  }
+
+  geometry.computeVertexNormals();
+
+  // Crear material y malla para la geometría
+  const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
+  const mesh = new THREE.Mesh(geometry, material);
+
+  // Exportar el modelo como GLTF (esto será un objeto JSON para GLTF)
+  const exporter = new GLTFExporter();
+  exporter.parse(mesh, (result) => {
+    const jsonString = JSON.stringify(result);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+
+    // Convertir Blob a Base64
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result.split(",")[1]; // Extraer solo la parte base64
+      fileModelContent.value = base64String;
+      initModel({ format: 'gltf', octetStreamContent: base64String });
+    };
+
+    reader.readAsDataURL(blob);
+  });
+}
+
+const download = async (event, fileName = "TuModeloDeSkynet3DSystems.gltf") => {
+  event?.preventDefault(); // Prevent default action if triggered by a button click
+
+  if (!fileModelContent.value) return;
+
+  isDownloading.value = true;
+
+  try {
+    // Convert Base64 to binary
+    const base64Data = fileModelContent.value.replace(/^data:model\/gltf\+json;base64,/, "");
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "model/gltf+json" });
+    const fileURL = URL.createObjectURL(blob);
+
+    // Load the GLTF model
+    const loader = new GLTFLoader();
+    loader.load(
+      fileURL,
+      (gltf) => {
+        const scene = gltf.scene;
+
+        // 🔹 Scale down by 50%
+        scene.scale.set(0.1, 0.1, 0.1);
+
+        // 🔹 Flip the model on X-axis to mirror it
+        scene.scale.x *= -1;
+
+        // 🔹 Fix normals if needed
+        scene.traverse((child) => {
+          if (child.isMesh) {
+            child.geometry.computeVertexNormals();
+            child.material.side = THREE.FrontSide; // Ensure correct face rendering
+          }
+        });
+
+        // Export the modified model
+        const exporter = new GLTFExporter();
+        exporter.parse(
+          scene,
+          (gltfData) => {
+            const gltfBlob = new Blob([JSON.stringify(gltfData)], { type: "model/gltf+json" });
+
+            // Create a downloadable link
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(gltfBlob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          },
+          { binary: false } // Export as JSON GLTF
+        );
+
+        isDownloading.value = false;
+      },
+      undefined,
+      (error) => {
+        console.error("Error loading GLTF:", error);
+        isDownloading.value = false;
+      }
+    );
+  } catch (error) {
+    console.error("Download failed:", error);
+    isDownloading.value = false;
+  }
+};
+
+const dbRequest = indexedDB.open('OctetDB', 1);
+
+dbRequest.onupgradeneeded = function (event) {
+  let db = event.target.result;
+  db.createObjectStore('dataStore', { keyPath: 'id' });
+};
+
+const saveData = (id, content) => {
+  const dbRequest = indexedDB.open('OctetDB', 1);
+
+  dbRequest.onsuccess = function (event) {
+    const db = event.target.result;
+    const transaction = db.transaction('dataStore', 'readwrite');
+    const store = transaction.objectStore('dataStore');
+
+    store.put({ id, content });
+  };
+};
+
+const quote = async () => {
+  if (!fileModelContent.value)
+    return;
+
+  saveData('octetData', `data:application/octet-stream;base64,${fileModelContent.value}`);
+  saveData('imageData', fileContent.value);
+
+  await router.push({
+    path: '/main-pages/model-checkout',
+    query: { from: 'image-to-3d' }  // Set your query parameter here
+  });
+}
+
+const initModel = (modelItem) => {
   scene.background = new THREE.Color(0xdddddd);
 
   const camera = new THREE.PerspectiveCamera(75, 1000 / 600, 0.1, 1000);
@@ -307,7 +578,6 @@ const initModels = () => {
   // Redimensiona el renderizador según el tamaño del contenedor
   function resizeRenderer() {
     const container = document.getElementById('model-viewer');
-    const imageViewer = document.getElementById('image-viewer');
 
     if (!container) {
       console.log("not container");
@@ -326,12 +596,6 @@ const initModels = () => {
     renderer.setSize(width, height);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-
-    // Ajustar tamaño de la imagen
-    if (imageViewer) {
-      imageViewer.style.width = `${width}px`;
-      imageViewer.style.height = `${height}px`;
-    }
   }
 
   nextTick(() => {
@@ -370,7 +634,6 @@ const initModels = () => {
   let loadedModels: THREE.Object3D[] = [];
   let selectedModel: THREE.Object3D | null = null;
   let isDragging = false;
-  let isRotating = false;  // Variable para controlar si el modelo seleccionado debe rotar
 
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
@@ -378,60 +641,81 @@ const initModels = () => {
   const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
   function loadModel(item: any) {
-    let loader: any;
-    let fileType = item.fileName.split('.').pop()?.toLowerCase();
+    if (item.format !== 'gltf' && item.format !== 'glb') {
+      console.error('Only GLTF or GLB format is supported.');
+      return;
+    }
 
-    console.log(item.format)
+    // Check if the base64 string contains the 'data:' prefix and remove it if present
+    let base64Decoded = item.octetStreamContent;
+    const base64Prefix = 'data:application/octet-stream;base64,';
 
-    switch (item.format) {
-      case 'glb':
-      case 'gltf':
-        loader = new GLTFLoader();
-        loader.load(item.filePath, (gltf) => {
-          addModelToScene(gltf.scene);
-          console.log("gltf: ", gltf.scene.uuid)
-        });
-        break;
+    // Remove the prefix if it exists
+    if (base64Decoded.indexOf(base64Prefix) === 0) {
+      base64Decoded = base64Decoded.substring(base64Prefix.length);
+    }
 
-      case 'obj':
-        loader = new OBJLoader();
-        loader.load(item.filePath, (obj) => {
-          addModelToScene(obj);
-          console.log('obj: ', obj.uuid)
-        });
-        break;
+    try {
+      // Decode base64 string into binary
+      const decoded = atob(base64Decoded); // Decode base64 to binary string
+      const buffer = new ArrayBuffer(decoded.length);
+      const view = new Uint8Array(buffer);
 
-      case 'fbx':
-        loader = new FBXLoader();
-        loader.load(item.filePath, (fbx) => {
-          addModelToScene(fbx);
-          console.log('fbx: ', fbx.uuid)
-        });
-        break;
+      // Copy the decoded data into the buffer
+      for (let i = 0; i < decoded.length; i++) {
+        view[i] = decoded.charCodeAt(i);
+      }
 
-      case 'stl':
-        loader = new STLLoader();
-        loader.load(item.filePath, (geometry) => {
-          const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
-          const mesh = new THREE.Mesh(geometry, material);
-          addModelToScene(mesh);
-          console.log('stl: ', mesh.uuid)
-        });
-        break;
+      // Create a Blob from the buffer
+      const blob = new Blob([buffer], { type: 'application/octet-stream' });
 
-      default:
-        console.error('Unsupported model format');
+      // Generate a URL for the Blob
+      const url = URL.createObjectURL(blob);
+
+      // GLTF Loader
+      const loader = new GLTFLoader();
+      loader.load(url, (gltf) => {
+        addModelToScene(gltf.scene);
+        console.log('gltf: ', gltf.scene.uuid);
+      });
+
+      // Optionally, revoke the object URL after loading the model
+      URL.revokeObjectURL(url);
+
+    } catch (error) {
+      console.error('Error decoding base64 string: ', error);
     }
   }
 
   function addModelToScene(model: THREE.Object3D) {
-    model.scale.set(0.5, 0.5, 0.5);
+    // Calcular el Bounding Box del modelo
+    const box = new THREE.Box3().setFromObject(model);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+
+    // Ajustar la posición para que el centro del modelo esté en (0, 0, 0)
+    model.position.sub(center);
+
+    // Escalar el modelo para que sea **gigante**
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scaleFactor = 80 / maxDim; // 🚀 Lo llevamos al límite 🚀
+    model.scale.set(scaleFactor, scaleFactor, scaleFactor);
     model.position.set(0, 0, 0);
+
+    // Agregar el modelo a la escena
     scene.add(model);
     loadedModels.push(model);
+
+    // 🔹 Poner la cámara pegada al modelo 🔹
+    const distance = maxDim * 0.1; // 🔥 EXTREMADAMENTE CERCA 🔥
+    camera.position.set(0, 0, distance); // Directo en el eje Z
+    camera.lookAt(0, 0, 0); // Apuntar al modelo
   }
 
-  projectDetails.value.modelCheckoutCartDataLocal.forEach(loadModel);
+  loadModel(modelItem)
+  // projectDetails.value.modelCheckoutCartDataLocal.forEach(loadModel);
 
   const originalColors = new Map<THREE.Object3D, THREE.Color>(); // Guardar colores originales
 
@@ -524,22 +808,20 @@ const initModels = () => {
   animate();
 }
 
-getProjectById()
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
+// getProjectById()
 
 onMounted(() => {
-  initModels();
+  // initModels();
 });
 </script>
 
 <template>
   <VRow>
     <VCol cols="12" md="8">
-      <VBtn color="secondary" variant="text"
-        :to="{ name: 'apps-all-projects-projects', query: { from: 'project-details' } }">
-        <VIcon icon="tabler-arrow-left"></VIcon> Projectos
-      </VBtn>
-      <br>
-      <br>
       <VCard>
         <VCardItem :title="projectDetails.title" class="pb-6">
           <template #subtitle>
@@ -555,8 +837,9 @@ onMounted(() => {
                   'Formato del Modelo: ' }}
               </VChip>
               <VChip variant="tonal" size="small">
-                {{[...new Set(projectDetails.modelCheckoutCartDataLocal.map(model =>
-                  model.format.toUpperCase()))].join(", ")}}
+                <!-- {{[...new Set(projectDetails.modelCheckoutCartDataLocal.map(model =>
+                  model.format.toUpperCase()))].join(", ")}} -->
+                GLTF
               </VChip>
               <!-- <VIcon
                 size="24"
@@ -573,18 +856,18 @@ onMounted(() => {
         </VCardItem>
         <VCardText>
           <VCard flat border>
-            <swiper-container id="swiperContainer" v-show="selectedElement === 'image'" class="mySwiper w-100 rounded"
+            <!-- <swiper-container id="swiperContainer" v-show="selectedElement === 'image'" class="mySwiper w-100 rounded"
               thumbs-swiper=".mySwiper2" loop="true" space-between="10" navigation="false" centered-slides="true"
               events-prefix="swiper-">
               <swiper-slide v-for="swiperImg in projectDetails?.images" :key="swiperImg.alt">
                 <VImg v-if="selectedElement === 'image'" id="image-viewer" :src="swiperImg.imagePath" cover
                   class="swiper-img1" />
               </swiper-slide>
-            </swiper-container>
-            <div v-show="selectedElement === 'model'" class="px-2 pt-2">
+            </swiper-container> -->
+            <div class="px-2 pt-2">
               <div id="model-viewer" class="w-100 rounded" style=" block-size: 600px;inline-size: 800px;"></div>
             </div>
-            <swiper-container class="mySwiper2" loop="true" free-mode="false" events-prefix="swiper-"
+            <!-- <swiper-container class="mySwiper2" loop="true" free-mode="false" events-prefix="swiper-"
               slides-per-view="4">
               <swiper-slide v-for="(swiperImg) in projectDetails?.images" :key="swiperImg.alt"
                 @click="selectOption('image')">
@@ -592,25 +875,47 @@ onMounted(() => {
               </swiper-slide>
             </swiper-container>
 
-            <VProgressLinear v-if="fullLoadProjects" indeterminate color="primary" />
-            <br>
-            <div class="d-flex justify-space-between align-center">
-              <div class="ms-3"> <!-- Agrega margen a la izquierda -->
-                <VBtn variant="outlined" color="secondary" @click="selectOption('model')">
-                  <div style="display: flex; gap: 10px;">
-                    <VIcon icon="tabler-cube" size="20" />
-                    Ver 3D
-                  </div>
-                </VBtn>
-              </div>
-            </div>
+            <div style="display: flex; justify-content: end;">
+              <VBtn @click="selectOption('model')">
+                <div style="display: flex; gap: 10px;">
+                  <VIcon icon="tabler-cube" size="20" />
+                  Ver 3D
+                </div>
+              </VBtn>
+            </div> -->
+
             <VCardText>
-              <h5 class="text-h5 mb-4">
+              <!-- <h5 class="text-h5 mb-4">
                 📌 Acerca del Proyecto
               </h5>
               <p class="text-body-1">
                 {{ projectDetails?.about }}
-              </p>
+              </p> -->
+              <div class="d-flex justify-space-between align-center">
+                <div>
+                  <VBtn variant="outlined" :loading="loadings" :disabled="loadings" color="secondary" class="ma-2"
+                    @click="fileUploadMessage === 'Sube Tu Imagen' ? triggerFileInput() : reload()">
+                    {{ fileUploadMessage }}
+                    <VIcon end :icon="fileUploadIcon" />
+                  </VBtn>
+
+                  <VBtn variant="outlined" class="ma-2" @click="quote">
+                    Cotizar Modelo
+                  </VBtn>
+                </div>
+
+                <VBtn :loading="isDownloading" :disabled="isDownloading" variant="outlined" class="ma-2"
+                  @click="download($event)">
+                  Descargar
+                  <VIcon end icon="tabler-download" />
+                </VBtn>
+              </div>
+
+              <!-- Input de archivo oculto -->
+              <input type="file" ref="fileInput" accept="image/*" @change="uploadImage" style="display: none;" />
+
+              <canvas ref="canvas" style="display: none;"></canvas>
+
               <VDivider class="my-6" />
 
               <h5 class="text-h5 mb-4">
@@ -619,12 +924,12 @@ onMounted(() => {
               <div class="d-flex gap-x-12 gap-y-5 flex-wrap">
                 <div>
                   <VList class="card-list text-medium-emphasis">
-                    <VListItem>
+                    <!-- <VListItem>
                       <template #prepend>
                         <VIcon icon="tabler-atom" size="20" />
                       </template>
                       <VListItemTitle>Materiales: {{ projectDetails?.materials }}</VListItemTitle>
-                    </VListItem>
+                    </VListItem> -->
                     <VListItem>
                       <template #prepend>
                         <VIcon icon="tabler-cube" size="20" />
@@ -635,6 +940,13 @@ onMounted(() => {
                     </VListItem>
                     <VListItem>
                       <template #prepend>
+                        <VIcon icon="tabler-photo" size="20" />
+                      </template>
+                      <VListItemTitle>Formato de su imagen: {{ fileUploadFormat }}
+                      </VListItemTitle>
+                    </VListItem>
+                    <!-- <VListItem>
+                      <template #prepend>
                         <VIcon icon="tabler-weight" size="20" />
                       </template>
                       <VListItemTitle>
@@ -642,7 +954,7 @@ onMounted(() => {
                           ? (projectDetails.weight / 1000).toFixed(2) + ' KG'
                           : projectDetails.weight + ' G' }}
                       </VListItemTitle>
-                    </VListItem>
+                    </VListItem> -->
                     <!-- <VListItem>
                       <template #prepend>
                         <VIcon
@@ -656,28 +968,28 @@ onMounted(() => {
 
                 <div>
                   <VList class="card-list text-medium-emphasis">
-                    <VListItem>
+                    <!-- <VListItem>
                       <template #prepend>
                         <VIcon icon="tabler-number" size="20" />
                       </template>
                       <VListItemTitle>Numero de impresiones: {{ projectDetails?.totalPrints }}</VListItemTitle>
-                    </VListItem>
-                    <VListItem>
+                    </VListItem> -->
+                    <!-- <VListItem>
                       <template #prepend>
                         <VIcon icon="tabler-clock" size="20" />
                       </template>
                       <VListItemTitle>Tiempo Impresión: {{ projectDetails?.time }}</VListItemTitle>
-                    </VListItem>
+                    </VListItem> -->
                   </VList>
                 </div>
               </div>
-              <VDivider class="my-6" />
+              <!-- <VDivider class="my-6" /> -->
 
-              <h5 class="text-h5 mb-4">
+              <!-- <h5 class="text-h5 mb-4">
                 📌 Descripción
-              </h5>
+              </h5> -->
               <!-- eslint-disable-next-line vue/no-v-html -->
-              <div v-html="projectDetails?.description" />
+              <!-- <div v-html="projectDetails?.description" /> -->
 
               <!-- <VDivider class="my-6" />
 
@@ -747,6 +1059,10 @@ onMounted(() => {
           </template>
         </VExpansionPanels>
       </div>
+
+      <VDivider class="my-6" />
+
+      <VImg :src="fileContent" rounded="lg" />
     </VCol>
   </VRow>
 </template>

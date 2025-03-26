@@ -11,6 +11,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute();
 const router = useRouter()
 const pending_to_go = ref(route.query.pending_to_go)
+const loggingIn = ref(false)
 
 definePage({
   meta: {
@@ -55,18 +56,23 @@ const login = async () => {
     });
 
     if (response.data && response.data.validLogin) {
+      loggingIn.value = true
       localStorage.setItem('userData', JSON.stringify(jwtDecode(response.data.token)));
 
       if (pending_to_go.value !== undefined) {
         await router.push(pending_to_go.value)
       }
       else await router.push('/main-pages/landing-page')
+
+      loggingIn.value = false
     } else {
       console.error("El campo 'user' no está presente en la respuesta");
+      loggingIn.value = false
       isSnackbarScrollReverseVisible.value = true
     }
   } catch (error) {
     console.log('validateForm: ', error.response?.data?.message || error.message);
+    loggingIn.value = false
     isSnackbarScrollReverseVisible.value = true
   }
 }
@@ -134,7 +140,7 @@ const login = async () => {
                 </div>
 
                 <!-- login button -->
-                <VBtn block type="submit">
+                <VBtn :loading="loggingIn" :disabled="loggingIn" block type="submit">
                   Acceso
                 </VBtn>
               </VCol>

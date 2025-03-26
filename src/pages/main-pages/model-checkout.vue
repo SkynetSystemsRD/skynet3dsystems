@@ -16,12 +16,54 @@ import axios from 'axios'
 import { useConfigStore } from '@core/stores/config'
 
 const router = useRouter()
+const route = useRoute();
+const from = route.query.from;
 
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
+const octetData = ref('');
+
+const getData = (id, callback) => {
+  const dbRequest = indexedDB.open('OctetDB', 1);
+
+  dbRequest.onsuccess = function (event) {
+    const db = event.target.result;
+    const transaction = db.transaction('dataStore', 'readonly');
+    const store = transaction.objectStore('dataStore');
+    const getRequest = store.get(id);
+
+    getRequest.onsuccess = function () {
+      callback(getRequest.result?.content || null);
+    };
+  };
+};
 
 if (!userData) {
   router.push({ path: '/pages/authentication/login-v1', query: { pending_to_go: '/main-pages/model-checkout' } });
+}
+else if (from === 'image-to-3d') {
+  getData('imageData', (imageData) => {
+    getData('octetData', (octetData) => {
+      modelCheckoutData.value.modelItems.push({
+        id: 1,
+        fileName: 'TuModeloSkynet3DSystems.gltf',
+        filePath: '/TuModeloSkynet3DSystems.gltf',
+        format: 'gltf'.toUpperCase(),
+        isSupported: 'gltf',
+        size: 500,
+        imageContent: imageData,
+        octetStreamContent: octetData,
+        dimentions: {
+          x: 1,
+          y: 1,
+          z: 1
+        },
+        weight: 0, // dar el valor correspondiente
+        uuid: 'uuid', // dar el valor correspondiente
+        price: 0
+      });
+    });
+  });
 }
 
 definePage({
@@ -134,13 +176,11 @@ let modelCheckoutData = ref<ModelCheckoutData>({
 // }
 
 const currentStep = ref(0)
+const confirmed = ref(false)
 
 // Use onMounted or another async lifecycle hook to fetch addresses
 onMounted(async () => {
-  if (userData) {
-    await getAddress();
-  }
-  console.log(modelCheckoutData.value.addresses)
+  await getAddress();
   // console.log(modelCheckoutData.value.addresses)
 });
 </script>
@@ -151,7 +191,7 @@ onMounted(async () => {
     <VContainer>
       <div class="model-checkout-card">
         <VCard>
-          <VCardText>
+          <VCardText v-if="!confirmed">
             <!-- 👉 Stepper -->
             <AppStepper v-model:current-step="currentStep" class="model-checkout-stepper" :items="modelCheckoutSteps"
               :direction="$vuetify.display.mdAndUp ? 'horizontal' : 'vertical'" align="center" />
@@ -189,7 +229,10 @@ onMounted(async () => {
                   }" />
               </VWindowItem>
               <VWindowItem>
-                <ConfirmationContent v-model:model-checkout-data="modelCheckoutData" />
+                <ConfirmationContent v-model:model-checkout-data="modelCheckoutData" @confirm:checkout-data="() => {
+                  confirmed = true
+                  console.log('CONFIRM: ', modelCheckoutData)
+                }" />
               </VWindowItem>
             </VWindow>
           </VCardText>

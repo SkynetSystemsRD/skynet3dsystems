@@ -95,6 +95,7 @@ declare module 'vue-router/auto-routes' {
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
     'main-pages-help-center': RouteRecordInfo<'main-pages-help-center', '/main-pages/help-center', Record<never, never>, Record<never, never>>,
     'main-pages-help-center-article-title': RouteRecordInfo<'main-pages-help-center-article-title', '/main-pages/help-center/article/:title', { title: ParamValue<true> }, { title: ParamValue<false> }>,
+    'main-pages-image-to3d': RouteRecordInfo<'main-pages-image-to3d', '/main-pages/image-to-3d', Record<never, never>, Record<never, never>>,
     'main-pages-landing-page': RouteRecordInfo<'main-pages-landing-page', '/main-pages/landing-page', Record<never, never>, Record<never, never>>,
     'main-pages-model-checkout': RouteRecordInfo<'main-pages-model-checkout', '/main-pages/model-checkout', Record<never, never>, Record<never, never>>,
     'main-pages-payment': RouteRecordInfo<'main-pages-payment', '/main-pages/payment', Record<never, never>, Record<never, never>>,

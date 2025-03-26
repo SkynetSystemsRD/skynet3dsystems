@@ -9,7 +9,7 @@ import { useDisplay } from 'vuetify'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const props = defineProps({
   activeId: String,
@@ -38,6 +38,20 @@ const sidebar = ref(false)
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
 
+const screenWidth = ref(window.innerWidth);
+
+const updateWidth = () => {
+  screenWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+  window.addEventListener("resize", updateWidth);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateWidth);
+});
+
 watch(() => display, () => {
   return display.mdAndUp ? sidebar.value = false : sidebar.value
 }, { deep: true })
@@ -65,8 +79,9 @@ const menuItems: MenuItem[] = [
       // { name: 'Skynet 3D Hands (Gestos y Acciones)✋✨ ', to: { name: 'main-pages-payment' }, route: "faf" },
       // { name: 'Cotización Instantánea con IA 🤖', to: { name: 'main-pages-help-center' }, route: "faf" },
       { name: 'Cotización Personalizada 📝', to: { name: 'main-pages-model-checkout' }, route: "/main-pages/model-checkout" },
-      { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
+      { name: 'Convierte Imagen a Modelo 3D 🎨', to: { name: 'main-pages-help-center' }, route: "/main-pages/image-to-3d" },
       // { name: 'Generador de Modelos con IA 🎨', to: { name: 'main-pages-help-center' }, route: "faf" },
+
     ],
   },
   // {
@@ -172,11 +187,14 @@ console.log(userData)
                 <ul class="mb-6">
                   <li v-for="listItem in item.navItems" :key="listItem.name" style="list-style: none;"
                     class="text-body-1 mb-4 text-no-wrap">
-                    <RouterLink :to="listItem.to" :target="item.listTitle === 'Page' ? '_self' : '_blank'"
+                    <RouterLink
+                      :to="userData ? listItem.route : { path: '/pages/authentication/login-v1', query: { pending_to_go: listItem.route } }"
                       class="mega-menu-item"
                       :class="isCurrentRoute(listItem.to) ? 'active-link' : 'text-high-emphasis'">
-                      <VIcon icon="tabler-circle" :size="10" class="me-2" />
-                      <span> {{ listItem.name }}</span>
+                      <div class="d-flex align-center">
+                        <VIcon icon="tabler-circle" color="primary" :size="10" class="me-2" />
+                        <span>{{ listItem.name }}</span>
+                      </div>
                     </RouterLink>
                   </li>
                 </ul>
@@ -218,8 +236,7 @@ console.log(userData)
               <div class="app-logo">
                 <VNodeRenderer :nodes="themeConfig.app.logo" :class="rotatingClass" />
                 <h1 class="app-logo-title">
-                  {{ themeConfig.app.title }}
-                </h1>
+                  {{ screenWidth < 415 ? 'Skynet 3D' : themeConfig.app.title }} </h1>
               </div>
             </RouterLink>
           </VAppBarTitle>
@@ -260,7 +277,7 @@ console.log(userData)
                           <li v-for="listItem in item.navItems" :key="listItem.name" style="list-style: none;"
                             class="text-body-1 mb-4 text-no-wrap">
                             <RouterLink
-                              :to="userData ? listItem.to : { path: '/pages/authentication/login-v1', query: { pending_to_go: listItem.route } }"
+                              :to="userData ? listItem.route : { path: '/pages/authentication/login-v1', query: { pending_to_go: listItem.route } }"
                               class="mega-menu-item"
                               :class="isCurrentRoute(listItem.to) ? 'active-link' : 'text-high-emphasis'">
                               <div class="d-flex align-center">
@@ -295,10 +312,7 @@ console.log(userData)
 
         <div class="d-flex gap-x-4">
           <RouterLink v-if="!userData" class="mega-menu-item" to="/pages/authentication/login-v1">
-            <VBtn prepend-icon="tabler-login" variant="elevated" color="primary" target="_blank"
-              rel="noopener noreferrer">
-              Iniciar Sección
-            </VBtn>
+            <VBtn variant="tonal" icon="tabler-user-plus" />
           </RouterLink>
 
           <UserProfile v-else />

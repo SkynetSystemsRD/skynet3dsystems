@@ -27,6 +27,9 @@ const getPrice = () => {
       query: { pending_to_go: '/main-pages/model-checkout' }  // Set your query parameter here
     });
   } else {
+    router.push({
+      path: '/main-pages/model-checkout'
+    });
     // Otherwise, proceed with the logic to get the price
     console.log('User data exists, proceed to fetch price');
     // router.push('/'); // Replace '/login' with the route you want

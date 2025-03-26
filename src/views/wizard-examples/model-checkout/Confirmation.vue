@@ -7,14 +7,31 @@ const props = defineProps<{
   modelCheckoutData: ModelCheckoutData
 }>()
 
-defineEmits<{
+interface Emit {
   (e: 'update:currentStep', value: number): void
   (e: 'update:checkout-data', value: ModelCheckoutData): void
-}>()
+  (e: 'confirm:checkout-data'): void
+}
+
+const emit = defineEmits<Emit>()
 
 const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
 const paymentMethod = ref({})
+const orderId = ref('')
+const confirmed = ref(false)
+
+const clearAllData = () => {
+  const dbRequest = indexedDB.open('OctetDB', 1);
+
+  dbRequest.onsuccess = function (event) {
+    const db = event.target.result;
+    const transaction = db.transaction('dataStore', 'readwrite');
+    const store = transaction.objectStore('dataStore');
+
+    store.clear();
+  };
+};
 
 const createProject = async () => {
   try {
@@ -42,9 +59,9 @@ const saveBillingDetails = (proyectId: string, addressId: string) => {
       addressId: addressId,
       userId: userData.id,
       deliverySpeed: props.modelCheckoutData.deliverySpeed,
-      note: props.modelCheckoutData.note,
+      note: props.modelCheckoutData.note || 'N/A',
       totalAmount: props.modelCheckoutData.orderAmount,
-      promoCode: props.modelCheckoutData.promoCode,
+      promoCode: props.modelCheckoutData.promoCode || 'N/A',
       paymentMethod: paymentMethod.value,
     }, {
       headers: {
@@ -71,54 +88,63 @@ const confirmOrder = async () => {
     props.modelCheckoutData.addresses.length > 0 &&
     (props.modelCheckoutData.paymentMethod.cash || props.modelCheckoutData.paymentMethod.card !== '' || props.modelCheckoutData.paymentMethod.transfer.accountNumber !== 0)
   ) {
-    const projectId = await createProject()
-    const addressId = props.modelCheckoutData.addresses.find(a => a.value === props.modelCheckoutData.deliveryAddress)?.id;
-    saveBillingDetails(projectId, addressId)
+    try {
+      const projectId = orderId.value = await createProject();
+      const addressId = props.modelCheckoutData.addresses.find(a => a.value === props.modelCheckoutData.deliveryAddress)?.id;
 
-    props.modelCheckoutData.modelItems.forEach(model => {
-      try {
-        const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/saveModels`, {
-          projectId: projectId,
-          userId: userData.id,
-          fileName: model.fileName.split('.')[0],
-          filePath: model.filePath,
-          size: model.size,
-          dimentions: {
-            x: model.dimentions.x,
-            y: model.dimentions.y,
-            z: model.dimentions.z
-          },
-          format: model.format.toLowerCase(),
-          weight: model.weight,
-          price: model.price,
-          uuid: model.uuid,
-          imageContent: model.imageContent,
-          octetStreamContent: model.octetStreamContent,
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+      await saveBillingDetails(projectId, addressId);
 
-        if (response.data.result) {
-          messageInfo.value = 'Muchas gracias, pedido confirmado 😇'
-          isSnackbarScrollReverseVisible.value = true
-        } else {
-          console.error("El campo 'user' no está presente en la respuesta");
-          messageInfo.value = '¡Uy! Algo salió mal 😵‍💫 Pero no te preocupes, estamos en ello 🛠️✨'
-          isSnackbarScrollReverseVisible.value = true
+      for (const model of props.modelCheckoutData.modelItems) {
+        try {
+          const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/saveModels`, {
+            projectId: projectId,
+            userId: userData.id,
+            fileName: model.fileName.split('.')[0],
+            filePath: model.filePath,
+            size: model.size,
+            dimentions: {
+              x: model.dimentions.x,
+              y: model.dimentions.y,
+              z: model.dimentions.z
+            },
+            format: model.format.toLowerCase(),
+            weight: model.weight,
+            price: model.price,
+            uuid: model.uuid,
+            imageContent: model.imageContent,
+            octetStreamContent: model.octetStreamContent,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (response.data.result) {
+            emit("confirm:checkout-data");
+            confirmed.value = true
+            messageInfo.value = 'Muchas gracias, pedido confirmado 😇';
+            clearAllData();
+            isSnackbarScrollReverseVisible.value = true;
+          } else {
+            console.error("El campo 'user' no está presente en la respuesta");
+            messageInfo.value = '¡Uy! Algo salió mal 😵‍💫 Pero no te preocupes, estamos en ello 🛠️✨';
+            isSnackbarScrollReverseVisible.value = true;
+          }
+        } catch (error) {
+          console.log('confirmOrder: ', error.response?.data?.message || error.message);
+          isSnackbarScrollReverseVisible.value = true;
         }
-      } catch (error) {
-        console.log('confirmOrder: ', error.response?.data?.message || error.message);
-        isSnackbarScrollReverseVisible.value = true
       }
-    })
+    } catch (error) {
+      console.log('Error en confirmOrder: ', error.message);
+      messageInfo.value = '🚨 Ocurrió un error inesperado al confirmar el pedido.';
+      isSnackbarScrollReverseVisible.value = true;
+    }
+  } else {
+    messageInfo.value = '🚨 ¡Ups! Antes de confirmar, revisa que hayas seleccionado los modelos, la dirección y el método de pago. 🏡💳✅ ¡Completa estos datos y estarás listo para continuar! 🚀';
+    isSnackbarScrollReverseVisible.value = true;
   }
-  else {
-    messageInfo.value = '🚨 ¡Ups! Antes de confirmar, revisa que hayas seleccionado los modelos, la dirección y el método de pago. 🏡💳✅ ¡Completa estos datos y estarás listo para continuar! 🚀'
-    isSnackbarScrollReverseVisible.value = true
-  }
-}
+};
 
 const selectedDeliveryAddress = computed(() => {
   if (props.modelCheckoutData.paymentMethod.cash) {
@@ -176,7 +202,7 @@ const resolveDeliveryMethod = computed(() => {
     return { method: 'Envio Estándar', desc: 'Normalmente en 24h' }
 })
 // Thank You! 😇
-const messageInfo = ref('Ahora Verifica tu Pedido 👍')
+let messageInfo = ref('Ahora Verifica tu Pedido 👍')
 const isSnackbarScrollReverseVisible = ref(false)
 
 watch(() => props.modelCheckoutData, (value) => {
@@ -191,7 +217,7 @@ watch(() => props.modelCheckoutData, (value) => {
         {{ messageInfo }}
       </h4>
       <p>
-        Tu numero de orden es <span class="text-body-1 font-weight-medium text-high-emphasis">#1536548131</span>,
+        Tu numero de orden es <span class="text-body-1 font-weight-medium text-high-emphasis">#{{ orderId }}</span>,
         verificala tus modelos antes de confirmarla
       </p>
       <p class="mb-0">
@@ -204,7 +230,7 @@ watch(() => props.modelCheckoutData, (value) => {
         si el correo electrónico fue enviado allí.</p>
       <div class="d-flex align-center gap-2 justify-center">
         <VIcon size="20" icon="tabler-clock" class="text-high-emphasis" />
-        <span>Fecha del Pedido 25/05/2020 12:35pm</span>
+        <span>Fecha del Pedido: {{ new Date().toLocaleString('es-DO') }}</span>
       </div>
     </div>
 
@@ -355,7 +381,7 @@ watch(() => props.modelCheckoutData, (value) => {
 
         <br>
 
-        <VBtn @click="confirmOrder">
+        <VBtn v-if="!confirmed" @click="confirmOrder">
           Confirmar Pedido
         </VBtn>
       </VCol>
