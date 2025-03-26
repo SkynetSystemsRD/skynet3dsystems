@@ -594,16 +594,16 @@ onMounted(() => {
 
             <VProgressLinear v-if="fullLoadProjects" indeterminate color="primary" />
             <br>
-
-            <div style="display: flex; justify-content: end;">
-              <VBtn @click="selectOption('model')">
-                <div style="display: flex; gap: 10px;">
-                  <VIcon icon="tabler-cube" size="20" />
-                  Ver 3D
-                </div>
-              </VBtn>
+            <div class="d-flex justify-space-between align-center">
+              <div class="ms-3"> <!-- Agrega margen a la izquierda -->
+                <VBtn variant="outlined" color="secondary" @click="selectOption('model')">
+                  <div style="display: flex; gap: 10px;">
+                    <VIcon icon="tabler-cube" size="20" />
+                    Ver 3D
+                  </div>
+                </VBtn>
+              </div>
             </div>
-
             <VCardText>
               <h5 class="text-h5 mb-4">
                 📌 Acerca del Proyecto
