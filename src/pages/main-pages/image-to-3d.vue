@@ -537,7 +537,7 @@ const quote = async () => {
   if (!fileModelContent.value)
     return;
 
-  localStorage.setItem('octetData', fileModelContent.value);
+  sessionStorage.setItem('octetData', fileModelContent.value);
   await router.push({
     path: '/main-pages/model-checkout',
     query: { from: 'image-to-3d' }  // Set your query parameter here
