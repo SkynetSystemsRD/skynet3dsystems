@@ -557,6 +557,7 @@ const quote = async () => {
     return;
 
   saveData('octetData', `data:application/octet-stream;base64,${fileModelContent.value}`);
+  saveData('imageData', `data:image/png;base64,${fileModelContent.value}`);
 
   await router.push({
     path: '/main-pages/model-checkout',
