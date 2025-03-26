@@ -18,6 +18,7 @@ const orderBy = ref();
 const hideCompleted = ref(true);
 const label = ref('All Projects');
 const fullLoadProjects = ref(true)
+const loadingProjects = ref(false)
 
 interface Project {
   id: string;
@@ -225,7 +226,7 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
           <VCol v-for="projects in paginatedProjects" :key="projects.id" cols="12" md="4" sm="6">
             <RouterLink
               :to="{ name: 'apps-all-projects-project-details', query: { projectId: projects.id, projectNumber: projects.title.split(' ')[1] } }">
-              <VCard flat border>
+              <VCard flat border class="position-relative" @click="loadingProjects = true">
                 <VImg :src="projects.projectImg" class="cursor-pointer" />
                 <VCardText>
                   <h5 class="text-h5 mb-1">{{ projects.title }}</h5>
@@ -233,8 +234,8 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
                   <VChip v-if="isThisMyPorject(projects.userId)" variant="tonal" size="small">
                     Mi Proyecto
                   </VChip>
-                  <!-- SE PUEDE USAR EL PROGRESS BAR EN UN FUTURO -->
-                  <!-- <VProgressLinear :model-value="project.completed ? 100 : 0" rounded color="primary" height="8" class="mb-4" /> -->
+                  <VProgressCircular class="position-absolute" style="inset-block-start: 10px; inset-inline-end: 10px;"
+                    v-if="loadingProjects" indeterminate color="secondary" />
                 </VCardText>
               </VCard>
             </RouterLink>
