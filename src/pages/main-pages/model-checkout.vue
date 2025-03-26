@@ -42,29 +42,27 @@ if (!userData) {
   router.push({ path: '/pages/authentication/login-v1', query: { pending_to_go: '/main-pages/model-checkout' } });
 }
 else if (from === 'image-to-3d') {
-  getData('octetData', (data) => {
-    modelCheckoutData.value.modelItems.push({
-      id: 1,
-      fileName: 'TuModeloSkynet3DSystems.gltf',
-      filePath: '/TuModeloSkynet3DSystems.gltf',
-      format: 'gltf'.toUpperCase(),
-      isSupported: 'gltf',
-      size: 500,
-      imageContent: '',
-      octetStreamContent: data,
-      dimentions: {
-        x: 1,
-        y: 1,
-        z: 1
-      },
-      weight: 0, // dar el valor correspondiente
-      uuid: 'uuid', // dar el valor correspondiente
-      price: 0
+  getData('imageData', (imageData) => {
+    getData('octetData', (octetData) => {
+      modelCheckoutData.value.modelItems.push({
+        id: 1,
+        fileName: 'TuModeloSkynet3DSystems.gltf',
+        filePath: '/TuModeloSkynet3DSystems.gltf',
+        format: 'gltf'.toUpperCase(),
+        isSupported: 'gltf',
+        size: 500,
+        imageContent: imageData,
+        octetStreamContent: octetData,
+        dimentions: {
+          x: 1,
+          y: 1,
+          z: 1
+        },
+        weight: 0, // dar el valor correspondiente
+        uuid: 'uuid', // dar el valor correspondiente
+        price: 0
+      });
     });
-  });
-
-  getData('imageData', (data) => {
-    modelCheckoutData.value.modelItems[0].imageContent = data
   });
 }
 
