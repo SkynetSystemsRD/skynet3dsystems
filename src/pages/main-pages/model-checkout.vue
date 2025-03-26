@@ -23,11 +23,46 @@ const storedData = localStorage.getItem('userData');
 const userData = storedData ? JSON.parse(storedData) : null;
 const octetData = ref('');
 
+const getData = (id, callback) => {
+  const dbRequest = indexedDB.open('OctetDB', 1);
+
+  dbRequest.onsuccess = function (event) {
+    const db = event.target.result;
+    const transaction = db.transaction('dataStore', 'readonly');
+    const store = transaction.objectStore('dataStore');
+    const getRequest = store.get(id);
+
+    getRequest.onsuccess = function () {
+      callback(getRequest.result?.content || null);
+    };
+  };
+};
+
 if (!userData) {
   router.push({ path: '/pages/authentication/login-v1', query: { pending_to_go: '/main-pages/model-checkout' } });
 }
 else if (from === 'image-to-3d') {
-  console.log(sessionStorage.getItem('octetData'))
+  getData('octetData', (data) => {
+    modelCheckoutData.value.modelItems.push({
+      id: 1,
+      fileName: 'TuModeloSkynet3DSystems',
+      filePath: '/TuModeloSkynet3DSystems.gltf',
+      format: 'gltf'.toUpperCase(),
+      isSupported: 'gltf',
+      size: 500,
+      imageContent: data,
+      octetStreamContent: data,
+      dimentions: {
+        x: 1,
+        y: 1,
+        z: 1
+      },
+      weight: 0, // dar el valor correspondiente
+      uuid: 'uuid', // dar el valor correspondiente
+      price: 0
+    });
+    console.log('Retrieved Data:', data);
+  });
 }
 
 definePage({
