@@ -533,11 +533,32 @@ const download = async (event, fileName = "TuModeloDeSkynet3DSystems.gltf") => {
   }
 };
 
+const dbRequest = indexedDB.open('OctetDB', 1);
+
+dbRequest.onupgradeneeded = function (event) {
+  let db = event.target.result;
+  db.createObjectStore('dataStore', { keyPath: 'id' });
+};
+
+const saveData = (id, content) => {
+  const dbRequest = indexedDB.open('OctetDB', 1);
+
+  dbRequest.onsuccess = function (event) {
+    const db = event.target.result;
+    const transaction = db.transaction('dataStore', 'readwrite');
+    const store = transaction.objectStore('dataStore');
+
+    store.put({ id, content });
+  };
+};
+
 const quote = async () => {
   if (!fileModelContent.value)
     return;
 
-  sessionStorage.setItem('octetData', fileModelContent.value);
+  saveData('octetData', `data:application/octet-stream;base64,${fileModelContent.value}`);
+  saveData('imageData', `data:image/png;base64,${fileContent.value}`);
+
   await router.push({
     path: '/main-pages/model-checkout',
     query: { from: 'image-to-3d' }  // Set your query parameter here
