@@ -556,7 +556,7 @@ const quote = async () => {
   if (!fileModelContent.value)
     return;
 
-  saveData('octetData', fileModelContent.value);
+  saveData('octetData', `data:application/octet-stream;base64,${fileModelContent.value}`);
 
   await router.push({
     path: '/main-pages/model-checkout',
