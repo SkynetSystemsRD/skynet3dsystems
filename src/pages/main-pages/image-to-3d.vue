@@ -315,7 +315,7 @@ function reload() {
     container.innerHTML = content;  // Recarga el contenido del contenedor
 
     // Esta línea es para ver el resultado en la consola, puedes eliminarla después
-    console.log("Refreshed");
+    console.log("Scene Refreshed");
   } else {
     console.error("El contenedor no se encuentra en el DOM.");
   }
