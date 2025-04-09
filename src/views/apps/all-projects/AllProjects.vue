@@ -97,19 +97,21 @@ const getAllProjects = async () => {
       let indexProject = 1
 
       for (const p of projects) {
-        const models = await getModelsByProjectId(p._id)
-        const randomIndex = getRandomNumber(projects.length)
+        const models = await getModelsByProjectId(p._id);
 
-        // Ensure all fields are present when pushing a new project
+        if (!models || models.length === 0) continue;
+
+        const randomIndex = getRandomNumber(models.length); // usas `models.length` no `projects.length`
+
         projectsData.value.projects.push({
           id: p._id,
           userId: p.userId,
-          title: `Proyecto ${indexProject++}` || '',
-          description: models.map(model => model.fileName).join(", ") || '',
-          completed: 1 % 2 === 0,
+          title: `Proyecto ${indexProject++}`,
+          description: models.map(model => model.fileName).join(", "),
+          completed: indexProject % 2 === 0, // ahora depende del contador, no es siempre falso
           instructor: '',
           rating: (Math.random() * (5 - 4) + 4).toFixed(1),
-          projectImg: `data:image/png;base64,${models[randomIndex].fileImageContent}` || '',
+          projectImg: `data:image/png;base64,${models[randomIndex].fileImageContent}`,
         });
       }
 
@@ -228,7 +230,7 @@ watch([hideCompleted, label, () => props.searchQuery], () => {
             <RouterLink
               :to="{ name: 'apps-all-projects-project-details', query: { projectId: projects.id, projectNumber: projects.title.split(' ')[1] } }">
               <VCard flat border class="position-relative" @click="loadingProjects = true">
-                <VImg :src="projects.projectImg" class="cursor-pointer" />
+                <VImg :src="projects.projectImg" class="cursor-pointer" height="500px" cover />
                 <VCardText>
                   <h5 class="text-h5 mb-1">{{ projects.title }}</h5>
                   <p>{{ projects.description }}</p>
