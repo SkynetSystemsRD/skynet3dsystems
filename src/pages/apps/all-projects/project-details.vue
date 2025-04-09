@@ -189,7 +189,8 @@ const getModelsByProjectId = async (projectId: string) => {
   try {
     // Await the response from axios
     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/models/getModelsByProjectId`, {
-      projectId: projectId
+      projectId: projectId,
+      isPreview: false
     }, {
       headers: {
         'Content-Type': 'application/json',
